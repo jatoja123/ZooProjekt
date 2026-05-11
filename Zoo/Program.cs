@@ -1,1 +1,4 @@
-﻿Console.WriteLine("Hello, World!");
+﻿using Zoo;
+
+var game = new GameController();
+game.StartGame();
