@@ -40,6 +40,10 @@ public class GameController : IObserver
         {
             if (turnEvent.IsStartOfTurn) HandleTurn(turnEvent.Turn);
         }
+        else if (notifyEvent is GameEndEvent)
+        {
+            HandleGameEnd();
+        }
     }
 
     private void HandleTurn(int turn)
@@ -63,5 +67,10 @@ public class GameController : IObserver
         }
         
         turnController.EndTurn();
+    }
+
+    private void HandleGameEnd()
+    {
+        gameDisplay.DisplayTitle("Koniec gry");
     }
 }

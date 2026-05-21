@@ -2,11 +2,10 @@
 
 public class Map
 {
-    private static int width = 10;
-    private static int height = 10;
+    private static int width = 5;
+    private static int height = 5;
     private static Dictionary<string, Type> locationTypes = new()
     {
-        { "puste", typeof(LocationEmpty) },
         { "ladowe", typeof(LocationHabitatLand) }
     };
     
@@ -19,6 +18,7 @@ public class Map
         for (int h = 0; h < height * width; h++)
         {
             Location location = new LocationEmpty(h % width, h / width);
+            if(h == height * width / 2) location = new LocationHospital(h % width, h / width);
             Locations.Add(location);
         }
     }
