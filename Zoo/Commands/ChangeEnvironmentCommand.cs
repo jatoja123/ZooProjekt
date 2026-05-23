@@ -1,23 +1,25 @@
 ﻿namespace Zoo.Commands;
 
-public class ChangeEnvironmentCommand(GameController controller) : ICommand
+public class ChangeEnvironmentCommand(GameController controller) : Command
 {
-    public int ActionCost() => 5;
-    public string ActionCommand() => "zmien";
+    public override int ActionCost => 5;
+    public override string ActionCommand() => "zmien";
+    public override string ActionDescription() => $"Zmienia typ wybiegu. Użycie: {ActionCommand()} <x> <y> <nowy typ>";
     
-    public bool Execute()
+    public override bool Execute(List<string> args)
     {
-        var response = controller.GameDisplay.GetPlayerResponse("<x> <y> <nowy typ>");
-        var parts = response.Split(' ');
-        if (parts.Length != 3)
+        if (args.Count != 3)
         {
             controller.GameDisplay.DisplayWarning("Zły format akcji");
             return false;
         }
+        if(!int.TryParse(args[0], out var x) || !int.TryParse(args[1], out var y))
+        {
+            controller.GameDisplay.DisplayWarning("Zły format pozycji");
+            return false;
+        }
         
-        var x = int.Parse(parts[0]);
-        var y = int.Parse(parts[1]);
-        var newType = parts[2];
+        var newType = args[2];
         if (!controller.Map.ChangeEnvironment(x, y, newType))
         {
             controller.GameDisplay.DisplayWarning("Nie udało się zmienić lokacji");

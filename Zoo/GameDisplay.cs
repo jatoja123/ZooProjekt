@@ -27,18 +27,19 @@ public class GameDisplay
         Console.WriteLine(result);
     }
     
-    public ICommand GetPlayerAction(List<ICommand> commands)
+    public (Command, List<string>) GetPlayerAction(List<Command> commands)
     {
         DisplayMessage("Wybierz akcje");
-        var actionStr = Console.ReadLine()?.Trim().ToLower();
-        var action = commands.FirstOrDefault(x => x.ActionCommand() == actionStr, null);
-        if (action == null)
+        var args = Console.ReadLine()?.Trim().ToLower().Split(' ');
+        var actionStr = args?[0];
+        var action = commands.FirstOrDefault(x => x != null && x.ActionCommand() == actionStr, null);
+        if (args == null || action == null)
         {
             DisplayWarning("Wybierz poprawną akcję. Sprawdź akcje pisząc 'akcje'");
             return GetPlayerAction(commands);
         }
         
-        return action;
+        return (action, args.Skip(1).ToList());
     }
 
     public string GetPlayerResponse(string message)

@@ -1,16 +1,17 @@
 ﻿namespace Zoo.Commands;
 
-public class CommandListCommand(GameController controller) : ICommand
+public class CommandListCommand(GameController controller) : Command
 {
-    public int ActionCost() => 0;
+    public override int ActionCost => 0;
 
-    public string ActionCommand() => "akcje";
+    public override string ActionCommand() => "akcje";
+    public override string ActionDescription() => "Wyświetla dostępne akcje.";
 
-    public bool Execute()
+    public override bool Execute(List<string> args)
     {
         foreach (var action in GameController.PlayerActions)
         {
-            controller.GameDisplay.DisplayInfo($"{action.ActionCommand()} [{action.ActionCost()}]");
+            controller.GameDisplay.DisplayInfo($"{action.ActionCommand()} [{action.ActionCost}] {action.ActionDescription()}");
         }
         return true;
     }

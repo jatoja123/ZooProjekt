@@ -6,19 +6,24 @@ public class Map
     private static int height = 5;
     private static Dictionary<string, Type> locationTypes = new()
     {
-        { "ladowe", typeof(LocationHabitatLand) }
+        { "ladowe", typeof(LocationHabitatLand) },
+        { "wodne", typeof(LocationHabitatWater) },
     };
     
     public int Width => width;
     public int Height => height;
     public List<Location> Locations = new ();
     
+    
     public void Initialize()
     {
         for (int h = 0; h < height * width; h++)
         {
             Location location = new LocationEmpty(h % width, h / width);
-            if(h == height * width / 2) location = new LocationHospital(h % width, h / width);
+            if(h == height * width / 2)
+            {
+                location = new LocationHospital(h % width, h / width);
+            }
             Locations.Add(location);
         }
     }

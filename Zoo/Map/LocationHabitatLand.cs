@@ -1,10 +1,7 @@
 ﻿namespace Zoo;
 
-public class LocationHabitatLand(int x, int y) : Location(x, y)
+public class LocationHabitatLand(int x, int y) : LocationHabitat(x, y)
 {
     public override string Name() => "Lądowe";
     public override char Symbol() => '@';
-    public override bool CanBeReplaced() => !isOccupied;
-    
-    private bool isOccupied = false;
 }

@@ -5,7 +5,7 @@ namespace Zoo;
 public class GameController : IObserver
 {
     public static GameController Instance { get; private set; }
-    public static List<ICommand> PlayerActions = new();
+    public static List<Command> PlayerActions = new();
     private static int MaxActionCost = 10;
     
     private TurnController turnController;
@@ -18,7 +18,7 @@ public class GameController : IObserver
     {
         Instance = this;
         
-        PlayerActions = new List<ICommand>()
+        PlayerActions = new List<Command>()
         {
             new DisplayMapCommand(this),
             new ChangeEnvironmentCommand(this),
@@ -54,15 +54,15 @@ public class GameController : IObserver
         
         while (actionCostUsed < MaxActionCost)
         {
-            var action = gameDisplay.GetPlayerAction(PlayerActions);
-            var cost = action.ActionCost();
+            var (action, args) = gameDisplay.GetPlayerAction(PlayerActions);
+            var cost = action.ActionCost;
             if (actionCostUsed + cost > MaxActionCost)
             {
                 gameDisplay.DisplayMessage($"Akcja jest za droga ({cost}). Zostało Ci {MaxActionCost-actionCostUsed}/{MaxActionCost} akcji");
                 continue;
             }
 
-            if(!action.Execute()) continue;
+            if(!action.Execute(args)) continue;
             actionCostUsed += cost;
         }
         
