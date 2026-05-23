@@ -21,6 +21,8 @@ public class GameController : IObserver
     
     private AnimalsController animalsController;
     public AnimalsController AnimalsController => animalsController;
+
+    private bool skippingTurn = false;
     
     public void StartGame()
     {
@@ -32,6 +34,8 @@ public class GameController : IObserver
             new CommandChangeEnvironment(this),
             new CommandActionList(this),
             new CommandFreeAnimals(this),
+            new CommandRemoveAnimal(this),
+            new CommandSkipTurn(this),
         };
         
         map = new Map();
@@ -63,11 +67,12 @@ public class GameController : IObserver
 
     private void HandleTurn(int turn)
     {
+        skippingTurn = false;
         gameDisplay.DisplayTitle($"Tura {turn+1}");
         int actionCostUsed = 0;
         gameDisplay.DisplayMap(map);
         
-        while (actionCostUsed < MaxActionCost)
+        while (actionCostUsed < MaxActionCost && !skippingTurn)
         {
             var (action, args) = gameDisplay.GetPlayerAction(PlayerActions);
             var cost = action.ActionCost;
@@ -87,5 +92,10 @@ public class GameController : IObserver
     private void HandleGameEnd()
     {
         gameDisplay.DisplayTitle("Koniec gry");
+    }
+
+    public void SkipTurn()
+    {
+        skippingTurn = true;
     }
 }
