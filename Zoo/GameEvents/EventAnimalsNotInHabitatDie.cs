@@ -11,7 +11,7 @@ public class EventAnimalsNotInHabitatDie : GameEvent
     
     public override void Trigger()
     {
-        var animalsToDie = animalsController.Animals.Where(x => !x.IsInHabitat).ToList();
+        var animalsToDie = animalsController.FreeAnimals;
         foreach (var animal in animalsToDie)
         {
             GameController.Instance.GameDisplay.DisplayInfo($"Zwierze umiera (nie było na żadnym wybiegu): {animal.GetType().Name}");

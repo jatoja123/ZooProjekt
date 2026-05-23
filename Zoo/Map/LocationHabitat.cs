@@ -10,12 +10,13 @@ public abstract class LocationHabitat(int x, int y) : Location(x, y)
     private Animal? animal = null;
     private bool isOccupied = false;
 
-    public void AddAnimal(Animal newAnimal)
+    public bool AddAnimal(Animal newAnimal)
     {
-        if (isOccupied) return;
+        if (isOccupied) return false;
         isOccupied = true;
         animal = newAnimal;
         animal.Habitat = this;
+        return true;
     }
 
     public Animal? RemoveAnimal()

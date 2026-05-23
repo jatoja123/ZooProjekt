@@ -28,9 +28,10 @@ public class GameController : IObserver
         
         PlayerActions = new List<Command>()
         {
-            new DisplayMapCommand(this),
-            new ChangeEnvironmentCommand(this),
-            new CommandListCommand(this),
+            new CommandDisplayMap(this),
+            new CommandChangeEnvironment(this),
+            new CommandActionList(this),
+            new CommandFreeAnimals(this),
         };
         
         map = new Map();

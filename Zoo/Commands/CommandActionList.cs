@@ -1,6 +1,6 @@
 ﻿namespace Zoo.Commands;
 
-public class CommandListCommand(GameController controller) : Command
+public class CommandActionList(GameController controller) : Command
 {
     public override int ActionCost => 0;
 

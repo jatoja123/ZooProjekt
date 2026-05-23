@@ -12,7 +12,7 @@ public class Map
     
     public int Width => width;
     public int Height => height;
-    public List<Location> Locations = new ();
+    public List<Location> Locations { get; private set; } = new ();
     
     
     public void Start()
@@ -42,5 +42,5 @@ public class Map
         return true;
     }
 
-    private Location? GetLocation(int x, int y) => Locations.FirstOrDefault(l => l?.X == x && l?.Y == y, null);
+    public Location? GetLocation(int x, int y) => Locations.FirstOrDefault(l => l?.X == x && l?.Y == y, null);
 }

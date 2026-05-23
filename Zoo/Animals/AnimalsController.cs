@@ -6,6 +6,7 @@ public class AnimalsController
     
     private List<Animal> animals = new();
     public List<Animal> Animals => animals;
+    public List<Animal> FreeAnimals => animals.Where(x => !x.IsInHabitat).ToList();
 
     public void AddAnimal(Animal animal)
     {

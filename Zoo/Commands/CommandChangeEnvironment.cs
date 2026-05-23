@@ -1,6 +1,6 @@
 ﻿namespace Zoo.Commands;
 
-public class ChangeEnvironmentCommand(GameController controller) : Command
+public class CommandChangeEnvironment(GameController controller) : Command
 {
     public override int ActionCost => 5;
     public override string ActionCommand() => "zmien";

@@ -1,6 +1,6 @@
 ﻿namespace Zoo.Commands;
 
-public class DisplayMapCommand(GameController controller) : Command
+public class CommandDisplayMap(GameController controller) : Command
 {
     public override int ActionCost => 0;
 
