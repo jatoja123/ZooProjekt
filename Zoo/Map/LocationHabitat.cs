@@ -15,12 +15,16 @@ public abstract class LocationHabitat(int x, int y) : Location(x, y)
         if (isOccupied) return;
         isOccupied = true;
         animal = newAnimal;
+        animal.Habitat = this;
     }
 
-    public void RemoveAnimal()
+    public Animal? RemoveAnimal()
     {
-        if (!isOccupied) return;
+        if (!isOccupied) return null;
         isOccupied = false;
+        var currentAnimal = animal;
+        currentAnimal.Habitat = null;
         animal = null;
+        return currentAnimal;
     }
 }

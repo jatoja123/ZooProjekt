@@ -15,7 +15,7 @@ public class Map
     public List<Location> Locations = new ();
     
     
-    public void Initialize()
+    public void Start()
     {
         for (int h = 0; h < height * width; h++)
         {

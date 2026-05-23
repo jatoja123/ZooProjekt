@@ -1,4 +1,6 @@
-﻿using Zoo.Commands;
+﻿using Zoo.Animals;
+using Zoo.Commands;
+using Zoo.GameEvents;
 
 namespace Zoo;
 
@@ -9,10 +11,16 @@ public class GameController : IObserver
     private static int MaxActionCost = 10;
     
     private TurnController turnController;
+    private GameEventsController gameEventsController;
+    
     private GameDisplay gameDisplay;
     public GameDisplay GameDisplay => gameDisplay;
+    
     private Map map;
     public Map Map => map;
+    
+    private AnimalsController animalsController;
+    public AnimalsController AnimalsController => animalsController;
     
     public void StartGame()
     {
@@ -26,10 +34,16 @@ public class GameController : IObserver
         };
         
         map = new Map();
-        map.Initialize();
+        map.Start();
         gameDisplay = new GameDisplay();
         
+        gameEventsController = new GameEventsController();
+        gameEventsController.Start();
+        
+        animalsController = new AnimalsController();    
+        
         turnController = new TurnController();
+        turnController.Subscribe(gameEventsController);
         turnController.Subscribe(this);
         turnController.Start();
     }

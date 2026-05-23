@@ -1,10 +1,20 @@
-﻿namespace Zoo.GameEvents;
+﻿using Zoo.Animals;
+
+namespace Zoo.GameEvents;
 
 public class EventNewAnimalArrives : GameEvent
 {
     public override float EventChance() => 1;
+    
+    private AnimalsController animalsController => GameController.Instance.AnimalsController;
+    
     public override void Trigger()
     {
-        
+        var rnd = new Random();
+        var animalType = AnimalsController.AnimalTypes[rnd.Next(AnimalsController.AnimalTypes.Count)];
+        var animal = (Animal?)Activator.CreateInstance(animalType);
+        if (animal == null) return;
+        animalsController.AddAnimal(animal);
+        GameController.Instance.GameDisplay.DisplayInfo($"Nowe zwierze w ZOO: {animal.GetType().Name}");
     }
 }
