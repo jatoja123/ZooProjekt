@@ -14,7 +14,6 @@ public class Map
     public int Height => height;
     public List<Location> Locations { get; private set; } = new ();
     
-    
     public void Start()
     {
         for (int h = 0; h < height * width; h++)
@@ -22,7 +21,7 @@ public class Map
             Location location = new LocationEmpty(h % width, h / width);
             if(h == height * width / 2)
             {
-                location = new LocationHospital(h % width, h / width);
+                location = new LocationStorage(h % width, h / width);
             }
             Locations.Add(location);
         }

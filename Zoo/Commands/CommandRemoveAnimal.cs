@@ -1,4 +1,5 @@
-﻿using Zoo.Animals;
+﻿using System.Collections.Generic;
+using Zoo.Animals;
 
 namespace Zoo.Commands;
 
@@ -8,7 +9,6 @@ public class CommandRemoveAnimal(GameController controller) : Command
 
     public override string ActionCommand() => "wyjmij";
     public override string ActionDescription() => "Wyjmuje zwierzę z wybiegu (trzeba je znowu przydzielić). Użycie: wyjmij <x> <y>";
-    
 
     public override bool Execute(List<string> args)
     {
@@ -24,12 +24,15 @@ public class CommandRemoveAnimal(GameController controller) : Command
         }
 
         var location = controller.Map.GetLocation(x, y);
-        if (location == null || location is not LocationHabitat habitat || habitat.Animal == null)
+        if (location == null || location is not LocationHabitat habitat || habitat.Animals.Count == 0)
         {
             controller.GameDisplay.DisplayWarning("Lokacja nie zawiera zwierzęcia");
             return false;
         }
-        var animal = habitat.RemoveAnimal();
+        
+        var animal = habitat.Animals[0];
+        habitat.RemoveAnimal(animal);
+        
         return true;
     }
 }
