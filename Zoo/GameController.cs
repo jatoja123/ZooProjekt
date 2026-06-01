@@ -6,20 +6,20 @@ namespace Zoo;
 
 public class GameController : IObserver
 {
-    public static GameController Instance { get; private set; }
+    public static GameController Instance { get; private set; } = null!;
     public static List<Command> PlayerActions = new();
     private static int MaxActionCost = 10;
     
-    private TurnController turnController;
-    private GameEventsController gameEventsController;
+    private TurnController turnController = null!;
+    private GameEventsController gameEventsController = null!;
     
-    private GameDisplay gameDisplay;
+    private GameDisplay gameDisplay = null!;
     public GameDisplay GameDisplay => gameDisplay;
     
-    private Map map;
+    private Map map = null!;
     public Map Map => map;
     
-    private AnimalsController animalsController;
+    private AnimalsController animalsController = null!;
     public AnimalsController AnimalsController => animalsController;
 
     private bool skippingTurn = false;
@@ -31,10 +31,12 @@ public class GameController : IObserver
         PlayerActions = new List<Command>()
         {
             new CommandDisplayMap(this),
+            new CommandBuildHabitat(this),
             new CommandChangeEnvironment(this),
             new CommandActionList(this),
             new CommandFreeAnimals(this),
             new CommandRemoveAnimal(this),
+            new CommandShowHabitat(this),
             new CommandSkipTurn(this),
         };
         

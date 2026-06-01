@@ -5,6 +5,7 @@ namespace Zoo;
 public class GameDisplay
 {
     private Map? savedMap = null;
+
     public void DisplayMap(Map? map = null)
     {
         if (map == null) map = savedMap;
@@ -29,7 +30,7 @@ public class GameDisplay
     
     public (Command, List<string>) GetPlayerAction(List<Command> commands)
     {
-        DisplayMessage("Wybierz akcje");
+        DisplayMessage("Wybierz akcję (wpisz 'akcje' aby zobaczyć listę dostępnych komend)");
         var args = Console.ReadLine()?.Trim().ToLower().Split(' ');
         var actionStr = args?[0];
         var action = commands.FirstOrDefault(x => x != null && x.ActionCommand() == actionStr, null);
@@ -45,7 +46,7 @@ public class GameDisplay
     public string GetPlayerResponse(string message)
     {
         DisplayMessage(message);
-        return Console.ReadLine()?.Trim().ToLower();
+        return Console.ReadLine()?.Trim().ToLower() ?? string.Empty;
     }
     
     public void DisplayMessage(string message)
