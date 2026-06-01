@@ -1,3 +1,5 @@
+using System;
+
 namespace Zoo.Needs;
 
 public abstract class Need
@@ -7,7 +9,7 @@ public abstract class Need
     private int _threshold;
     public NeedType Type { get; private set; }
 
-    public Need(NeedType type, int value,  int maxValue = 100, int threshold = 20)
+    public Need(NeedType type, int value, int maxValue = 100, int threshold = 20)
     {
         if(value > maxValue)
         {
@@ -20,7 +22,7 @@ public abstract class Need
         
         _value = value;
         Type = type;
-        if(threshold > maxValue)
+        if(threshold > _maxValue)
         {
             throw new ArgumentException("Próg krytyczny nie może być większy niż wartość maksymalna!");
         }
@@ -29,6 +31,17 @@ public abstract class Need
             _threshold = threshold;
         }
     }
+
+    public int GetValue()
+    {
+        return _value;
+    }
+
+    public int GetMaxValue()
+    {
+        return _maxValue;
+    }
+
     public void Decrease(int amount)
     {
         _value -= amount;
@@ -37,6 +50,7 @@ public abstract class Need
             _value = 0;
         }
     }
+
     public void Increase(int amount)
     {
         _value += amount;
@@ -45,6 +59,7 @@ public abstract class Need
             _value = _maxValue;
         }
     }
+
     public bool IsCritical()
     {
         return _value <= _threshold;

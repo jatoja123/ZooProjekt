@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using Zoo.Needs;
 
 namespace Zoo.Commands;
 
@@ -43,7 +45,16 @@ public class CommandShowHabitat(GameController controller) : Command
                 for (int i = 0; i < habitat.Animals.Count; i++)
                 {
                     var animal = habitat.Animals[i];
-                    controller.GameDisplay.DisplayInfo($"- {animal.GetType().Name}");
+                    
+                    var hunger = animal.AnimalNeeds.FirstOrDefault(n => n.Type == NeedType.HUNGER);
+                    var thirst = animal.AnimalNeeds.FirstOrDefault(n => n.Type == NeedType.THIRST);
+                    var happiness = animal.AnimalNeeds.FirstOrDefault(n => n.Type == NeedType.HAPPINESS);
+                    
+                    string hungerStr = hunger != null ? $"{hunger.GetValue()}/{hunger.GetMaxValue()}" : "Brak";
+                    string thirstStr = thirst != null ? $"{thirst.GetValue()}/{thirst.GetMaxValue()}" : "Brak";
+                    string happinessStr = happiness != null ? $"{happiness.GetValue()}/{happiness.GetMaxValue()}" : "Brak";
+
+                    controller.GameDisplay.DisplayInfo($"[{i}] {animal.GetType().Name} | Głód: {hungerStr} | Pragnienie: {thirstStr} | Szczęście: {happinessStr}");
                 }
             }
         }
