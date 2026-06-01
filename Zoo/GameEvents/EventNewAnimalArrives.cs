@@ -1,4 +1,5 @@
-﻿using Zoo.Animals;
+﻿using System;
+using Zoo.Animals;
 
 namespace Zoo.GameEvents;
 
@@ -12,8 +13,11 @@ public class EventNewAnimalArrives : GameEvent
     {
         var rnd = new Random();
         var animalType = AnimalsController.AnimalTypes[rnd.Next(AnimalsController.AnimalTypes.Count)];
-        var animal = (Animal?)Activator.CreateInstance(animalType);
+        
+        var animal = (Animal?)Activator.CreateInstance(animalType, animalType.Name);
+        
         if (animal == null) return;
+        
         animalsController.AddAnimal(animal);
         GameController.Instance.GameDisplay.DisplayInfo($"Nowe zwierze w ZOO: {animal.GetType().Name}");
     }
