@@ -4,5 +4,6 @@ public enum NeedType
 {
     HUNGER,
     THIRST,
-    HAPPINESS
+    HAPPINESS,
+    HEALTH
 }

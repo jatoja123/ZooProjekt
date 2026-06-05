@@ -11,7 +11,7 @@ public abstract class Animal
     public Animal(string name)
     {
         _name = name;
-        AnimalNeeds = [new Hunger(100), new Thirst(100), new Happiness(100)];
+        AnimalNeeds = [new Hunger(100), new Thirst(100), new Happiness(100), new Health(100)];
     }
     
     public void Update(NotifyEvent gameEvent)
@@ -49,6 +49,17 @@ public abstract class Animal
         if (happiness != null)
         {
             happiness.Increase(35);
+        }
+    }
+    public void Heal()
+    {
+        Need? health = AnimalNeeds.FirstOrDefault(n => n.Type == NeedType.HEALTH);
+        
+        if (health != null)
+        {
+             // przy dodaniu opcji leku tutaj 
+             // dodatkowy if ktory sprawdza czy mozemy wyleczyc i zmniejsza count leku
+            health.Increase(35);
         }
     }
 }
