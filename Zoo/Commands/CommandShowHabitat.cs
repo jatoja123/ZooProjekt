@@ -46,15 +46,11 @@ public class CommandShowHabitat(GameController controller) : Command
                 {
                     var animal = habitat.Animals[i];
                     
-                    var hunger = animal.AnimalNeeds.FirstOrDefault(n => n.Type == NeedType.HUNGER);
-                    var thirst = animal.AnimalNeeds.FirstOrDefault(n => n.Type == NeedType.THIRST);
-                    var happiness = animal.AnimalNeeds.FirstOrDefault(n => n.Type == NeedType.HAPPINESS);
-                    
-                    string hungerStr = hunger != null ? $"{hunger.GetValue()}/{hunger.GetMaxValue()}" : "Brak";
-                    string thirstStr = thirst != null ? $"{thirst.GetValue()}/{thirst.GetMaxValue()}" : "Brak";
-                    string happinessStr = happiness != null ? $"{happiness.GetValue()}/{happiness.GetMaxValue()}" : "Brak";
+                    string needsStr = animal.AnimalNeeds.Count > 0 
+                        ? string.Join(" | ", animal.AnimalNeeds.Select(n => $"{n.Type}: {n.GetValue()}/{n.GetMaxValue()}")) 
+                        : "Brak potrzeb";
 
-                    controller.GameDisplay.DisplayInfo($"[{i}] {animal.GetType().Name} | Głód: {hungerStr} | Pragnienie: {thirstStr} | Szczęście: {happinessStr}");
+                    controller.GameDisplay.DisplayInfo($"[{i}] {animal.GetType().Name} | {needsStr}");
                 }
             }
         }

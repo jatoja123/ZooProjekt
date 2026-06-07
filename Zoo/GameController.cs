@@ -1,4 +1,5 @@
-﻿using Zoo.Animals;
+﻿using System.Collections.Generic;
+using Zoo.Animals;
 using Zoo.Commands;
 using Zoo.GameEvents;
 
@@ -22,6 +23,8 @@ public class GameController : IObserver
     private AnimalsController animalsController = null!;
     public AnimalsController AnimalsController => animalsController;
 
+    public List<string> Warehouse { get; private set; } = new();
+
     private bool skippingTurn = false;
     
     public void StartGame()
@@ -37,6 +40,7 @@ public class GameController : IObserver
             new CommandFreeAnimals(this),
             new CommandRemoveAnimal(this),
             new CommandShowHabitat(this),
+            new CommandShowWarehouse(this),
             new CommandSkipTurn(this),
         };
         
