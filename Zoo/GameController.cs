@@ -25,6 +25,8 @@ public class GameController : IObserver
 
     public List<string> Warehouse { get; private set; } = new();
 
+    private GameGUI gameGui = null!;
+
     private bool skippingTurn = false;
     
     public void StartGame()
@@ -33,7 +35,6 @@ public class GameController : IObserver
         
         PlayerActions = new List<Command>()
         {
-            new CommandDisplayMap(this),
             new CommandBuildHabitat(this),
             new CommandChangeEnvironment(this),
             new CommandActionList(this),
@@ -47,6 +48,9 @@ public class GameController : IObserver
         map = new Map();
         map.Start();
         gameDisplay = new GameDisplay();
+        
+        gameGui = new GameGUI(this);
+        gameGui.Start();
         
         gameEventsController = new GameEventsController();
         gameEventsController.Start();

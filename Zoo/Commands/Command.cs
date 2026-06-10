@@ -1,4 +1,6 @@
-﻿namespace Zoo.Commands;
+﻿using System.Collections.Generic;
+
+namespace Zoo.Commands;
 
 public abstract class Command
 {
@@ -6,4 +8,11 @@ public abstract class Command
     public abstract string ActionCommand();
     public abstract string ActionDescription();
     public abstract bool Execute(List<string> args);
+
+    public virtual List<string> GetAvailableOptions()
+    {
+        return new List<string>();
+    }
+
+    public virtual bool RequiresCoordinates => false;
 }

@@ -6,6 +6,8 @@ public class GameDisplay
 {
     private Map? savedMap = null;
 
+    public List<string> Logs { get; private set; } = new();
+
     public void DisplayMap(Map? map = null)
     {
         if (map == null) map = savedMap;
@@ -51,22 +53,33 @@ public class GameDisplay
     
     public void DisplayMessage(string message)
     {
-        Console.WriteLine($"[ {message} ]");
+        string formatted = $">> {message}";
+        Console.WriteLine(formatted);
+        Logs.Add(formatted);
     }
     
     public void DisplayInfo(string message)
     {
-        Console.WriteLine($"> {message}");
+        string formatted = $">> [INFO] {message}";
+        Console.WriteLine(formatted);
+        Logs.Add(formatted);
     }
     
     public void DisplayWarning(string message)
     {
-        Console.WriteLine($"! {message} !");
+        string formatted = $">> [WARN] {message}";
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine(formatted);
+        Console.ResetColor();
+        Logs.Add(formatted);
     }
-    
-    public void DisplayTitle(string message)
+
+    public void DisplayTitle(string title)
     {
-        message = message.ToUpper();
-        Console.WriteLine($"==== {message} ====");
+        string formatted = $"=== {title} ===";
+        Console.WriteLine(formatted);
+        Logs.Add(formatted);
     }
+
+    
 }

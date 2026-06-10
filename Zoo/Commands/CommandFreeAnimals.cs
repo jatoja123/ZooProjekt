@@ -1,4 +1,5 @@
-﻿using Zoo.Animals;
+﻿using System.Collections.Generic;
+using Zoo.Animals;
 
 namespace Zoo.Commands;
 
@@ -8,7 +9,7 @@ public class CommandFreeAnimals(GameController controller) : Command
 
     public override string ActionCommand() => "wolne";
     public override string ActionDescription() => "Pokazuje zwierzęta bez wybiegu / wsadza wolne zwierzę na wybieg. Użycie: wolne / wolne <index zwierzęcia> <x> <y>";
-    
+    public override bool RequiresCoordinates => true;
 
     public override bool Execute(List<string> args)
     {
@@ -44,6 +45,19 @@ public class CommandFreeAnimals(GameController controller) : Command
             i++;
         }
         return true;
+    }
+
+    public override List<string> GetAvailableOptions()
+    {
+        var options = new List<string>();
+        var freeAnimals = controller.AnimalsController.FreeAnimals;
+        
+        for (int i = 0; i < freeAnimals.Count; i++)
+        {
+            options.Add($"{i}: {freeAnimals[i].GetType().Name}");
+        }
+        
+        return options;
     }
 
     private bool MoveFreeAnimal(int index, int x, int y)

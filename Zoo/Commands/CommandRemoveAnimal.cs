@@ -9,6 +9,7 @@ public class CommandRemoveAnimal(GameController controller) : Command
 
     public override string ActionCommand() => "wyjmij";
     public override string ActionDescription() => "Wyjmuje zwierzę z wybiegu (trzeba je znowu przydzielić). Użycie: wyjmij <x> <y>";
+    public override bool RequiresCoordinates => true;
 
     public override bool Execute(List<string> args)
     {
