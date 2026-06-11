@@ -1,4 +1,6 @@
-﻿namespace Zoo.Commands;
+﻿using System.Collections.Generic;
+
+namespace Zoo.Commands;
 
 public class CommandSkipTurn(GameController controller) : Command
 {

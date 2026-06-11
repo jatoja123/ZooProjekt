@@ -7,10 +7,15 @@ public class TurnController: Observable
     private int maxTurns = 0;
     private bool isGameRunning = false;
 
+    public static int CurrentTurn { get; private set; } = 0;
+    public static int TotalTurns { get; private set; } = 10;
+
     public void Start()
     {
         turn = 0;
         maxTurns = MaxGameTurns;
+        CurrentTurn = turn;
+        TotalTurns = maxTurns;
         isGameRunning = true;
         Notify(new GameStartEvent());
         StartTurn();
@@ -27,9 +32,11 @@ public class TurnController: Observable
         if(!isGameRunning) return;
         Notify(new TurnEvent(isStartOfTurn: false, turn));
         turn++;
+        CurrentTurn = turn;
         if (turn == maxTurns)
         {
             turn = 0;
+            CurrentTurn = turn;
             Notify(new GameEndEvent());
             isGameRunning = false;
         } else StartTurn();

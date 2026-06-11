@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Threading.Tasks;
 using Raylib_cs;
 using Zoo.Commands;
 
@@ -157,15 +158,20 @@ public static class ContextMenuRenderer
             }
         }
 
-        if (cmd.Execute(args))
+        Task.Run(() =>
         {
-            state.StatusMessage = $"Wykonano: {cmd.ActionCommand()}";
-        }
-        else
-        {
-            state.StatusMessage = "Blad parametrow!";
-        }
-        
+            bool success = cmd.Execute(args);
+            
+            if (success)
+            {
+                state.StatusMessage = $"Wykonano: {cmd.ActionCommand()}";
+            }
+            else
+            {
+                state.StatusMessage = "Blad parametrow!";
+            }
+        });
+
         CloseAllMenus(state);
     }
 

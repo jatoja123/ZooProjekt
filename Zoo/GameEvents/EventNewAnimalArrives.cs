@@ -5,7 +5,9 @@ namespace Zoo.GameEvents;
 
 public class EventNewAnimalArrives : GameEvent
 {
-    public override float EventChance() => 1;
+    public override float EventChance() => 1f;
+    public override GameEventType EventType => GameEventType.StartOfTurn;
+    public override EventPriority Priority => EventPriority.Normal;
     
     private AnimalsController animalsController => GameController.Instance.AnimalsController;
     

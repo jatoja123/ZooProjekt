@@ -28,6 +28,8 @@ public class GameController : IObserver
     private GameGUI gameGui = null!;
 
     private bool skippingTurn = false;
+
+    public int CurrentTurn { get; private set; } = 1;
     
     public void StartGame()
     {
@@ -67,7 +69,17 @@ public class GameController : IObserver
     {
         if (notifyEvent is TurnEvent turnEvent)
         {
-            if (turnEvent.IsStartOfTurn) HandleTurn(turnEvent.Turn);
+            if (turnEvent.IsStartOfTurn) 
+            {
+                HandleTurn(turnEvent.Turn);
+            }
+            else
+            {
+                foreach (var animal in animalsController.Animals)
+                {
+                    animal.Update(notifyEvent);
+                }
+            }
         }
         else if (notifyEvent is GameEndEvent)
         {
@@ -78,7 +90,8 @@ public class GameController : IObserver
     private void HandleTurn(int turn)
     {
         skippingTurn = false;
-        gameDisplay.DisplayTitle($"Tura {turn+1}");
+        CurrentTurn = turn + 1;
+        gameDisplay.DisplayTitle($"Tura {CurrentTurn}");
         int actionCostUsed = 0;
         gameDisplay.DisplayMap(map);
         
@@ -106,6 +119,9 @@ public class GameController : IObserver
 
     public void SkipTurn()
     {
-        skippingTurn = true;
+        if (turnController != null)
+        {
+            turnController.EndTurn();
+        }
     }
 }

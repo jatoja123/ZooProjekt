@@ -1,4 +1,5 @@
-﻿using Zoo.Animals;
+using System.Linq;
+using Zoo.Animals;
 
 namespace Zoo.GameEvents;
 
@@ -11,7 +12,7 @@ public class EventAnimalsNotInHabitatDie : GameEvent
     
     public override void Trigger()
     {
-        var animalsToDie = animalsController.FreeAnimals;
+        var animalsToDie = animalsController.FreeAnimals.ToList();
         foreach (var animal in animalsToDie)
         {
             GameController.Instance.GameDisplay.DisplayInfo($"Zwierze umiera (nie było na żadnym wybiegu): {animal.GetType().Name}");

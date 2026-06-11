@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Threading.Tasks;
 using Raylib_cs;
 using Zoo.Commands;
 
@@ -42,16 +43,19 @@ public static class RightPanelRenderer
             ? new List<string>() 
             : state.InputBuffer.Split(' ').ToList();
 
-        if (cmd.Execute(args))
+        Task.Run(() =>
         {
-            state.StatusMessage = $"Wykonano: {cmd.ActionCommand()}";
-            state.InputBuffer = "";
-            state.SelectedX = -1;
-            state.SelectedY = -1;
-        }
-        else
-        {
-            state.StatusMessage = "Blad parametrow!";
-        }
+            if (cmd.Execute(args))
+            {
+                state.StatusMessage = $"Wykonano: {cmd.ActionCommand()}";
+                state.InputBuffer = "";
+                state.SelectedX = -1;
+                state.SelectedY = -1;
+            }
+            else
+            {
+                state.StatusMessage = "Blad parametrow!";
+            }
+        });
     }
 }
