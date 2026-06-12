@@ -60,8 +60,8 @@ public class GameController : IObserver
         animalsController = new AnimalsController();    
         
         turnController = new TurnController();
-        turnController.Subscribe(gameEventsController);
         turnController.Subscribe(this);
+        turnController.Subscribe(gameEventsController);
         turnController.Start();
     }
     
@@ -71,7 +71,8 @@ public class GameController : IObserver
         {
             if (turnEvent.IsStartOfTurn) 
             {
-                HandleTurn(turnEvent.Turn);
+                CurrentTurn = turnEvent.Turn + 1;
+                gameDisplay.DisplayTitle($"Tura {CurrentTurn}");
             }
             else
             {
@@ -81,17 +82,19 @@ public class GameController : IObserver
                 }
             }
         }
+        else if (notifyEvent is PlayerActionPhaseEvent)
+        {
+            HandleTurnActions();
+        }
         else if (notifyEvent is GameEndEvent)
         {
             HandleGameEnd();
         }
     }
 
-    private void HandleTurn(int turn)
+    private void HandleTurnActions()
     {
         skippingTurn = false;
-        CurrentTurn = turn + 1;
-        gameDisplay.DisplayTitle($"Tura {CurrentTurn}");
         int actionCostUsed = 0;
         gameDisplay.DisplayMap(map);
         
@@ -109,7 +112,10 @@ public class GameController : IObserver
             actionCostUsed += cost;
         }
         
-        turnController.EndTurn();
+        if (!skippingTurn)
+        {
+            turnController.EndTurn();
+        }
     }
 
     private void HandleGameEnd()
@@ -121,6 +127,7 @@ public class GameController : IObserver
     {
         if (turnController != null)
         {
+            skippingTurn = true;
             turnController.EndTurn();
         }
     }

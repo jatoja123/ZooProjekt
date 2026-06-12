@@ -25,6 +25,7 @@ public class TurnController: Observable
     {
         if(!isGameRunning) return;
         Notify(new TurnEvent(isStartOfTurn: true, turn));
+        Notify(new PlayerActionPhaseEvent(turn));
     }
     
     public void EndTurn()
