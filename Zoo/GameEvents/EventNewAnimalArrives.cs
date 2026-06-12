@@ -21,6 +21,9 @@ public class EventNewAnimalArrives : GameEvent
         if (animal == null) return;
         
         animalsController.AddAnimal(animal);
-        GameController.Instance.GameDisplay.DisplayInfo($"Nowe zwierze w ZOO: {animal.GetType().Name}");
+        
+        string message = $"Nowe zwierze w ZOO: {animal.GetType().Name}";
+        GameController.Instance.GameDisplay.DisplayInfo(message);
+        GameController.Instance.TriggerPopupEvent(message);
     }
 }

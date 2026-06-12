@@ -121,6 +121,12 @@ public class GameController : IObserver
     private void HandleGameEnd()
     {
         gameDisplay.DisplayTitle("Koniec gry");
+        gameGui.AddPopup("Koniec Gry!");
+    }
+
+    public void TriggerPopupEvent(string message)
+    {
+        gameGui.AddPopup(message);
     }
 
     public void SkipTurn()

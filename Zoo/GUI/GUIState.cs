@@ -21,4 +21,8 @@ public class GUIState
     public Rectangle SubMenuRect { get; set; } = new Rectangle(0, 0, 0, 0);
     public dynamic SelectedCommand { get; set; } = null;
     public List<string> CurrentSubOptions { get; set; } = new List<string>();
+
+    public Queue<string> PopupQueue { get; set; } = new Queue<string>();
+    public bool IsPopupOpen { get; set; } = false;
+    public string CurrentPopupMessage { get; set; } = "";
 }

@@ -12,6 +12,11 @@ public class GameGUI
 
     public GameGUI(GameController controller) => this.controller = controller;
 
+    public void AddPopup(string message)
+    {
+        state.PopupQueue.Enqueue(message);
+    }
+
     public void Start() => Task.Run(RunLoop);
 
     private void RunLoop()
@@ -33,7 +38,16 @@ public class GameGUI
 
             state.ClickHandled = false;
 
-            InputHandler.HandleKeyboard(state);
+            if (!state.IsPopupOpen && state.PopupQueue.Count > 0)
+            {
+                state.IsPopupOpen = true;
+                state.CurrentPopupMessage = state.PopupQueue.Dequeue();
+            }
+
+            if (!state.IsPopupOpen)
+            {
+                InputHandler.HandleKeyboard(state);
+            }
 
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Color.RayWhite);
@@ -43,6 +57,11 @@ public class GameGUI
             RightPanelRenderer.Draw(screenWidth, screenHeight, mousePos, isClicked, state);
             ConsoleRenderer.Draw(controller, screenWidth, screenHeight);
             ContextMenuRenderer.Draw(screenWidth, screenHeight, mousePos, isClicked, state);
+
+            if (state.IsPopupOpen)
+            {
+                PopupRenderer.Draw(screenWidth, screenHeight, mousePos, isClicked, state);
+            }
 
             Raylib.EndDrawing();
         }
