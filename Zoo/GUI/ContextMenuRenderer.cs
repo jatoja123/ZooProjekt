@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Threading.Tasks;
 using Raylib_cs;
 using Zoo.Commands;
+using Zoo;
 
 namespace Zoo.GUI;
 
@@ -13,7 +14,7 @@ public static class ContextMenuRenderer
     private const int MenuItemHeight = 30;
     private const int SubMenuWidth = 200;
 
-    public static void Draw(int screenWidth, int screenHeight, Vector2 mousePos, bool isClicked, GUIState state)
+    public static void Draw(GameController controller, int screenWidth, int screenHeight, Vector2 mousePos, bool isClicked, GUIState state)
     {
         if (!state.IsContextMenuOpen || state.SelectedX == -1) return;
 
@@ -22,12 +23,12 @@ public static class ContextMenuRenderer
         if (contextCommands.Count == 0) return;
 
         CalculateMainMenuBounds(screenWidth, screenHeight, contextCommands, state);
-        RenderMainMenu(mousePos, isClicked, contextCommands, state);
+        RenderMainMenu(controller, mousePos, isClicked, contextCommands, state);
 
         if (state.IsSubMenuOpen)
         {
             CalculateSubMenuBounds(screenWidth, screenHeight, state);
-            RenderSubMenu(mousePos, isClicked, state);
+            RenderSubMenu(controller, mousePos, isClicked, state);
         }
 
         HandleOutsideClicks(mousePos, isClicked, state);
@@ -45,7 +46,7 @@ public static class ContextMenuRenderer
         state.ContextMenuRect = new Rectangle(menuX, menuY, MenuWidth, menuHeight);
     }
 
-    private static void RenderMainMenu(Vector2 mousePos, bool isClicked, List<Command> commands, GUIState state)
+    private static void RenderMainMenu(GameController controller, Vector2 mousePos, bool isClicked, List<Command> commands, GUIState state)
     {
         Raylib.DrawRectangleRec(state.ContextMenuRect, Color.RayWhite);
         Raylib.DrawRectangleLinesEx(state.ContextMenuRect, 1, Color.Black);
@@ -61,7 +62,7 @@ public static class ContextMenuRenderer
                 
                 if (isClicked)
                 {
-                    HandleMainMenuClick(cmd, state);
+                    HandleMainMenuClick(controller, cmd, state);
                 }
             }
 
@@ -69,7 +70,7 @@ public static class ContextMenuRenderer
         }
     }
 
-    private static void HandleMainMenuClick(Command cmd, GUIState state)
+    private static void HandleMainMenuClick(GameController controller, Command cmd, GUIState state)
     {
         var subOptions = cmd.GetAvailableOptions();
         
@@ -82,7 +83,7 @@ public static class ContextMenuRenderer
         }
         else
         {
-            ExecuteFinalCommand(cmd, state, "");
+            ExecuteFinalCommand(controller, cmd, state, "");
         }
     }
 
@@ -98,7 +99,7 @@ public static class ContextMenuRenderer
         state.SubMenuRect = new Rectangle(subMenuX, subMenuY, SubMenuWidth, subMenuHeight);
     }
 
-    private static void RenderSubMenu(Vector2 mousePos, bool isClicked, GUIState state)
+    private static void RenderSubMenu(GameController controller, Vector2 mousePos, bool isClicked, GUIState state)
     {
         Raylib.DrawRectangleRec(state.SubMenuRect, Color.RayWhite);
         Raylib.DrawRectangleLinesEx(state.SubMenuRect, 1, Color.Black);
@@ -114,7 +115,10 @@ public static class ContextMenuRenderer
 
                 if (isClicked)
                 {
-                    ExecuteFinalCommand(state.SelectedCommand, state, option);
+                    if (state.SelectedCommand != null)
+                    {
+                        ExecuteFinalCommand(controller, state.SelectedCommand, state, option);
+                    }
                     return;
                 }
             }
@@ -134,7 +138,7 @@ public static class ContextMenuRenderer
         }
     }
 
-    private static void ExecuteFinalCommand(Command cmd, GUIState state, string additionalOption)
+    private static void ExecuteFinalCommand(GameController controller, Command cmd, GUIState state, string additionalOption)
     {
         List<string> args = new List<string>();
 
@@ -155,6 +159,30 @@ public static class ContextMenuRenderer
             if (!string.IsNullOrWhiteSpace(additionalOption))
             {
                 args.Add(additionalOption);
+            }
+        }
+
+        if (cmd.ActionCommand() == "sprawdz")
+        {
+            int targetX = state.SelectedX;
+            int targetY = state.SelectedY;
+
+            if (args.Count >= 2 && int.TryParse(args[0], out int x) && int.TryParse(args[1], out int y))
+            {
+                targetX = x;
+                targetY = y;
+            }
+            else if (args.Count == 0 && targetX != -1 && targetY != -1)
+            {
+                args.Add(targetX.ToString());
+                args.Add(targetY.ToString());
+            }
+
+            var location = controller.Map.GetLocation(targetX, targetY);
+            if (location is LocationHabitat habitat)
+            {
+                state.SelectedHabitat = habitat;
+                state.CurrentViewMode = ViewMode.HabitatView;
             }
         }
 
