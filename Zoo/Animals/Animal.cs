@@ -6,15 +6,19 @@ namespace Zoo.Animals;
 
 public abstract class Animal
 {
+    public char foodType {get; private set;} // M - meat, P - plant, B - both 
+    public uint age {get; private set;}
     public bool IsInHabitat => Habitat != null;
     public LocationHabitat? Habitat = null;
     private string _name;
     public List<Need> AnimalNeeds { get; private set; }
     
-    public Animal(string name)
+    public Animal(string name, char food)
     {
         _name = name;
+        foodType = food;
         AnimalNeeds = [new Hunger(100), new Thirst(100), new Happiness(100), new Health(100)];
+        age = 1;
     }
     
     public void Update(NotifyEvent gameEvent)
