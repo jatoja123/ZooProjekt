@@ -14,6 +14,7 @@ public class GameController : IObserver
     public static List<Command> MainActions = new();
     public static List<Command> ShopActions = new();
     public static List<Command> AnimalActions = new();
+    public static List<Command> MapActions = new();
     
     private static int MaxActionCost = 10;
 
@@ -47,11 +48,8 @@ public class GameController : IObserver
 
         MainActions = new List<Command>()
         {
-            new CommandBuildHabitat(this),
             new CommandActionList(this),
             new CommandFreeAnimals(this),
-            new CommandRemoveAnimal(this),
-            new CommandShowHabitat(this),
             new CommandShowWarehouse(this),
             new CommandSkipTurn(this),
             new CommandOpenShop(this)
@@ -70,6 +68,14 @@ public class GameController : IObserver
 
         AnimalActions = new List<Command>()
         {
+        };
+        
+        MapActions = new List<Command>()
+        {
+            new CommandBuildHabitat(this),
+            new CommandShowHabitat(this),
+            new CommandRemoveAnimal(this),
+            new CommandFreeAnimals(this),
         };
 
         PlayerActions = MainActions;

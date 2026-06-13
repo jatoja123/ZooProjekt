@@ -9,7 +9,6 @@ public class CommandFreeAnimals(GameController controller) : Command
 
     public override string ActionCommand() => "wolne";
     public override string ActionDescription() => "Pokazuje zwierzęta bez wybiegu / wsadza wolne zwierzę na wybieg. Użycie: wolne / wolne <index zwierzęcia> <x> <y>";
-    public override bool RequiresCoordinates => true;
 
     public override bool Execute(List<string> args)
     {

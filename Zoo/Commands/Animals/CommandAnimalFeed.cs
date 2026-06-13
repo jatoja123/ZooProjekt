@@ -1,12 +1,11 @@
-using System.Collections.Generic;
+﻿namespace Zoo.Commands.Animals;
 
-namespace Zoo.Commands;
 
-public class CommandBuildHabitat(GameController controller) : Command
+public class CommandAnimalFeed(GameController controller) : Command
 {
-    public override int ActionCost => 5;
-    public override string ActionCommand() => "buduj";
-    public override string ActionDescription() => "Buduje wybieg na mapie. Uzycie: buduj <x> <y> <ladowe/wodne>";
+    public override int ActionCost => 1;
+    public override string ActionCommand() => "nakarm";
+    public override string ActionDescription() => "Karmi zwierzęta na wybranym wybiegu. Uzycie: nakarm <x> <y> <>";
     
     public override bool Execute(List<string> args)
     {

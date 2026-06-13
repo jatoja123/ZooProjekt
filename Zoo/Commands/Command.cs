@@ -13,6 +13,4 @@ public abstract class Command
     {
         return new List<string>();
     }
-
-    public virtual bool RequiresCoordinates => false;
 }
