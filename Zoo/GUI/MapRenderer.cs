@@ -7,6 +7,17 @@ public static class MapRenderer
 {
     public static void Draw(GameController controller, int screenWidth, int screenHeight, Vector2 mousePos, bool isClicked, GUIState state)
     {
+        bool isOverUI = false;
+        
+        if (mousePos.X >= screenWidth - 300) isOverUI = true;
+        if (state.IsContextMenuOpen && Raylib.CheckCollisionPointRec(mousePos, state.ContextMenuRect)) isOverUI = true;
+        if (state.IsSubMenuOpen && Raylib.CheckCollisionPointRec(mousePos, state.SubMenuRect)) isOverUI = true;
+
+        if (isOverUI)
+        {
+            isClicked = false;
+        }
+
         state.HoveredX = -1;
         state.HoveredY = -1;
 
@@ -29,18 +40,16 @@ public static class MapRenderer
 
         Raylib.DrawText("Mapa ZOO:", mapStartX, mapStartY - 50, 30, Color.Black);
 
-        bool mouseInMenu = state.IsContextMenuOpen && Raylib.CheckCollisionPointRec(mousePos, state.ContextMenuRect);
-
         for (int y = 0; y < controller.Map.Height; y++)
         {
             for (int x = 0; x < controller.Map.Width; x++)
             {
-                DrawMapTile(controller, x, y, mapStartX, mapStartY, spacing, mapFontSize, mousePos, isClicked, mouseInMenu, state);
+                DrawMapTile(controller, x, y, mapStartX, mapStartY, spacing, mapFontSize, mousePos, isClicked, isOverUI, state);
             }
         }
     }
 
-    private static void DrawMapTile(GameController controller, int x, int y, int mapStartX, int mapStartY, int spacing, int mapFontSize, Vector2 mousePos, bool isClicked, bool mouseInMenu, GUIState state)
+    private static void DrawMapTile(GameController controller, int x, int y, int mapStartX, int mapStartY, int spacing, int mapFontSize, Vector2 mousePos, bool isClicked, bool isOverUI, GUIState state)
     {
         var location = controller.Map.GetLocation(x, y);
         int posX = mapStartX + (x * spacing);
@@ -48,7 +57,7 @@ public static class MapRenderer
 
         Rectangle tileRect = new Rectangle(posX, posY, mapFontSize, mapFontSize);
 
-        if (!mouseInMenu && Raylib.CheckCollisionPointRec(mousePos, tileRect))
+        if (!isOverUI && Raylib.CheckCollisionPointRec(mousePos, tileRect))
         {
             state.HoveredX = x;
             state.HoveredY = y;

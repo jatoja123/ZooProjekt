@@ -18,6 +18,7 @@ public static class RightPanelRenderer
         if (isClicked && Raylib.CheckCollisionPointRec(mousePos, exitBtnRect))
         {
             state.KeepRunning = false;
+            state.ClickHandled = true;
         }
 
         int buttonsCount = GameController.PlayerActions.Count;
@@ -26,21 +27,21 @@ public static class RightPanelRenderer
             var cmd = GameController.PlayerActions[i];
             float btnY = exitBtnRect.Y - 20 - ((buttonsCount - i) * 60);
             Rectangle btnRect = new Rectangle(screenWidth - 300, btnY, 280, 50);
-
             Raylib.DrawRectangleRec(btnRect, Color.LightGray);
             Raylib.DrawText(cmd.ActionCommand(), (int)btnRect.X + 15, (int)btnRect.Y + 12, 24, Color.Black);
 
             if (isClicked && Raylib.CheckCollisionPointRec(mousePos, btnRect))
             {
                 ExecuteCommand(cmd, state);
+                state.ClickHandled = true;
             }
         }
     }
 
     private static void ExecuteCommand(Command cmd, GUIState state)
     {
-        var args = string.IsNullOrWhiteSpace(state.InputBuffer) 
-            ? new List<string>() 
+        var args = string.IsNullOrWhiteSpace(state.InputBuffer)
+            ? new List<string>()
             : state.InputBuffer.Split(' ').ToList();
 
         Task.Run(() =>
