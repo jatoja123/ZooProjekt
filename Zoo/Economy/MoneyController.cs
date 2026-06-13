@@ -36,6 +36,13 @@ public class MoneyController
         Money += income;
     }
 
+    public bool Spend(int amount)
+    {
+        if (Money < amount) return false;
+        Money -= amount;
+        return true;
+    }
+
     //tymczoasowe
     private int GetCondition(Animal animal)
     {

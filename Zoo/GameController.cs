@@ -10,6 +10,12 @@ public class GameController : IObserver
 {
     public static GameController Instance { get; private set; } = null!;
     public static List<Command> PlayerActions = new();
+
+    //public trzyma albo shop albo mian
+    // main zapisuje stara liste komend na czas wejscia do sklpeu
+    // w shop actions jest exit ktory robi playeractions = main actions
+    public static List<Command> MainActions = new();
+    public static List<Command> ShopActions = new();
     private static int MaxActionCost = 10;
 
     private TurnController turnController = null!;
@@ -44,7 +50,7 @@ public class GameController : IObserver
     {
         Instance = this;
 
-        PlayerActions = new List<Command>()
+        MainActions = new List<Command>()
         {
             new CommandBuildHabitat(this),
             new CommandChangeEnvironment(this),
@@ -54,7 +60,21 @@ public class GameController : IObserver
             new CommandShowHabitat(this),
             new CommandShowWarehouse(this),
             new CommandSkipTurn(this),
+            new CommandOpenShop(this)
         };
+
+        ShopActions = new List<Command>()
+        {
+            new CommandActionList(this),
+            new CommandBuyFood(this),
+            new CommandBuyWater(this),
+            new CommandBuyMedicine(this),
+            new CommandBuyAnimal(this),
+            new CommandExpandStorage(this),
+            new CommandExitShop(this)
+        };
+
+        PlayerActions = MainActions;
 
         map = new Map();
         map.Start();
