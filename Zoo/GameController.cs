@@ -2,6 +2,7 @@
 using Zoo.Animals;
 using Zoo.Commands;
 using Zoo.GameEvents;
+using Zoo.Economy;
 
 namespace Zoo;
 
@@ -10,18 +11,22 @@ public class GameController : IObserver
     public static GameController Instance { get; private set; } = null!;
     public static List<Command> PlayerActions = new();
     private static int MaxActionCost = 10;
-    
+
     private TurnController turnController = null!;
     private GameEventsController gameEventsController = null!;
-    
+
     private GameDisplay gameDisplay = null!;
     public GameDisplay GameDisplay => gameDisplay;
-    
+
     private Map map = null!;
     public Map Map => map;
-    
+
     private AnimalsController animalsController = null!;
     public AnimalsController AnimalsController => animalsController;
+
+    //economy
+    private MoneyController moneyController = null!;
+    public MoneyController MoneyController => moneyController;
 
     public List<string> Warehouse { get; private set; } = new();
 
@@ -30,11 +35,11 @@ public class GameController : IObserver
     private bool skippingTurn = false;
 
     public int CurrentTurn { get; private set; } = 1;
-    
+
     public void StartGame()
     {
         Instance = this;
-        
+
         PlayerActions = new List<Command>()
         {
             new CommandBuildHabitat(this),
@@ -46,33 +51,38 @@ public class GameController : IObserver
             new CommandShowWarehouse(this),
             new CommandSkipTurn(this),
         };
-        
+
         map = new Map();
         map.Start();
         gameDisplay = new GameDisplay();
-        
+
         gameGui = new GameGUI(this);
         gameGui.Start();
-        
+
         gameEventsController = new GameEventsController();
         gameEventsController.Start();
-        
-        animalsController = new AnimalsController();    
-        
+
+        animalsController = new AnimalsController();
+
+        moneyController = new MoneyController();
+
         turnController = new TurnController();
         turnController.Subscribe(this);
         turnController.Subscribe(gameEventsController);
         turnController.Start();
     }
-    
+
     public void ReceiveEvent(NotifyEvent notifyEvent)
     {
         if (notifyEvent is TurnEvent turnEvent)
         {
-            if (turnEvent.IsStartOfTurn) 
+            if (turnEvent.IsStartOfTurn)
             {
                 CurrentTurn = turnEvent.Turn + 1;
                 gameDisplay.DisplayTitle($"Tura {CurrentTurn}");
+
+                moneyController.CalculateIncome(animalsController);
+                gameDisplay.DisplayInfo($"Stan kontra: {moneyController.Money}");
             }
             else
             {
@@ -97,21 +107,21 @@ public class GameController : IObserver
         skippingTurn = false;
         int actionCostUsed = 0;
         gameDisplay.DisplayMap(map);
-        
+
         while (actionCostUsed < MaxActionCost && !skippingTurn)
         {
             var (action, args) = gameDisplay.GetPlayerAction(PlayerActions);
             var cost = action.ActionCost;
             if (actionCostUsed + cost > MaxActionCost)
             {
-                gameDisplay.DisplayMessage($"Akcja jest za droga ({cost}). Zostało Ci {MaxActionCost-actionCostUsed}/{MaxActionCost} akcji");
+                gameDisplay.DisplayMessage($"Akcja jest za droga ({cost}). Zostało Ci {MaxActionCost - actionCostUsed}/{MaxActionCost} akcji");
                 continue;
             }
 
-            if(!action.Execute(args)) continue;
+            if (!action.Execute(args)) continue;
             actionCostUsed += cost;
         }
-        
+
         if (!skippingTurn)
         {
             turnController.EndTurn();
