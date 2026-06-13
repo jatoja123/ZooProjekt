@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Zoo.Animals;
 
 namespace Zoo;
@@ -12,12 +13,13 @@ public abstract class LocationHabitat(int x, int y) : Location(x, y)
 
     public bool AddAnimal(Animal newAnimal)
     {
+        if (animals.Count >= 4) return false;
+        if (animals.Contains(newAnimal)) return false;
+        
         if (animals.Count > 0 && animals[0].GetType().Name != newAnimal.GetType().Name)
         {
             return false;
         }
-        
-        if (animals.Contains(newAnimal)) return false;
         
         animals.Add(newAnimal);
         newAnimal.Habitat = this;

@@ -29,12 +29,12 @@ namespace Zoo.GUI
                 return;
             }
 
-            int cardWidth = 200;
-            int cardHeight = 260;
-            int spacingX = 20;
-            int spacingY = 20;
-            int startX = 20;
-            int startY = 80;
+            int cardWidth = 400;
+            int cardHeight = 500;
+            int spacingX = 30;
+            int spacingY = 30;
+            int startX = 30;
+            int startY = 90;
 
             int currentX = startX;
             int currentY = startY;
@@ -57,7 +57,7 @@ namespace Zoo.GUI
                     state.ClickHandled = true;
                 }
 
-                Rectangle imgRect = new Rectangle(currentX + 10, currentY + 10, cardWidth - 20, 150);
+                Rectangle imgRect = new Rectangle(currentX + 20, currentY + 20, cardWidth - 40, 330);
                 Texture2D? animalTexture = AssetLoader.GetAnimalTexture(animalName);
 
                 if (animalTexture.HasValue)
@@ -76,7 +76,7 @@ namespace Zoo.GUI
                     Raylib.DrawRectangleRec(imgRect, Color.DarkGray);
                 }
 
-                Raylib.DrawText(animalName, currentX + 10, currentY + 170, 20, Color.Black);
+                Raylib.DrawText(animalName, currentX + 20, currentY + 380, 32, Color.Black);
 
                 currentX += cardWidth + spacingX;
 
@@ -89,22 +89,22 @@ namespace Zoo.GUI
 
             if (state.SelectedAnimal != null)
             {
-                int statHeight = 120;
-                int statWidth = screenWidth - 340;
-                int statX = 20;
-                int statY = screenHeight - statHeight - 20;
+                int statHeight = 150;
+                int statWidth = screenWidth - 60;
+                int statX = 30;
+                int statY = screenHeight - statHeight - 30;
 
                 Raylib.DrawRectangle(statX, statY, statWidth, statHeight, Color.RayWhite);
-                Raylib.DrawRectangleLinesEx(new Rectangle(statX, statY, statWidth, statHeight), 2, Color.Black);
+                Raylib.DrawRectangleLinesEx(new Rectangle(statX, statY, statWidth, statHeight), 3, Color.Black);
 
                 string selName = state.SelectedAnimal.GetType().Name;
-                Raylib.DrawText($"Statystyki: {selName}", statX + 15, statY + 15, 24, Color.Black);
+                Raylib.DrawText($"Statystyki: {selName}", statX + 20, statY + 20, 36, Color.Black);
 
                 string needsStr = state.SelectedAnimal.AnimalNeeds.Count > 0 
                     ? string.Join(" | ", state.SelectedAnimal.AnimalNeeds.Select(n => $"{n.Type}: {n.GetValue()}/{n.GetMaxValue()}")) 
                     : "Brak potrzeb";
 
-                Raylib.DrawText(needsStr, statX + 15, statY + 60, 20, Color.DarkBlue);
+                Raylib.DrawText(needsStr, statX + 20, statY + 80, 24, Color.DarkBlue);
             }
         }
     }
