@@ -24,9 +24,13 @@ public class GameController : IObserver
     private AnimalsController animalsController = null!;
     public AnimalsController AnimalsController => animalsController;
 
-    //economy
+    //-----------------economy
     private MoneyController moneyController = null!;
     public MoneyController MoneyController => moneyController;
+
+    private Storage storage = null!;
+    public Storage Storage => storage;
+
 
     public List<string> Warehouse { get; private set; } = new();
 
@@ -65,6 +69,8 @@ public class GameController : IObserver
         animalsController = new AnimalsController();
 
         moneyController = new MoneyController();
+
+        storage = new Storage();
 
         turnController = new TurnController();
         turnController.Subscribe(this);
