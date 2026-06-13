@@ -20,59 +20,59 @@ public class GameGUI
     public void Start() => Task.Run(RunLoop);
 
     private void RunLoop()
-{
-    int monitor = Raylib.GetCurrentMonitor();
-    int width = Raylib.GetMonitorWidth(monitor);
-    int height = Raylib.GetMonitorHeight(monitor);
-
-    Raylib.InitWindow(800, 600, "Zoo");
-    Raylib.SetTargetFPS(60);
-
-    while (!Raylib.WindowShouldClose() && state.KeepRunning)
     {
-        int screenWidth = Raylib.GetScreenWidth();
-        int screenHeight = Raylib.GetScreenHeight();
-        Vector2 mousePos = Raylib.GetMousePosition();
-        bool isClicked = Raylib.IsMouseButtonPressed(MouseButton.Left);
+        int monitor = Raylib.GetCurrentMonitor();
+        int width = Raylib.GetMonitorWidth(monitor);
+        int height = Raylib.GetMonitorHeight(monitor);
 
-        state.ClickHandled = false;
+        Raylib.InitWindow(800, 600, "Zoo");
+        Raylib.SetTargetFPS(60);
 
-        if (!state.IsPopupOpen && state.PopupQueue.Count > 0)
+        while (!Raylib.WindowShouldClose() && state.KeepRunning)
         {
-            state.IsPopupOpen = true;
-            state.CurrentPopupMessage = state.PopupQueue.Dequeue();
+            int screenWidth = Raylib.GetScreenWidth();
+            int screenHeight = Raylib.GetScreenHeight();
+            Vector2 mousePos = Raylib.GetMousePosition();
+            bool isClicked = Raylib.IsMouseButtonPressed(MouseButton.Left);
+
+            state.ClickHandled = false;
+
+            if (!state.IsPopupOpen && state.PopupQueue.Count > 0)
+            {
+                state.IsPopupOpen = true;
+                state.CurrentPopupMessage = state.PopupQueue.Dequeue();
+            }
+
+            if (!state.IsPopupOpen)
+            {
+                InputHandler.HandleKeyboard(state);
+            }
+
+            Raylib.BeginDrawing();
+            Raylib.ClearBackground(Color.RayWhite);
+
+            if (state.CurrentViewMode == ViewMode.MainMap)
+            {
+                TopUIRenderer.Draw(screenHeight, state);
+                MapRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
+                RightPanelRenderer.Draw(screenWidth, screenHeight, mousePos, isClicked, state);
+                ConsoleRenderer.Draw(controller, screenWidth, screenHeight);
+                ContextMenuRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
+            }
+            else if (state.CurrentViewMode == ViewMode.HabitatView)
+            {
+                HabitatRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
+            }
+
+            if (state.IsPopupOpen)
+            {
+                PopupRenderer.Draw(screenWidth, screenHeight, mousePos, isClicked, state);
+            }
+
+            Raylib.EndDrawing();
         }
 
-        if (!state.IsPopupOpen)
-        {
-            InputHandler.HandleKeyboard(state);
-        }
-
-        Raylib.BeginDrawing();
-        Raylib.ClearBackground(Color.RayWhite);
-
-        if (state.CurrentViewMode == ViewMode.MainMap)
-        {
-            TopUIRenderer.Draw(screenHeight, state);
-            MapRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
-            RightPanelRenderer.Draw(screenWidth, screenHeight, mousePos, isClicked, state);
-            ConsoleRenderer.Draw(controller, screenWidth, screenHeight);
-            ContextMenuRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
-        }
-        else if (state.CurrentViewMode == ViewMode.HabitatView)
-        {
-            HabitatRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
-        }
-
-        if (state.IsPopupOpen)
-        {
-            PopupRenderer.Draw(screenWidth, screenHeight, mousePos, isClicked, state);
-        }
-
-        Raylib.EndDrawing();
+        AssetLoader.UnloadAllTextures();
+        Raylib.CloseWindow();
     }
-
-    AssetLoader.UnloadAllTextures();
-    Raylib.CloseWindow();
-}
 }
