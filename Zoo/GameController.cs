@@ -32,7 +32,7 @@ public class GameController : IObserver
     public Storage Storage => storage;
 
 
-    public List<string> Warehouse { get; private set; } = new();
+    //public List<string> Warehouse { get; private set; } = new();
 
     private GameGUI gameGui = null!;
 

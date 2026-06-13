@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using System.Runtime;
+using Zoo.Economy;
+
 
 namespace Zoo.Commands;
 
@@ -11,18 +14,16 @@ public class CommandShowWarehouse(GameController controller) : Command
 
     public override bool Execute(List<string> args)
     {
-        if (controller.Warehouse.Count == 0)
+        // gdy submenu zmienic
+        controller.GameDisplay.DisplayInfo("Zawartość magazynu:");
+
+        foreach (var type in System.Enum.GetValues<GoodType>())
         {
-            controller.GameDisplay.DisplayInfo("Magazyn jest pusty.");
-            return true;
+            int amount = controller.Storage.GetAmount(type);
+            int limit = controller.Storage.GetLimit(type);
+            controller.GameDisplay.DisplayInfo($"{type}: {amount}/{limit}");
         }
 
-        controller.GameDisplay.DisplayInfo("Zawartość magazynu:");
-        for (int i = 0; i < controller.Warehouse.Count; i++)
-        {
-            controller.GameDisplay.DisplayInfo($"[{i}] {controller.Warehouse[i]}");
-        }
-        
         return true;
     }
 }
