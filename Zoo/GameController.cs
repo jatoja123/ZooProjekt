@@ -48,7 +48,6 @@ public class GameController : IObserver
         MainActions = new List<Command>()
         {
             new CommandBuildHabitat(this),
-            new CommandChangeEnvironment(this),
             new CommandActionList(this),
             new CommandFreeAnimals(this),
             new CommandRemoveAnimal(this),
