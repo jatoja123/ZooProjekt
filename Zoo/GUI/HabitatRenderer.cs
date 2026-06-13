@@ -41,7 +41,7 @@ namespace Zoo.GUI
 
             foreach (var animal in state.SelectedHabitat.Animals)
             {
-                string animalName = animal.GetType().Name;
+                string animalName = animal.Name;
                 bool isSelected = state.SelectedAnimal == animal;
 
                 Rectangle cardRect = new Rectangle(currentX, currentY, cardWidth, cardHeight);
@@ -97,11 +97,11 @@ namespace Zoo.GUI
                 Raylib.DrawRectangle(statX, statY, statWidth, statHeight, Color.RayWhite);
                 Raylib.DrawRectangleLinesEx(new Rectangle(statX, statY, statWidth, statHeight), 3, Color.Black);
 
-                string selName = state.SelectedAnimal.GetType().Name;
+                string selName = state.SelectedAnimal.Name;
                 Raylib.DrawText($"Statystyki: {selName}", statX + 20, statY + 20, 36, Color.Black);
 
                 string needsStr = state.SelectedAnimal.AnimalNeeds.Count > 0 
-                    ? string.Join(" | ", state.SelectedAnimal.AnimalNeeds.Select(n => $"{n.Type}: {n.GetValue()}/{n.GetMaxValue()}")) 
+                    ? string.Join(" | ", state.SelectedAnimal.AnimalNeeds.Select(n => $"{n.Type}: {n.Value}/{n.MaxValue}")) 
                     : "Brak potrzeb";
 
                 Raylib.DrawText(needsStr, statX + 20, statY + 80, 24, Color.DarkBlue);

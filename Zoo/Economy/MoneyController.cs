@@ -46,7 +46,7 @@ public class MoneyController
     //tymczoasowe
     private int GetCondition(Animal animal)
     {
-        return animal.AnimalNeeds.Min(n => n.GetValue());
+        return animal.AnimalNeeds.Min(n => n.Value);
     }
 }
 

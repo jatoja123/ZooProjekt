@@ -15,7 +15,7 @@ public static class HoverInfoRenderer
             int posX = mapStartX + (state.HoveredX * spacing);
             int posY = mapStartY + (state.HoveredY * spacing);
             
-            string animalName = hoveredHabitat.Animals[0].GetType().Name;
+            string animalName = hoveredHabitat.Animals[0].Name;
             Texture2D? animalTexture = AssetLoader.GetAnimalTexture(animalName);
             
             int cardW = 160;

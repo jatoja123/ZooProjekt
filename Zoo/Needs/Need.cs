@@ -7,9 +7,15 @@ public abstract class Need
     private int _value;
     private int _maxValue;
     private int _threshold;
+    
+    public int Value => _value;
+
+    public int MaxValue => _maxValue;
+    public int Missing => _maxValue - _value;
+    public int PassiveDecrease { get; private set; }
     public NeedType Type { get; private set; }
 
-    public Need(NeedType type, int value, int maxValue = 100, int threshold = 20)
+    public Need(NeedType type, int value, int maxValue = 100, int threshold = 20, int passiveDecrease = 0)
     {
         if(value > maxValue)
         {
@@ -19,6 +25,8 @@ public abstract class Need
         {
             _maxValue = maxValue;
         }
+        
+        PassiveDecrease = passiveDecrease;
         
         _value = value;
         Type = type;
@@ -30,16 +38,6 @@ public abstract class Need
         {
             _threshold = threshold;
         }
-    }
-
-    public int GetValue()
-    {
-        return _value;
-    }
-
-    public int GetMaxValue()
-    {
-        return _maxValue;
     }
 
     public void Decrease(int amount)

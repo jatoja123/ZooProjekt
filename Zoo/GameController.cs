@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Zoo.Animals;
 using Zoo.Commands;
+using Zoo.Commands.Animals;
 using Zoo.GameEvents;
 using Zoo.Economy;
 
@@ -68,6 +69,7 @@ public class GameController : IObserver
 
         AnimalActions = new List<Command>()
         {
+            new CommandAnimalFeed(this),
         };
         
         MapActions = new List<Command>()

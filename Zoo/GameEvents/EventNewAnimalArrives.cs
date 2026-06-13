@@ -16,13 +16,13 @@ public class EventNewAnimalArrives : GameEvent
         var rnd = new Random();
         var animalType = AnimalsController.AnimalTypes[rnd.Next(AnimalsController.AnimalTypes.Count)];
         
-        var animal = (Animal?)Activator.CreateInstance(animalType, animalType.Name, 'M');
+        var animal = (Animal?)Activator.CreateInstance(animalType, AnimalNamesHelper.RandomName());
         
         if (animal == null) return;
         
         animalsController.AddAnimal(animal);
         
-        string message = $"Nowe zwierze w ZOO: {animal.GetType().Name}";
+        string message = $"Nowe zwierze w ZOO: {animal.Name}";
         GameController.Instance.GameDisplay.DisplayInfo(message);
         GameController.Instance.TriggerPopupEvent(message);
     }

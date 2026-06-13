@@ -15,7 +15,7 @@ public class EventAnimalsNotInHabitatDie : GameEvent
         var animalsToDie = animalsController.FreeAnimals.ToList();
         foreach (var animal in animalsToDie)
         {
-            string message = $"Zwierze umiera, nie bylo na wybiegu: {animal.GetType().Name}";
+            string message = $"Zwierze umiera, nie bylo na wybiegu: {animal.Name}";
             GameController.Instance.GameDisplay.DisplayInfo(message);
             GameController.Instance.TriggerPopupEvent(message);
             animalsController.RemoveAnimal(animal);

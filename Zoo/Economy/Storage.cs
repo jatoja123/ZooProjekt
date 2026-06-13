@@ -2,9 +2,9 @@ namespace Zoo.Economy;
 
 public enum GoodType
 {
-    FoodM,
-    FoodP,
-    FoodB,
+    FoodMeat,
+    FoodPlant,
+    FoodMixed,
     WATER,
     MEDICINE
 }
@@ -41,11 +41,13 @@ public class Storage
         return true;
     }
 
-    public bool Use(GoodType type, int amount)
+    /// Zwraca informacje o tym ile zostało REALNIE zużyte
+    public int Use(GoodType type, int amount)
     {
-        if (amounts[type] < amount) return false;
+        if (amount < 0) return 0;
+        if (amounts[type] < amount) amount = amounts[type];
         amounts[type] -= amount;
-        return true;
+        return amount;
     }
 
     public void ExpandLimit(GoodType type, int amount)

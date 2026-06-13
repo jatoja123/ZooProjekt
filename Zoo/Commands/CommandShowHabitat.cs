@@ -47,10 +47,10 @@ public class CommandShowHabitat(GameController controller) : Command
                     var animal = habitat.Animals[i];
                     
                     string needsStr = animal.AnimalNeeds.Count > 0 
-                        ? string.Join(" | ", animal.AnimalNeeds.Select(n => $"{n.Type}: {n.GetValue()}/{n.GetMaxValue()}")) 
+                        ? string.Join(" | ", animal.AnimalNeeds.Select(n => $"{n.Type}: {n.Value}/{n.MaxValue}")) 
                         : "Brak potrzeb";
 
-                    controller.GameDisplay.DisplayInfo($"[{i}] {animal.GetType().Name} | {needsStr}");
+                    controller.GameDisplay.DisplayInfo($"[{i}] {animal.Name} | {needsStr}");
                 }
             }
         }

@@ -40,7 +40,7 @@ public class CommandFreeAnimals(GameController controller) : Command
         int i = 0;
         foreach (var animal in freeAnimals)
         {
-            controller.GameDisplay.DisplayInfo($"({i}) {animal.GetType().Name}");
+            controller.GameDisplay.DisplayInfo($"({i}) {animal.Name}");
             i++;
         }
         return true;
@@ -53,7 +53,7 @@ public class CommandFreeAnimals(GameController controller) : Command
         
         for (int i = 0; i < freeAnimals.Count; i++)
         {
-            options.Add($"{i}: {freeAnimals[i].GetType().Name}");
+            options.Add($"{i}: {freeAnimals[i].Name}");
         }
         
         return options;
