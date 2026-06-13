@@ -3,11 +3,11 @@
 namespace Zoo.Commands.Animals;
 
 
-public class CommandAnimalFeed(GameController controller) : Command
+public class CommandAnimalDrink(GameController controller) : Command
 {
     public override int ActionCost => 1;
-    public override string ActionCommand() => "nakarm";
-    public override string ActionDescription() => "Karmi zwierzę na wybranym wybiegu. Uzycie: nakarm <x> <y> <index zwierza> <ilosc jedzenia>";
+    public override string ActionCommand() => "napoj";
+    public override string ActionDescription() => "Napaja zwierzę na wybranym wybiegu. Uzycie: napoj <x> <y> <index zwierza> <ilosc wody>";
     
     public override bool Execute(List<string> args)
     {
@@ -38,9 +38,9 @@ public class CommandAnimalFeed(GameController controller) : Command
             controller.GameDisplay.DisplayWarning("Nie znaleziono zwierza na wybranej pozycji");
             return false;
         }
-        var foodUsed = controller.Storage.Use(animal.foodType, count);
-        foodUsed = animal.Feed(foodUsed);
-        controller.GameDisplay.DisplayInfo($"Nakarmiono {animal.Name} o {foodUsed}");
+        var waterUsed = controller.Storage.Use(animal.foodType, count);
+        waterUsed = animal.GiveWater(waterUsed);
+        controller.GameDisplay.DisplayInfo($"Napojono {animal.Name} o {waterUsed}");
         return true;
     }
 }

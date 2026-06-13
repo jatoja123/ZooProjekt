@@ -1,17 +1,18 @@
-﻿using Zoo.Economy;
+﻿using Zoo.Animals;
+using Zoo.Economy;
 
 namespace Zoo.Commands.Animals;
 
 
-public class CommandAnimalFeed(GameController controller) : Command
+public class CommandAnimalPlay(GameController controller) : Command
 {
     public override int ActionCost => 1;
-    public override string ActionCommand() => "nakarm";
-    public override string ActionDescription() => "Karmi zwierzę na wybranym wybiegu. Uzycie: nakarm <x> <y> <index zwierza> <ilosc jedzenia>";
+    public override string ActionCommand() => "pobaw";
+    public override string ActionDescription() => "Zabawia zwierze na wybiegu. Uzycie: pobaw <x> <y> <index zwierza>";
     
     public override bool Execute(List<string> args)
     {
-        if (args.Count != 4)
+        if (args.Count != 3)
         {
             controller.GameDisplay.DisplayWarning("Zly format akcji");
             return false;
@@ -26,11 +27,6 @@ public class CommandAnimalFeed(GameController controller) : Command
             controller.GameDisplay.DisplayWarning("Zły format indeksu");
             return false;
         }
-        if(!int.TryParse(args[3], out var count))
-        {
-            controller.GameDisplay.DisplayWarning("Zły format ilosci");
-            return false;
-        }
         
         var animal = controller.AnimalsController.GetAnimal(x, y, idx);
         if (animal == null)
@@ -38,9 +34,9 @@ public class CommandAnimalFeed(GameController controller) : Command
             controller.GameDisplay.DisplayWarning("Nie znaleziono zwierza na wybranej pozycji");
             return false;
         }
-        var foodUsed = controller.Storage.Use(animal.foodType, count);
-        foodUsed = animal.Feed(foodUsed);
-        controller.GameDisplay.DisplayInfo($"Nakarmiono {animal.Name} o {foodUsed}");
+        
+        animal.Play();
+        controller.GameDisplay.DisplayInfo($"Pobawiono się z {animal.Name} - {AnimalNamesHelper.RandomPlayName()}");
         return true;
     }
 }

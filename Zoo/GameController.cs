@@ -70,6 +70,8 @@ public class GameController : IObserver
         AnimalActions = new List<Command>()
         {
             new CommandAnimalFeed(this),
+            new CommandAnimalDrink(this),
+            new CommandAnimalPlay(this),
         };
         
         MapActions = new List<Command>()

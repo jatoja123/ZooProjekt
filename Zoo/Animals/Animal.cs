@@ -54,13 +54,22 @@ public abstract class Animal
         return 0;
     }
 
-    public void GiveWater(int waterAmount)
+    /// <summary>
+    /// Zwraca ile REALNIE dano wody (żeby nie utopić)
+    /// </summary>
+    /// <param name="waterAmount"></param>
+    /// <returns></returns>
+    public int GiveWater(int waterAmount)
     {
         Need? thirst = AnimalNeeds.FirstOrDefault(n => n.Type == NeedType.THIRST);
         if (thirst != null)
         {
+            waterAmount = Math.Min(waterAmount, thirst.Missing);
             thirst.Increase(waterAmount);
+            return waterAmount;
         }
+
+        return 0;
     }
 
     public void Play()
