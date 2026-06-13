@@ -25,9 +25,8 @@ public class GameGUI
     int width = Raylib.GetMonitorWidth(monitor);
     int height = Raylib.GetMonitorHeight(monitor);
 
-    Raylib.InitWindow(width, height, "Zoo Projekt GUI");
-    Raylib.ToggleFullscreen();
-    Raylib.SetTargetFPS(30);
+    Raylib.InitWindow(800, 600, "Zoo");
+    Raylib.SetTargetFPS(60);
 
     while (!Raylib.WindowShouldClose() && state.KeepRunning)
     {
