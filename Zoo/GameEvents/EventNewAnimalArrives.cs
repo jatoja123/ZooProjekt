@@ -16,7 +16,7 @@ public class EventNewAnimalArrives : GameEvent
         var rnd = new Random();
         var animalType = AnimalsController.AnimalTypes[rnd.Next(AnimalsController.AnimalTypes.Count)];
         
-        var animal = (Animal?)Activator.CreateInstance(animalType, animalType.Name);
+        var animal = (Animal?)Activator.CreateInstance(animalType, animalType.Name, 'M');
         
         if (animal == null) return;
         
