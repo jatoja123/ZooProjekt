@@ -11,11 +11,10 @@ public class GameController : IObserver
     public static GameController Instance { get; private set; } = null!;
     public static List<Command> PlayerActions = new();
 
-    //public trzyma albo shop albo mian
-    // main zapisuje stara liste komend na czas wejscia do sklpeu
-    // w shop actions jest exit ktory robi playeractions = main actions
     public static List<Command> MainActions = new();
     public static List<Command> ShopActions = new();
+    public static List<Command> AnimalActions = new();
+    
     private static int MaxActionCost = 10;
 
     private TurnController turnController = null!;
@@ -30,15 +29,11 @@ public class GameController : IObserver
     private AnimalsController animalsController = null!;
     public AnimalsController AnimalsController => animalsController;
 
-    //-----------------economy
     private MoneyController moneyController = null!;
     public MoneyController MoneyController => moneyController;
 
     private Storage storage = null!;
     public Storage Storage => storage;
-
-
-    //public List<string> Warehouse { get; private set; } = new();
 
     private GameGUI gameGui = null!;
 
@@ -72,6 +67,10 @@ public class GameController : IObserver
             new CommandBuyAnimal(this),
             new CommandExpandStorage(this),
             new CommandExitShop(this)
+        };
+
+        AnimalActions = new List<Command>()
+        {
         };
 
         PlayerActions = MainActions;

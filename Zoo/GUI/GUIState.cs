@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Raylib_cs;
 using Zoo.Commands;
 using Zoo;
+using Zoo.Animals;
 
 namespace Zoo.GUI;
 
@@ -22,6 +23,7 @@ public class GUIState
     public int HoveredY { get; set; } = -1;
     public LocationHabitat? SelectedHabitat { get; set; }
     public Command? SelectedCommand { get; set; }
+    public Animal? SelectedAnimal { get; set; }
     public bool KeepRunning { get; set; } = true;
     public bool IsContextMenuOpen { get; set; } = false;
     public float ContextMenuX { get; set; } = 0;
