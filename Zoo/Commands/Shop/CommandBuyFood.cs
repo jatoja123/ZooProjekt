@@ -50,7 +50,8 @@ public class CommandBuyFood(GameController controller) : Command
 
         if (!fullyAdded)
         {
-            controller.GameDisplay.DisplayWarning($"Zakup przekracza limit magazynu, nie zakupiono");
+            controller.GameDisplay.DisplayWarning($"Zakup przekracza limit magazynu, nie dokonano transakcji");
+            return false;
         }
         else
         {

@@ -14,7 +14,7 @@ public class CommandBuyMedicine(GameController controller) : Command
     {
         if (args.Count != 1 || !int.TryParse(args[0], out var amount) || amount <= 0)
         {
-            controller.GameDisplay.DisplayWarning("Zły format ilości");
+            controller.GameDisplay.DisplayWarning("Zły format - podaj ilość leków do kupienia");
             return false;
         }
 
@@ -29,10 +29,14 @@ public class CommandBuyMedicine(GameController controller) : Command
         bool fullyAdded = controller.Storage.Add(GoodType.MEDICINE, amount);
 
         if (!fullyAdded)
+        {
             controller.GameDisplay.DisplayWarning("Zakup przekracza limit magazynu, nie zakupiono");
-        else
+            return false;
+        }
+        else{
             controller.MoneyController.Spend(cost);
-        controller.GameDisplay.DisplayInfo($"Kupiono {amount} leków za {cost}$");
-        return true;
+            controller.GameDisplay.DisplayInfo($"Kupiono {amount} leków za {cost}$");
+            return true;
+        }
     }
 }

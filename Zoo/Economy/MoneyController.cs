@@ -27,7 +27,9 @@ public class MoneyController
                 //1-> 1, 2-> 0.5, 3-> 0.33, 4-> 0.25...
                 //1- 20, 2- 10, 3 -6, 4-5, 5-4,...
 
-                int condition = GetCondition(animal);
+
+                //?
+                int condition = animal.GetCondition(animal);
                 income += baseValue * condition / 100;
 
             }
@@ -41,12 +43,6 @@ public class MoneyController
         if (Money < amount) return false;
         Money -= amount;
         return true;
-    }
-
-    //tymczoasowe
-    private int GetCondition(Animal animal)
-    {
-        return animal.AnimalNeeds.Min(n => n.Value);
     }
 }
 
