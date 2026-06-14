@@ -7,7 +7,7 @@ public class CommandSkipTurn(GameController controller) : Command
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "pomin";
-    public override string ActionDescription() => "Pomija i kończy turę";
+    public override string ActionDescription() => "Pomija i kończy ture";
 
     public override bool Execute(List<string> args)
     {

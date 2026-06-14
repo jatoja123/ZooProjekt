@@ -10,13 +10,13 @@ public class CommandBuyAnimal(GameController controller) : Command
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "kupzwierze";
-    public override string ActionDescription() => $"Kupuje losowe zwierzę. Koszt: {ShopPrices.AnimalPrice}$";
+    public override string ActionDescription() => $"Kupuje losowe zwierze. Koszt: {ShopPrices.AnimalPrice}$";
 
     public override bool Execute(List<string> args)
     {
         if (controller.MoneyController.Money < ShopPrices.AnimalPrice)
         {
-            controller.GameDisplay.DisplayWarning("Niewystarczająca ilość pieniędzy");
+            controller.GameDisplay.DisplayWarning("Niewystarczajaca ilosc pieniedzy");
             return false;
         }
 
@@ -26,7 +26,7 @@ public class CommandBuyAnimal(GameController controller) : Command
 
         if (animal == null)
         {
-            controller.GameDisplay.DisplayWarning("Nie udało się stworzyć zwierzęcia");
+            controller.GameDisplay.DisplayWarning("Nie udalo sie stworzyc zwierzecia");
             return false;
         }
 
@@ -34,7 +34,7 @@ public class CommandBuyAnimal(GameController controller) : Command
         //umieszczanie zwierzaka ?? dopracować
         controller.MoneyController.Spend(ShopPrices.AnimalPrice);
         controller.AnimalsController.AddAnimal(animal);
-        controller.GameDisplay.DisplayInfo($"Kupiono zwierzę: {animal.Name} za {ShopPrices.AnimalPrice}$");
+        controller.GameDisplay.DisplayInfo($"Kupiono zwierze: {animal.Name} za {ShopPrices.AnimalPrice}$");
         return true;
     }
 }

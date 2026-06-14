@@ -8,7 +8,7 @@ public class CommandFreeAnimals(GameController controller) : Command
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "wolne";
-    public override string ActionDescription() => "Pokazuje zwierzęta bez wybiegu / wsadza wolne zwierzę na wybieg. Użycie: wolne / wolne <index zwierzęcia> <x> <y>";
+    public override string ActionDescription() => "Pokazuje zwierzeta bez wybiegu / wsadza wolne zwierze na wybieg. Użycie: wolne / wolne <index zwierzęcia> <x> <y>";
 
     public override bool Execute(List<string> args)
     {
@@ -17,13 +17,13 @@ public class CommandFreeAnimals(GameController controller) : Command
             if (!int.TryParse(args[0], out var idx) || !int.TryParse(args[1], out var x) ||
                 !int.TryParse(args[2], out var y))
             {
-                controller.GameDisplay.DisplayWarning("Zły format akcji");
+                controller.GameDisplay.DisplayWarning("Zly format akcji");
                 return false;
             }
 
             if (!MoveFreeAnimal(idx, x, y))
             {
-                controller.GameDisplay.DisplayWarning("Nie udało się przenieść zwierzęcia w to miejsce");
+                controller.GameDisplay.DisplayWarning("Nie udalo sie przeniesc zwierzecia w to miejsce");
                 return false;
             }
             return true;
@@ -32,11 +32,11 @@ public class CommandFreeAnimals(GameController controller) : Command
         var freeAnimals = controller.AnimalsController.FreeAnimals;
         if (freeAnimals.Count == 0)
         {
-            controller.GameDisplay.DisplayInfo("Brak zwierząt bez wybiegu");
+            controller.GameDisplay.DisplayInfo("Brak zwierzat bez wybiegu");
             return true;
         }
         
-        controller.GameDisplay.DisplayMessage("Zwierzęta bez wybiegu:");
+        controller.GameDisplay.DisplayMessage("Zwierzeta bez wybiegu:");
         int i = 0;
         foreach (var animal in freeAnimals)
         {

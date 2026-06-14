@@ -7,7 +7,7 @@ public class CommandOpenShop(GameController controller) : Command
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "sklep";
-    public override string ActionDescription() => "Otwiera sklep. Użycie: sklep";
+    public override string ActionDescription() => "Otwiera sklep. Uzycie: sklep";
 
     public override bool Execute(List<string> args)
     {

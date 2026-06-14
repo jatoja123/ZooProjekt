@@ -11,13 +11,13 @@ public class CommandBuyFood(GameController controller) : Command
     public override string ActionCommand() => "kupjedzenie";
 
 
-    public override string ActionDescription() => "Kupuje jedzenie M-mięsne, P-roślinne, B-mieszane. Użycie: kupjedzenie <M/P/B> <ilość>";
+    public override string ActionDescription() => "Kupuje jedzenie M-miesne, P-roslinne, B-mieszane. Użycie: kupjedzenie <M/P/B> <ilosc>";
 
     public override bool Execute(List<string> args)
     {
         if (args.Count != 2)
         {
-            controller.GameDisplay.DisplayWarning("Zła liczba arugmentów akcji");
+            controller.GameDisplay.DisplayWarning("Zla liczba arugmentpw akcji");
             return false;
         }
 
@@ -34,7 +34,7 @@ public class CommandBuyFood(GameController controller) : Command
 
         if (!int.TryParse(args[1], out var amount) || amount <= 0)
         {
-            controller.GameDisplay.DisplayWarning("Zły format ilości");
+            controller.GameDisplay.DisplayWarning("Zly format ilosci");
             return false;
         }
 
@@ -42,7 +42,7 @@ public class CommandBuyFood(GameController controller) : Command
 
         if (controller.MoneyController.Money < cost)
         {
-            controller.GameDisplay.DisplayWarning("Niewystarczająca ilość pieniędzy");
+            controller.GameDisplay.DisplayWarning("Niewystarczajaca ilosc pieniedzy");
             return false;
         }
 

@@ -8,20 +8,20 @@ public class CommandBuyMedicine(GameController controller) : Command
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "kupleki";
-    public override string ActionDescription() => "Kupuje magiczne leki. Użycie: kupleki <ilość>";
+    public override string ActionDescription() => "Kupuje magiczne leki. Uzycie: kupleki <ilość>";
 
     public override bool Execute(List<string> args)
     {
         if (args.Count != 1 || !int.TryParse(args[0], out var amount) || amount <= 0)
         {
-            controller.GameDisplay.DisplayWarning("Zły format - podaj ilość leków do kupienia");
+            controller.GameDisplay.DisplayWarning("Zly format - podaj ilosc lekow do kupienia");
             return false;
         }
 
         int cost = amount * ShopPrices.MedicinePrice;
         if (controller.MoneyController.Money < cost)
         {
-            controller.GameDisplay.DisplayWarning("Niewystarczająca ilość pieniędzy");
+            controller.GameDisplay.DisplayWarning("Niewystarczajaca ilosc pieniędzy");
             return false;
         }
 
@@ -35,7 +35,7 @@ public class CommandBuyMedicine(GameController controller) : Command
         }
         else{
             controller.MoneyController.Spend(cost);
-            controller.GameDisplay.DisplayInfo($"Kupiono {amount} leków za {cost}$");
+            controller.GameDisplay.DisplayInfo($"Kupiono {amount} lekow za {cost}$");
             return true;
         }
     }

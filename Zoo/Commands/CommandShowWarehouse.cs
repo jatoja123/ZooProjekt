@@ -10,12 +10,12 @@ public class CommandShowWarehouse(GameController controller) : Command
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "magazyn";
-    public override string ActionDescription() => "Wyświetla zawartość magazynu. Użycie: magazyn";
+    public override string ActionDescription() => "Wyswietla zawartosc magazynu. Uzycie: magazyn";
 
     public override bool Execute(List<string> args)
     {
         // gdy submenu zmienic
-        controller.GameDisplay.DisplayInfo("Zawartość magazynu:");
+        controller.GameDisplay.DisplayInfo("Zawartosc magazynu:");
 
         foreach (var type in System.Enum.GetValues<GoodType>())
         {

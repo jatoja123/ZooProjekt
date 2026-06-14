@@ -8,20 +8,20 @@ public class CommandBuyWater(GameController controller) : Command
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "kupwode";
-    public override string ActionDescription() => "Kupuje wodę. Użycie: kupwode <ilość>";
+    public override string ActionDescription() => "Kupuje wode. Uzycie: kupwode <ilość>";
 
     public override bool Execute(List<string> args)
     {
         if (args.Count != 1 || !int.TryParse(args[0], out var amount) || amount <= 0)
         {
-            controller.GameDisplay.DisplayWarning("Zły format ilości");
+            controller.GameDisplay.DisplayWarning("Zly format ilosci");
             return false;
         }
 
         int cost = amount * ShopPrices.WaterPrice;
         if (controller.MoneyController.Money < cost)
         {
-            controller.GameDisplay.DisplayWarning("Niewystarczająca ilość pieniędzy");
+            controller.GameDisplay.DisplayWarning("Niewystarczajaca ilosc pieniędzy");
             return false;
         }
 

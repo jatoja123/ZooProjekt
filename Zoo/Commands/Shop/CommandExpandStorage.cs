@@ -8,13 +8,13 @@ public class CommandExpandStorage(GameController controller) : Command
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "rozszerz";
-    public override string ActionDescription() => $"Rozszerza limit magazynu o {ShopPrices.ExpandAmount}. Koszt: {ShopPrices.ExpandsStorage}$. Użycie: rozszerz <M/P/B/water/medicine>";
+    public override string ActionDescription() => $"Rozszerza limit magazynu o {ShopPrices.ExpandAmount}. Koszt: {ShopPrices.ExpandsStorage}$. Uzycie: rozszerz <M/P/B/water/medicine>";
 
     public override bool Execute(List<string> args)
     {
         if (args.Count != 1)
         {
-            controller.GameDisplay.DisplayWarning("Zła liczba argumentów akcji");
+            controller.GameDisplay.DisplayWarning("Zla liczba argumentow akcji");
             return false;
         }
 
@@ -33,7 +33,7 @@ public class CommandExpandStorage(GameController controller) : Command
 
         if (controller.MoneyController.Money < ShopPrices.ExpandsStorage)
         {
-            controller.GameDisplay.DisplayWarning("Niewystarczająca ilość pieniędzy");
+            controller.GameDisplay.DisplayWarning("Niewystarczająca ilosc pieniedzy");
             return false;
         }
 

@@ -9,18 +9,18 @@ public class CommandShowHabitat(GameController controller) : Command
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "sprawdz";
-    public override string ActionDescription() => "Wyświetla informacje o lokacji i zwierzętach. Użycie: sprawdz <x> <y>";
+    public override string ActionDescription() => "Wydwietla informacje o lokacji i zwierzetach. Użycie: sprawdz <x> <y>";
 
     public override bool Execute(List<string> args)
     {
         if (args.Count != 2)
         {
-            controller.GameDisplay.DisplayWarning("Zła liczba argumentów akcji");
+            controller.GameDisplay.DisplayWarning("Zla liczba argumentow akcji");
             return false;
         }
         if (!int.TryParse(args[0], out var x) || !int.TryParse(args[1], out var y))
         {
-            controller.GameDisplay.DisplayWarning("Zły format argumentów akcji");
+            controller.GameDisplay.DisplayWarning("Zly format argumentow akcji");
             return false;
         }
 
@@ -41,7 +41,7 @@ public class CommandShowHabitat(GameController controller) : Command
             }
             else
             {
-                controller.GameDisplay.DisplayInfo("Zwierzęta na wybiegu:");
+                controller.GameDisplay.DisplayInfo("Zwierzeta na wybiegu:");
                 for (int i = 0; i < habitat.Animals.Count; i++)
                 {
                     var animal = habitat.Animals[i];

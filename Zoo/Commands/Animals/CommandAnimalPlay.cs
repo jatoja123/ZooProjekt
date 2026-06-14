@@ -19,12 +19,12 @@ public class CommandAnimalPlay(GameController controller) : Command
         }
         if(!int.TryParse(args[0], out var x) || !int.TryParse(args[1], out var y))
         {
-            controller.GameDisplay.DisplayWarning("Zły format pozycji");
+            controller.GameDisplay.DisplayWarning("Zly format pozycji");
             return false;
         }
         if(!int.TryParse(args[2], out var idx))
         {
-            controller.GameDisplay.DisplayWarning("Zły format indeksu");
+            controller.GameDisplay.DisplayWarning("Zly format indeksu");
             return false;
         }
         
@@ -36,7 +36,7 @@ public class CommandAnimalPlay(GameController controller) : Command
         }
         
         animal.Play();
-        controller.GameDisplay.DisplayInfo($"Pobawiono się z {animal.Name} - {AnimalNamesHelper.RandomPlayName()}");
+        controller.GameDisplay.DisplayInfo($"Pobawiono sie z {animal.Name} - {AnimalNamesHelper.RandomPlayName()}");
         return true;
     }
 }

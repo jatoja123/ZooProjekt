@@ -32,7 +32,7 @@ public class GameDisplay
     
     public (Command, List<string>) GetPlayerAction(List<Command> commands)
     {
-        DisplayMessage("Wybierz akcję (wpisz 'akcje' aby zobaczyć listę dostępnych komend)");
+        DisplayMessage("Wybierz akcje (wpisz 'akcje' aby zobaczyc liste dostepnych komend)");
         var args = Console.ReadLine()?.Trim().ToLower().Split(' ');
         var actionStr = args?[0];
         var action = commands.FirstOrDefault(x => x != null && x.ActionCommand() == actionStr, null);

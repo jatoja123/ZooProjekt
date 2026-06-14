@@ -7,7 +7,7 @@ public class CommandAnimalFeed(GameController controller) : Command
 {
     public override int ActionCost => 1;
     public override string ActionCommand() => "nakarm";
-    public override string ActionDescription() => "Karmi zwierzę na wybranym wybiegu. Uzycie: nakarm <x> <y> <index zwierza> <ilosc jedzenia>";
+    public override string ActionDescription() => "Karmi zwierze na wybranym wybiegu. Uzycie: nakarm <x> <y> <index zwierza> <ilosc jedzenia>";
     
     public override bool Execute(List<string> args)
     {
@@ -18,17 +18,17 @@ public class CommandAnimalFeed(GameController controller) : Command
         }
         if(!int.TryParse(args[0], out var x) || !int.TryParse(args[1], out var y))
         {
-            controller.GameDisplay.DisplayWarning("Zły format pozycji");
+            controller.GameDisplay.DisplayWarning("Zly format pozycji");
             return false;
         }
         if(!int.TryParse(args[2], out var idx))
         {
-            controller.GameDisplay.DisplayWarning("Zły format indeksu");
+            controller.GameDisplay.DisplayWarning("Zly format indeksu");
             return false;
         }
         if(!int.TryParse(args[3], out var count))
         {
-            controller.GameDisplay.DisplayWarning("Zły format ilosci");
+            controller.GameDisplay.DisplayWarning("Zly format ilosci");
             return false;
         }
         
