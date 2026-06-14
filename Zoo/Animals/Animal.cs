@@ -89,8 +89,8 @@ public abstract class Animal
             health.Increase(35);
         }
     }
-    public int GetCondition(Animal animal)
+    public int GetCondition()
     {
-        return animal.AnimalNeeds.Min(n => n.Value);
+        return AnimalNeeds.Min(n => n.Value);
     }
 }
