@@ -15,13 +15,13 @@ public class CommandShowWarehouse(GameController controller) : Command
     public override bool Execute(List<string> args)
     {
         // gdy submenu zmienic
-        controller.GameDisplay.DisplayInfo("Zawartosc magazynu:");
+        controller.ConsoleDisplay.DisplayInfo("Zawartosc magazynu:");
 
         foreach (var type in System.Enum.GetValues<GoodType>())
         {
             int amount = controller.Storage.GetAmount(type);
             int limit = controller.Storage.GetLimit(type);
-            controller.GameDisplay.DisplayInfo($"{type}: {amount}/{limit}");
+            controller.ConsoleDisplay.DisplayInfo($"{type}: {amount}/{limit}");
         }
 
         return true;

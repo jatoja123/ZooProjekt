@@ -13,34 +13,34 @@ public class CommandAnimalFeed(GameController controller) : Command
     {
         if (args.Count != 4)
         {
-            controller.GameDisplay.DisplayWarning("Zly format akcji");
+            controller.ConsoleDisplay.DisplayWarning("Zly format akcji");
             return false;
         }
         if(!int.TryParse(args[0], out var x) || !int.TryParse(args[1], out var y))
         {
-            controller.GameDisplay.DisplayWarning("Zly format pozycji");
+            controller.ConsoleDisplay.DisplayWarning("Zly format pozycji");
             return false;
         }
         if(!int.TryParse(args[2], out var idx))
         {
-            controller.GameDisplay.DisplayWarning("Zly format indeksu");
+            controller.ConsoleDisplay.DisplayWarning("Zly format indeksu");
             return false;
         }
         if(!int.TryParse(args[3], out var count))
         {
-            controller.GameDisplay.DisplayWarning("Zly format ilosci");
+            controller.ConsoleDisplay.DisplayWarning("Zly format ilosci");
             return false;
         }
         
         var animal = controller.AnimalsController.GetAnimal(x, y, idx);
         if (animal == null)
         {
-            controller.GameDisplay.DisplayWarning("Nie znaleziono zwierza na wybranej pozycji");
+            controller.ConsoleDisplay.DisplayWarning("Nie znaleziono zwierza na wybranej pozycji");
             return false;
         }
         var foodUsed = controller.Storage.Use(animal.foodType, count);
         foodUsed = animal.Feed(foodUsed);
-        controller.GameDisplay.DisplayInfo($"Nakarmiono {animal.Name} o {foodUsed}");
+        controller.ConsoleDisplay.DisplayInfo($"Nakarmiono {animal.Name} o {foodUsed}");
         return true;
     }
 }

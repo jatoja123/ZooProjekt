@@ -17,7 +17,7 @@ public class CommandBuyFood(GameController controller) : Command
     {
         if (args.Count != 2)
         {
-            controller.GameDisplay.DisplayWarning("Zla liczba arugmentpw akcji");
+            controller.ConsoleDisplay.DisplayWarning("Zla liczba arugmentpw akcji");
             return false;
         }
 
@@ -28,13 +28,13 @@ public class CommandBuyFood(GameController controller) : Command
             case "P": type = GoodType.FoodPlant; break;
             case "B": type = GoodType.FoodMixed; break;
             default:
-                controller.GameDisplay.DisplayWarning("Nieznany typ jedzenia - wybierz z (M/P/B)");
+                controller.ConsoleDisplay.DisplayWarning("Nieznany typ jedzenia - wybierz z (M/P/B)");
                 return false;
         }
 
         if (!int.TryParse(args[1], out var amount) || amount <= 0)
         {
-            controller.GameDisplay.DisplayWarning("Zly format ilosci");
+            controller.ConsoleDisplay.DisplayWarning("Zly format ilosci");
             return false;
         }
 
@@ -42,7 +42,7 @@ public class CommandBuyFood(GameController controller) : Command
 
         if (controller.MoneyController.Money < cost)
         {
-            controller.GameDisplay.DisplayWarning("Niewystarczajaca ilosc pieniedzy");
+            controller.ConsoleDisplay.DisplayWarning("Niewystarczajaca ilosc pieniedzy");
             return false;
         }
 
@@ -50,13 +50,13 @@ public class CommandBuyFood(GameController controller) : Command
 
         if (!fullyAdded)
         {
-            controller.GameDisplay.DisplayWarning($"Zakup przekracza limit magazynu, nie dokonano transakcji");
+            controller.ConsoleDisplay.DisplayWarning($"Zakup przekracza limit magazynu, nie dokonano transakcji");
             return false;
         }
         else
         {
             controller.MoneyController.Spend(cost);
-            controller.GameDisplay.DisplayInfo($"Kupiono {amount} {type} za {cost}$");
+            controller.ConsoleDisplay.DisplayInfo($"Kupiono {amount} {type} za {cost}$");
         }
         return true;
     }

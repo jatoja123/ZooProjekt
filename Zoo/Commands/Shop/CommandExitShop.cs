@@ -12,8 +12,8 @@ public class CommandExitShop(GameController controller) : Command
     public override bool Execute(List<string> args)
     {
         GameController.PlayerActions = GameController.MainActions;
-        controller.GameDisplay.DisplayInfo("Sklep");
-        controller.GameDisplay.DisplayInfo($"Opuszczono sklep.");
+        controller.ConsoleDisplay.DisplayInfo("Sklep");
+        controller.ConsoleDisplay.DisplayInfo($"Opuszczono sklep.");
 
         return true;
     }

@@ -14,29 +14,29 @@ public class CommandAnimalPlay(GameController controller) : Command
     {
         if (args.Count != 3)
         {
-            controller.GameDisplay.DisplayWarning("Zly format akcji");
+            controller.ConsoleDisplay.DisplayWarning("Zly format akcji");
             return false;
         }
         if(!int.TryParse(args[0], out var x) || !int.TryParse(args[1], out var y))
         {
-            controller.GameDisplay.DisplayWarning("Zly format pozycji");
+            controller.ConsoleDisplay.DisplayWarning("Zly format pozycji");
             return false;
         }
         if(!int.TryParse(args[2], out var idx))
         {
-            controller.GameDisplay.DisplayWarning("Zly format indeksu");
+            controller.ConsoleDisplay.DisplayWarning("Zly format indeksu");
             return false;
         }
         
         var animal = controller.AnimalsController.GetAnimal(x, y, idx);
         if (animal == null)
         {
-            controller.GameDisplay.DisplayWarning("Nie znaleziono zwierza na wybranej pozycji");
+            controller.ConsoleDisplay.DisplayWarning("Nie znaleziono zwierza na wybranej pozycji");
             return false;
         }
         
         animal.Play();
-        controller.GameDisplay.DisplayInfo($"Pobawiono sie z {animal.Name} - {AnimalNamesHelper.RandomPlayName()}");
+        controller.ConsoleDisplay.DisplayInfo($"Pobawiono sie z {animal.Name} - {AnimalNamesHelper.RandomPlayName()}");
         return true;
     }
 }

@@ -23,7 +23,7 @@ public class EventNewAnimalArrives : GameEvent
         animalsController.AddAnimal(animal);
         
         string message = $"Nowe zwierze w ZOO: {animal.Name}";
-        GameController.Instance.GameDisplay.DisplayInfo(message);
+        GameController.Instance.ConsoleDisplay.DisplayInfo(message);
         GameController.Instance.TriggerPopupEvent(message);
     }
 }

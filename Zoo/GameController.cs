@@ -22,8 +22,8 @@ public class GameController : IObserver
     private TurnController turnController = null!;
     private GameEventsController gameEventsController = null!;
 
-    private GameDisplay gameDisplay = null!;
-    public GameDisplay GameDisplay => gameDisplay;
+    private ConsoleDisplay consoleDisplay = null!;
+    public ConsoleDisplay ConsoleDisplay => consoleDisplay;
 
     private Map map = null!;
     public Map Map => map;
@@ -86,7 +86,7 @@ public class GameController : IObserver
 
         map = new Map();
         map.Start();
-        gameDisplay = new GameDisplay();
+        consoleDisplay = new ConsoleDisplay();
 
         gameGui = new GameGUI(this);
         gameGui.Start();
@@ -113,10 +113,10 @@ public class GameController : IObserver
             if (turnEvent.IsStartOfTurn)
             {
                 CurrentTurn = turnEvent.Turn + 1;
-                gameDisplay.DisplayTitle($"Tura {CurrentTurn}");
+                consoleDisplay.DisplayTitle($"Tura {CurrentTurn}");
 
                 moneyController.CalculateIncome(animalsController);
-                gameDisplay.DisplayInfo($"Stan kontra: {moneyController.Money}");
+                consoleDisplay.DisplayInfo($"Stan kontra: {moneyController.Money}");
             }
             else
             {
@@ -140,15 +140,15 @@ public class GameController : IObserver
     {
         skippingTurn = false;
         int actionCostUsed = 0;
-        gameDisplay.DisplayMap(map);
+        consoleDisplay.DisplayMap(map);
 
         while (actionCostUsed < MaxActionCost && !skippingTurn)
         {
-            var (action, args) = gameDisplay.GetPlayerAction(PlayerActions);
+            var (action, args) = consoleDisplay.GetPlayerAction(PlayerActions);
             var cost = action.ActionCost;
             if (actionCostUsed + cost > MaxActionCost)
             {
-                gameDisplay.DisplayMessage($"Akcja jest za droga ({cost}). Zostało Ci {MaxActionCost - actionCostUsed}/{MaxActionCost} akcji");
+                consoleDisplay.DisplayMessage($"Akcja jest za droga ({cost}). Zostało Ci {MaxActionCost - actionCostUsed}/{MaxActionCost} akcji");
                 continue;
             }
 
@@ -164,7 +164,7 @@ public class GameController : IObserver
 
     private void HandleGameEnd()
     {
-        gameDisplay.DisplayTitle("Koniec gry");
+        consoleDisplay.DisplayTitle("Koniec gry");
         gameGui.AddPopup("Koniec Gry!");
     }
 

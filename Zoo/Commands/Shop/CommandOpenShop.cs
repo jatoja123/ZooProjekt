@@ -12,12 +12,12 @@ public class CommandOpenShop(GameController controller) : Command
     public override bool Execute(List<string> args)
     {
         GameController.PlayerActions = GameController.ShopActions;
-        controller.GameDisplay.DisplayInfo("Sklep");
-        controller.GameDisplay.DisplayInfo($"Stan konta: {controller.MoneyController.Money}$");
+        controller.ConsoleDisplay.DisplayInfo("Sklep");
+        controller.ConsoleDisplay.DisplayInfo($"Stan konta: {controller.MoneyController.Money}$");
 
         foreach (var action in GameController.ShopActions)
         {
-            controller.GameDisplay.DisplayInfo($"{action.ActionCommand()} - {action.ActionDescription()}");
+            controller.ConsoleDisplay.DisplayInfo($"{action.ActionCommand()} - {action.ActionDescription()}");
         }
         return true;
     }

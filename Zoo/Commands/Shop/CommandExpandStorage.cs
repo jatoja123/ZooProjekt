@@ -14,7 +14,7 @@ public class CommandExpandStorage(GameController controller) : Command
     {
         if (args.Count != 1)
         {
-            controller.GameDisplay.DisplayWarning("Zla liczba argumentow akcji");
+            controller.ConsoleDisplay.DisplayWarning("Zla liczba argumentow akcji");
             return false;
         }
 
@@ -27,19 +27,19 @@ public class CommandExpandStorage(GameController controller) : Command
             case "WATER": type = GoodType.WATER; break;
             case "MEDICINE": type = GoodType.MEDICINE; break;
             default:
-                controller.GameDisplay.DisplayWarning("Nieznany typ magazynu (M/P/B/water/medicine)");
+                controller.ConsoleDisplay.DisplayWarning("Nieznany typ magazynu (M/P/B/water/medicine)");
                 return false;
         }
 
         if (controller.MoneyController.Money < ShopPrices.ExpandsStorage)
         {
-            controller.GameDisplay.DisplayWarning("Niewystarczająca ilosc pieniedzy");
+            controller.ConsoleDisplay.DisplayWarning("Niewystarczająca ilosc pieniedzy");
             return false;
         }
 
         controller.MoneyController.Spend(ShopPrices.ExpandsStorage);
         controller.Storage.ExpandLimit(type, ShopPrices.ExpandAmount);
-        controller.GameDisplay.DisplayInfo($"Rozszerzono limit {type} o {ShopPrices.ExpandAmount} za {ShopPrices.ExpandsStorage}$");
+        controller.ConsoleDisplay.DisplayInfo($"Rozszerzono limit {type} o {ShopPrices.ExpandAmount} za {ShopPrices.ExpandsStorage}$");
         return true;
     }
 }

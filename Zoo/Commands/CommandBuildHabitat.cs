@@ -12,19 +12,19 @@ public class CommandBuildHabitat(GameController controller) : Command
     {
         if (args.Count != 3)
         {
-            controller.GameDisplay.DisplayWarning("Zly format akcji");
+            controller.ConsoleDisplay.DisplayWarning("Zly format akcji");
             return false;
         }
         if(!int.TryParse(args[0], out var x) || !int.TryParse(args[1], out var y))
         {
-            controller.GameDisplay.DisplayWarning("Zly format pozycji");
+            controller.ConsoleDisplay.DisplayWarning("Zly format pozycji");
             return false;
         }
         
         var habitatType = args[2];
         if (!controller.Map.ChangeEnvironment(x, y, habitatType))
         {
-            controller.GameDisplay.DisplayWarning("Nie udalo sie zbudowac wybiegu w tym miejscu");
+            controller.ConsoleDisplay.DisplayWarning("Nie udalo sie zbudowac wybiegu w tym miejscu");
             return false;
         }
         return true;

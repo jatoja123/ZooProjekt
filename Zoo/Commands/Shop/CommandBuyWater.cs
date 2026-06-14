@@ -14,14 +14,14 @@ public class CommandBuyWater(GameController controller) : Command
     {
         if (args.Count != 1 || !int.TryParse(args[0], out var amount) || amount <= 0)
         {
-            controller.GameDisplay.DisplayWarning("Zly format ilosci");
+            controller.ConsoleDisplay.DisplayWarning("Zly format ilosci");
             return false;
         }
 
         int cost = amount * ShopPrices.WaterPrice;
         if (controller.MoneyController.Money < cost)
         {
-            controller.GameDisplay.DisplayWarning("Niewystarczajaca ilosc pieniędzy");
+            controller.ConsoleDisplay.DisplayWarning("Niewystarczajaca ilosc pieniędzy");
             return false;
         }
 
@@ -29,10 +29,10 @@ public class CommandBuyWater(GameController controller) : Command
         bool fullyAdded = controller.Storage.Add(GoodType.WATER, amount);
 
         if (!fullyAdded)
-            controller.GameDisplay.DisplayWarning("Zakup przekracza limit magazynu, nie zakupiono");
+            controller.ConsoleDisplay.DisplayWarning("Zakup przekracza limit magazynu, nie zakupiono");
         else
             controller.MoneyController.Spend(cost);
-        controller.GameDisplay.DisplayInfo($"Kupiono {amount} wody za {cost}$");
+        controller.ConsoleDisplay.DisplayInfo($"Kupiono {amount} wody za {cost}$");
         return true;
     }
 }

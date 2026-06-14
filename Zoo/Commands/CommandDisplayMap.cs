@@ -10,7 +10,7 @@ public class CommandDisplayMap(GameController controller) : Command
 
     public override bool Execute(List<string> args)
     {
-        controller.GameDisplay.DisplayMap();
+        controller.ConsoleDisplay.DisplayMap();
         return true;
     }
 }

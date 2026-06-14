@@ -15,33 +15,33 @@ public class CommandShowHabitat(GameController controller) : Command
     {
         if (args.Count != 2)
         {
-            controller.GameDisplay.DisplayWarning("Zla liczba argumentow akcji");
+            controller.ConsoleDisplay.DisplayWarning("Zla liczba argumentow akcji");
             return false;
         }
         if (!int.TryParse(args[0], out var x) || !int.TryParse(args[1], out var y))
         {
-            controller.GameDisplay.DisplayWarning("Zly format argumentow akcji");
+            controller.ConsoleDisplay.DisplayWarning("Zly format argumentow akcji");
             return false;
         }
 
         var location = controller.Map.GetLocation(x, y);
         if (location == null)
         {
-            controller.GameDisplay.DisplayWarning("Lokacja nie istnieje");
+            controller.ConsoleDisplay.DisplayWarning("Lokacja nie istnieje");
             return false;
         }
 
-        controller.GameDisplay.DisplayInfo($"Lokacja: {location.Name()} [{location.Symbol()}]");
+        controller.ConsoleDisplay.DisplayInfo($"Lokacja: {location.Name()} [{location.Symbol()}]");
 
         if (location is LocationHabitat habitat)
         {
             if (habitat.Animals.Count == 0)
             {
-                controller.GameDisplay.DisplayInfo("Wybieg jest pusty.");
+                controller.ConsoleDisplay.DisplayInfo("Wybieg jest pusty.");
             }
             else
             {
-                controller.GameDisplay.DisplayInfo("Zwierzeta na wybiegu:");
+                controller.ConsoleDisplay.DisplayInfo("Zwierzeta na wybiegu:");
                 for (int i = 0; i < habitat.Animals.Count; i++)
                 {
                     var animal = habitat.Animals[i];
@@ -50,7 +50,7 @@ public class CommandShowHabitat(GameController controller) : Command
                         ? string.Join(" | ", animal.AnimalNeeds.Select(n => $"{n.Type}: {n.Value}/{n.MaxValue}")) 
                         : "Brak potrzeb";
 
-                    controller.GameDisplay.DisplayInfo($"[{i}] {animal.Name} | {needsStr}");
+                    controller.ConsoleDisplay.DisplayInfo($"[{i}] {animal.Name} | {needsStr}");
                 }
             }
         }

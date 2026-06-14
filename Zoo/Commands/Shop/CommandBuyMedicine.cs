@@ -14,14 +14,14 @@ public class CommandBuyMedicine(GameController controller) : Command
     {
         if (args.Count != 1 || !int.TryParse(args[0], out var amount) || amount <= 0)
         {
-            controller.GameDisplay.DisplayWarning("Zly format - podaj ilosc lekow do kupienia");
+            controller.ConsoleDisplay.DisplayWarning("Zly format - podaj ilosc lekow do kupienia");
             return false;
         }
 
         int cost = amount * ShopPrices.MedicinePrice;
         if (controller.MoneyController.Money < cost)
         {
-            controller.GameDisplay.DisplayWarning("Niewystarczajaca ilosc pieniędzy");
+            controller.ConsoleDisplay.DisplayWarning("Niewystarczajaca ilosc pieniędzy");
             return false;
         }
 
@@ -30,12 +30,12 @@ public class CommandBuyMedicine(GameController controller) : Command
 
         if (!fullyAdded)
         {
-            controller.GameDisplay.DisplayWarning("Zakup przekracza limit magazynu, nie zakupiono");
+            controller.ConsoleDisplay.DisplayWarning("Zakup przekracza limit magazynu, nie zakupiono");
             return false;
         }
         else{
             controller.MoneyController.Spend(cost);
-            controller.GameDisplay.DisplayInfo($"Kupiono {amount} lekow za {cost}$");
+            controller.ConsoleDisplay.DisplayInfo($"Kupiono {amount} lekow za {cost}$");
             return true;
         }
     }

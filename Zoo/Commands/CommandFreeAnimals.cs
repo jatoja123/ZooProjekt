@@ -17,13 +17,13 @@ public class CommandFreeAnimals(GameController controller) : Command
             if (!int.TryParse(args[0], out var idx) || !int.TryParse(args[1], out var x) ||
                 !int.TryParse(args[2], out var y))
             {
-                controller.GameDisplay.DisplayWarning("Zly format akcji");
+                controller.ConsoleDisplay.DisplayWarning("Zly format akcji");
                 return false;
             }
 
             if (!MoveFreeAnimal(idx, x, y))
             {
-                controller.GameDisplay.DisplayWarning("Nie udalo sie przeniesc zwierzecia w to miejsce");
+                controller.ConsoleDisplay.DisplayWarning("Nie udalo sie przeniesc zwierzecia w to miejsce");
                 return false;
             }
             return true;
@@ -32,15 +32,15 @@ public class CommandFreeAnimals(GameController controller) : Command
         var freeAnimals = controller.AnimalsController.FreeAnimals;
         if (freeAnimals.Count == 0)
         {
-            controller.GameDisplay.DisplayInfo("Brak zwierzat bez wybiegu");
+            controller.ConsoleDisplay.DisplayInfo("Brak zwierzat bez wybiegu");
             return true;
         }
         
-        controller.GameDisplay.DisplayMessage("Zwierzeta bez wybiegu:");
+        controller.ConsoleDisplay.DisplayMessage("Zwierzeta bez wybiegu:");
         int i = 0;
         foreach (var animal in freeAnimals)
         {
-            controller.GameDisplay.DisplayInfo($"({i}) {animal.Name}");
+            controller.ConsoleDisplay.DisplayInfo($"({i}) {animal.Name}");
             i++;
         }
         return true;

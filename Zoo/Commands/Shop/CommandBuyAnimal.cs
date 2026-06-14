@@ -16,7 +16,7 @@ public class CommandBuyAnimal(GameController controller) : Command
     {
         if (controller.MoneyController.Money < ShopPrices.AnimalPrice)
         {
-            controller.GameDisplay.DisplayWarning("Niewystarczajaca ilosc pieniedzy");
+            controller.ConsoleDisplay.DisplayWarning("Niewystarczajaca ilosc pieniedzy");
             return false;
         }
 
@@ -26,7 +26,7 @@ public class CommandBuyAnimal(GameController controller) : Command
 
         if (animal == null)
         {
-            controller.GameDisplay.DisplayWarning("Nie udalo sie stworzyc zwierzecia");
+            controller.ConsoleDisplay.DisplayWarning("Nie udalo sie stworzyc zwierzecia");
             return false;
         }
 
@@ -34,7 +34,7 @@ public class CommandBuyAnimal(GameController controller) : Command
         //umieszczanie zwierzaka ?? dopracować
         controller.MoneyController.Spend(ShopPrices.AnimalPrice);
         controller.AnimalsController.AddAnimal(animal);
-        controller.GameDisplay.DisplayInfo($"Kupiono zwierze: {animal.Name} za {ShopPrices.AnimalPrice}$");
+        controller.ConsoleDisplay.DisplayInfo($"Kupiono zwierze: {animal.Name} za {ShopPrices.AnimalPrice}$");
         return true;
     }
 }

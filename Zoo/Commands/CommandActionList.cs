@@ -14,7 +14,7 @@ public class CommandActionList(GameController controller) : Command
         actions.AddRange(GameController.AnimalActions);
         foreach (var action in actions)
         {
-            controller.GameDisplay.DisplayInfo($"{action.ActionCommand()} [{action.ActionCost}] {action.ActionDescription()}");
+            controller.ConsoleDisplay.DisplayInfo($"{action.ActionCommand()} [{action.ActionCost}] {action.ActionDescription()}");
         }
         return true;
     }

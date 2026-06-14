@@ -2,7 +2,7 @@
 
 namespace Zoo;
 
-public class GameDisplay
+public class ConsoleDisplay
 {
     private Map? savedMap = null;
 
