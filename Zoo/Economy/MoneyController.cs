@@ -29,7 +29,7 @@ public class MoneyController
 
 
                 //?
-                int condition = animal.GetCondition(animal);
+                int condition = animal.GetCondition();
                 income += baseValue * condition / 100;
 
             }
