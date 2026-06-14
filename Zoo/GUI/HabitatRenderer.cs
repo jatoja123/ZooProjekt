@@ -105,6 +105,9 @@ namespace Zoo.GUI
                     : "Brak potrzeb";
 
                 Raylib.DrawText(needsStr, statX + 20, statY + 80, 24, Color.DarkBlue);
+                
+                string foodTypeStr = $"Dieta: {state.SelectedAnimal.foodType}";
+                Raylib.DrawText(foodTypeStr, statX + 20, statY + 110, 24, Color.DarkGreen);
             }
         }
     }
