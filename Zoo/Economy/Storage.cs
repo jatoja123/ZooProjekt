@@ -20,21 +20,14 @@ public class Storage
 
     public int GetAmount(GoodType type) => amounts[type];
     public int GetLimit(GoodType type) => limits[type];
-
-    //dopelanianie do maxa?
+    
     public bool Add(GoodType type, int amount)
     {
         int spaceLeft = limits[type] - amounts[type];
 
-        if (spaceLeft == 0)
-        {
-            return false;
-        }
-
         if (spaceLeft < amount)
         {
-            amounts[type] = limits[type];
-            return true;
+            return false;
         }
 
         amounts[type] += amount;

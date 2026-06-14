@@ -25,7 +25,7 @@ public class GameGUI
         int width = Raylib.GetMonitorWidth(monitor);
         int height = Raylib.GetMonitorHeight(monitor);
 
-        Raylib.InitWindow(800, 600, "Zoo");
+        Raylib.InitWindow(1800, 1200, "Zoo");
         Raylib.SetTargetFPS(60);
 
         while (!Raylib.WindowShouldClose() && state.KeepRunning)

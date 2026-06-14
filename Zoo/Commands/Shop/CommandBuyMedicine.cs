@@ -29,10 +29,10 @@ public class CommandBuyMedicine(GameController controller) : Command
         bool fullyAdded = controller.Storage.Add(GoodType.MEDICINE, amount);
 
         if (!fullyAdded)
-            controller.GameDisplay.DisplayWarning("Magazyn leków pełny");
+            controller.GameDisplay.DisplayWarning("Zakup przekracza limit magazynu, nie zakupiono");
         else
             controller.MoneyController.Spend(cost);
-        controller.GameDisplay.DisplayInfo($"Kupiono {amount} leków za {cost}$, do limitu magazynu");
+        controller.GameDisplay.DisplayInfo($"Kupiono {amount} leków za {cost}$");
         return true;
     }
 }
