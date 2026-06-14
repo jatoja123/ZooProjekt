@@ -58,7 +58,7 @@ namespace Zoo.GUI
                 }
 
                 Rectangle imgRect = new Rectangle(currentX + 20, currentY + 20, cardWidth - 40, 330);
-                Texture2D? animalTexture = AssetLoader.GetAnimalTexture(animalName);
+                Texture2D? animalTexture = AssetLoader.GetAnimalTexture(animal);
 
                 if (animalTexture.HasValue)
                 {
@@ -105,6 +105,9 @@ namespace Zoo.GUI
                     : "Brak potrzeb";
 
                 Raylib.DrawText(needsStr, statX + 20, statY + 80, 24, Color.DarkBlue);
+                
+                string foodTypeStr = $"Dieta: {state.SelectedAnimal.foodType}";
+                Raylib.DrawText(foodTypeStr, statX + 20, statY + 110, 24, Color.DarkGreen);
             }
         }
     }
