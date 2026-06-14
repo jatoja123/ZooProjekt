@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Zoo.Animals;
 using Zoo.Commands;
+using Zoo.Commands.Animals;
 using Zoo.GameEvents;
 using Zoo.Economy;
 
@@ -11,11 +12,11 @@ public class GameController : IObserver
     public static GameController Instance { get; private set; } = null!;
     public static List<Command> PlayerActions = new();
 
-    //public trzyma albo shop albo mian
-    // main zapisuje stara liste komend na czas wejscia do sklpeu
-    // w shop actions jest exit ktory robi playeractions = main actions
     public static List<Command> MainActions = new();
     public static List<Command> ShopActions = new();
+    public static List<Command> AnimalActions = new();
+    public static List<Command> MapActions = new();
+    
     private static int MaxActionCost = 10;
 
     private TurnController turnController = null!;
@@ -30,15 +31,11 @@ public class GameController : IObserver
     private AnimalsController animalsController = null!;
     public AnimalsController AnimalsController => animalsController;
 
-    //-----------------economy
     private MoneyController moneyController = null!;
     public MoneyController MoneyController => moneyController;
 
     private Storage storage = null!;
     public Storage Storage => storage;
-
-
-    //public List<string> Warehouse { get; private set; } = new();
 
     private GameGUI gameGui = null!;
 
@@ -52,12 +49,8 @@ public class GameController : IObserver
 
         MainActions = new List<Command>()
         {
-            new CommandBuildHabitat(this),
-            new CommandChangeEnvironment(this),
             new CommandActionList(this),
             new CommandFreeAnimals(this),
-            new CommandRemoveAnimal(this),
-            new CommandShowHabitat(this),
             new CommandShowWarehouse(this),
             new CommandSkipTurn(this),
             new CommandOpenShop(this)
@@ -72,6 +65,21 @@ public class GameController : IObserver
             new CommandBuyAnimal(this),
             new CommandExpandStorage(this),
             new CommandExitShop(this)
+        };
+
+        AnimalActions = new List<Command>()
+        {
+            new CommandAnimalFeed(this),
+            new CommandAnimalDrink(this),
+            new CommandAnimalPlay(this),
+        };
+        
+        MapActions = new List<Command>()
+        {
+            new CommandBuildHabitat(this),
+            new CommandShowHabitat(this),
+            new CommandRemoveAnimal(this),
+            new CommandFreeAnimals(this),
         };
 
         PlayerActions = MainActions;

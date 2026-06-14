@@ -18,4 +18,11 @@ public class AnimalsController
         if (!animals.Contains(animal)) return;
         animals.Remove(animal);
     }
+
+    public Animal? GetAnimal(int x, int y, int index)
+    {
+        var habitat = animals.First(a => a.IsInHabitat && a.Habitat?.X == x && a.Habitat?.Y == y).Habitat;
+        return habitat?.Animals[index];
+    }
+
 }

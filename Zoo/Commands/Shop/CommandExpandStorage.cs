@@ -21,9 +21,9 @@ public class CommandExpandStorage(GameController controller) : Command
         GoodType type;
         switch (args[0].ToUpper())
         {
-            case "M": type = GoodType.FoodM; break;
-            case "P": type = GoodType.FoodP; break;
-            case "B": type = GoodType.FoodB; break;
+            case "M": type = GoodType.FoodMeat; break;
+            case "P": type = GoodType.FoodPlant; break;
+            case "B": type = GoodType.FoodMixed; break;
             case "WATER": type = GoodType.WATER; break;
             case "MEDICINE": type = GoodType.MEDICINE; break;
             default:

@@ -7,7 +7,6 @@ public class CommandBuildHabitat(GameController controller) : Command
     public override int ActionCost => 5;
     public override string ActionCommand() => "buduj";
     public override string ActionDescription() => "Buduje wybieg na mapie. Uzycie: buduj <x> <y> <ladowe/wodne>";
-    public override bool RequiresCoordinates => true;
     
     public override bool Execute(List<string> args)
     {

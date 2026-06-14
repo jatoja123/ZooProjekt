@@ -21,11 +21,7 @@ public class GameGUI
 
     private void RunLoop()
     {
-        int monitor = Raylib.GetCurrentMonitor();
-        int width = Raylib.GetMonitorWidth(monitor);
-        int height = Raylib.GetMonitorHeight(monitor);
-
-        Raylib.InitWindow(1800, 1200, "Zoo");
+        Raylib.InitWindow(1800, 1000, "Zoo");
         Raylib.SetTargetFPS(60);
 
         while (!Raylib.WindowShouldClose() && state.KeepRunning)

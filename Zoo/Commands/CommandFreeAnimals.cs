@@ -9,7 +9,6 @@ public class CommandFreeAnimals(GameController controller) : Command
 
     public override string ActionCommand() => "wolne";
     public override string ActionDescription() => "Pokazuje zwierzęta bez wybiegu / wsadza wolne zwierzę na wybieg. Użycie: wolne / wolne <index zwierzęcia> <x> <y>";
-    public override bool RequiresCoordinates => true;
 
     public override bool Execute(List<string> args)
     {
@@ -41,7 +40,7 @@ public class CommandFreeAnimals(GameController controller) : Command
         int i = 0;
         foreach (var animal in freeAnimals)
         {
-            controller.GameDisplay.DisplayInfo($"({i}) {animal.GetType().Name}");
+            controller.GameDisplay.DisplayInfo($"({i}) {animal.Name}");
             i++;
         }
         return true;
@@ -54,7 +53,7 @@ public class CommandFreeAnimals(GameController controller) : Command
         
         for (int i = 0; i < freeAnimals.Count; i++)
         {
-            options.Add($"{i}: {freeAnimals[i].GetType().Name}");
+            options.Add($"{i}: {freeAnimals[i].Name}");
         }
         
         return options;

@@ -18,7 +18,7 @@ public static class ContextMenuRenderer
     {
         if (!state.IsContextMenuOpen || state.SelectedX == -1) return;
 
-        var contextCommands = GameController.PlayerActions.Where(c => c.RequiresCoordinates).ToList();
+        var contextCommands = GameController.MapActions.ToList();
 
         if (contextCommands.Count == 0) return;
 

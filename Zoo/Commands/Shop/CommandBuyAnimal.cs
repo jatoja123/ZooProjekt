@@ -22,7 +22,7 @@ public class CommandBuyAnimal(GameController controller) : Command
 
         var rnd = new Random();
         var animalType = AnimalsController.AnimalTypes[rnd.Next(AnimalsController.AnimalTypes.Count)];
-        var animal = (Animal?)Activator.CreateInstance(animalType, animalType.Name, 'M');
+        var animal = (Animal?)Activator.CreateInstance(animalType, AnimalNamesHelper.RandomName());
 
         if (animal == null)
         {
@@ -34,7 +34,7 @@ public class CommandBuyAnimal(GameController controller) : Command
         //umieszczanie zwierzaka ?? dopracować
         controller.MoneyController.Spend(ShopPrices.AnimalPrice);
         controller.AnimalsController.AddAnimal(animal);
-        controller.GameDisplay.DisplayInfo($"Kupiono zwierzę: {animal.GetType().Name} za {ShopPrices.AnimalPrice}$");
+        controller.GameDisplay.DisplayInfo($"Kupiono zwierzę: {animal.Name} za {ShopPrices.AnimalPrice}$");
         return true;
     }
 }
