@@ -58,7 +58,7 @@ namespace Zoo.GUI
                 }
 
                 Rectangle imgRect = new Rectangle(currentX + 20, currentY + 20, cardWidth - 40, 330);
-                Texture2D? animalTexture = AssetLoader.GetAnimalTexture(animalName);
+                Texture2D? animalTexture = AssetLoader.GetAnimalTexture(animal);
 
                 if (animalTexture.HasValue)
                 {

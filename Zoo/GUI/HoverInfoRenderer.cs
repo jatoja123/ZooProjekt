@@ -1,5 +1,6 @@
 using System.Numerics;
 using Raylib_cs;
+using Zoo.Animals;
 
 namespace Zoo.GUI;
 
@@ -15,8 +16,9 @@ public static class HoverInfoRenderer
             int posX = mapStartX + (state.HoveredX * spacing);
             int posY = mapStartY + (state.HoveredY * spacing);
             
-            string animalName = hoveredHabitat.Animals[0].Name;
-            Texture2D? animalTexture = AssetLoader.GetAnimalTexture(animalName);
+            var animal = hoveredHabitat.Animals[0];
+            string animalName = animal.Name;
+            Texture2D? animalTexture = AssetLoader.GetAnimalTexture(animal);
             
             int cardW = 160;
             int cardH = 160;
