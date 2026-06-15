@@ -10,18 +10,36 @@ public class CommandBuyAnimal(GameController controller) : Command
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "kupzwierze";
-    public override string ActionDescription() => $"Kupuje losowe zwierze. Koszt: {ShopPrices.AnimalPrice}$";
+    public override string ActionDescription() => $"Kupuje wybrane zwierze. Koszt: {ShopPrices.AnimalPrice}$. Wybierz typ zwierzecia.";
 
     public override bool Execute(List<string> args)
     {
+        if(args.Count < 1)
+        {
+            controller.ConsoleDisplay.DisplayWarning("Nie podano typu zwierzecia");
+            return false;
+        }
+
+
         if (controller.MoneyController.Money < ShopPrices.AnimalPrice)
         {
             controller.ConsoleDisplay.DisplayWarning("Niewystarczajaca ilosc pieniedzy");
             return false;
         }
+        
+        
+        var AnimalTypeName = char.ToUpper(args[0][0]) + args[0][1..].ToLower();
 
-        var rnd = new Random();
-        var animalType = AnimalsController.AnimalTypes[rnd.Next(AnimalsController.AnimalTypes.Count)];
+
+        var animalType = AnimalsController.AnimalTypes
+            .FirstOrDefault(t => t.Name == AnimalTypeName);
+
+        if (animalType == null)
+        {
+            controller.ConsoleDisplay.DisplayWarning($"Nie znaleziono zwierzecia o nazwie {AnimalTypeName}");
+            return false;
+        }
+
         var animal = (Animal?)Activator.CreateInstance(animalType, AnimalNamesHelper.RandomName());
 
         if (animal == null)
@@ -30,11 +48,15 @@ public class CommandBuyAnimal(GameController controller) : Command
             return false;
         }
 
-
         //umieszczanie zwierzaka ?? dopracować
         controller.MoneyController.Spend(ShopPrices.AnimalPrice);
         controller.AnimalsController.AddAnimal(animal);
         controller.ConsoleDisplay.DisplayInfo($"Kupiono zwierze: {animal.Name} za {ShopPrices.AnimalPrice}$");
         return true;
+    }
+
+    public override List<string> GetAvailableOptions()
+    {
+        return AnimalsController.AnimalTypes.Select(t => t.Name).ToList();
     }
 }
