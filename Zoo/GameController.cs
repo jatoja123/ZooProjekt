@@ -41,6 +41,10 @@ public class GameController : IObserver
 
     private bool skippingTurn = false;
 
+    public int ActionCostUsed { get; private set; } = 0;
+    public int MaxAction => MaxActionCost;
+    public int ActionsLeft => MaxAction - ActionCostUsed;
+
     public int CurrentTurn { get; private set; } = 1;
 
     public void StartGame()
@@ -139,21 +143,21 @@ public class GameController : IObserver
     private void HandleTurnActions()
     {
         skippingTurn = false;
-        int actionCostUsed = 0;
+        ActionCostUsed = 0;
         consoleDisplay.DisplayMap(map);
 
-        while (actionCostUsed < MaxActionCost && !skippingTurn)
+        while (ActionCostUsed < MaxActionCost && !skippingTurn)
         {
             var (action, args) = consoleDisplay.GetPlayerAction(PlayerActions);
             var cost = action.ActionCost;
-            if (actionCostUsed + cost > MaxActionCost)
+            if (ActionCostUsed + cost > MaxActionCost)
             {
-                consoleDisplay.DisplayMessage($"Akcja jest za droga ({cost}). Zostało Ci {MaxActionCost - actionCostUsed}/{MaxActionCost} akcji");
+                consoleDisplay.DisplayMessage($"Akcja jest za droga ({cost}). Zostało Ci {ActionsLeft}/{MaxActionCost} akcji");
                 continue;
             }
 
             if (!action.Execute(args)) continue;
-            actionCostUsed += cost;
+            ActionCostUsed += cost;
         }
 
         if (!skippingTurn)
@@ -161,7 +165,6 @@ public class GameController : IObserver
             turnController.EndTurn();
         }
     }
-
     private void HandleGameEnd()
     {
         consoleDisplay.DisplayTitle("Koniec gry");

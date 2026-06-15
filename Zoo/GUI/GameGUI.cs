@@ -49,7 +49,7 @@ public class GameGUI
 
             if (state.CurrentViewMode == ViewMode.MainMap)
             {
-                TopUIRenderer.Draw(screenHeight, state);
+                TopUIRenderer.Draw(controller, screenHeight, state);
                 MapRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
                 RightPanelRenderer.Draw(screenWidth, screenHeight, mousePos, isClicked, state);
                 ConsoleRenderer.Draw(controller, 20, screenHeight - 440, screenWidth - 350, 300, false);
