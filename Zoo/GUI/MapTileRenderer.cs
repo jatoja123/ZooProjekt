@@ -18,7 +18,9 @@ public static class MapTileRenderer
             state.HoveredX = x;
             state.HoveredY = y;
             
-            if (isClicked)
+            bool isStorage = location != null && location.Symbol() == 'M';
+
+            if (isClicked && !isStorage)
             {
                 state.InputBuffer = $"{x} {y}";
                 state.SelectedX = x;

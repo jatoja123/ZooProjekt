@@ -11,15 +11,20 @@ namespace Zoo.GUI
         {
             Raylib.ClearBackground(Color.DarkGreen);
             
+            bool isOverUI = false;
+            if (state.IsContextMenuOpen && Raylib.CheckCollisionPointRec(mousePos, state.ContextMenuRect)) isOverUI = true;
+            if (state.IsSubMenuOpen && Raylib.CheckCollisionPointRec(mousePos, state.SubMenuRect)) isOverUI = true;
+
             Rectangle backButton = new Rectangle(20, 20, 200, 40);
             Raylib.DrawRectangleRec(backButton, Color.LightGray);
             Raylib.DrawText("Powrot do mapy", 35, 30, 20, Color.Black);
 
-            if (isClicked && Raylib.CheckCollisionPointRec(mousePos, backButton))
+            if (isClicked && !isOverUI && Raylib.CheckCollisionPointRec(mousePos, backButton))
             {
                 state.CurrentViewMode = ViewMode.MainMap;
                 state.SelectedAnimal = null;
                 GameController.PlayerActions = GameController.MainActions;
+                state.IsContextMenuOpen = false;
                 state.ClickHandled = true;
                 return;
             }
@@ -29,10 +34,10 @@ namespace Zoo.GUI
                 return;
             }
 
-            int cardWidth = 400;
-            int cardHeight = 500;
-            int spacingX = 30;
-            int spacingY = 30;
+            int cardWidth = 250;
+            int cardHeight = 320;
+            int spacingX = 20;
+            int spacingY = 20;
             int startX = 30;
             int startY = 90;
 
@@ -50,14 +55,17 @@ namespace Zoo.GUI
                 Raylib.DrawRectangleRec(cardRect, isHovered || isSelected ? Color.LightGray : Color.RayWhite);
                 Raylib.DrawRectangleLinesEx(cardRect, isSelected ? 4 : 2, isSelected ? Color.Blue : (isHovered ? Color.Red : Color.Black));
 
-                if (isHovered && isClicked)
+                if (isHovered && isClicked && !isOverUI)
                 {
                     state.SelectedAnimal = animal;
                     GameController.PlayerActions = GameController.AnimalActions;
+                    state.IsContextMenuOpen = true;
+                    state.ContextMenuX = mousePos.X + 15;
+                    state.ContextMenuY = mousePos.Y - 30;
                     state.ClickHandled = true;
                 }
 
-                Rectangle imgRect = new Rectangle(currentX + 20, currentY + 20, cardWidth - 40, 330);
+                Rectangle imgRect = new Rectangle(currentX + 15, currentY + 15, cardWidth - 30, 200);
                 Texture2D? animalTexture = AssetLoader.GetAnimalTexture(animal);
 
                 if (animalTexture.HasValue)
@@ -76,11 +84,11 @@ namespace Zoo.GUI
                     Raylib.DrawRectangleRec(imgRect, Color.DarkGray);
                 }
 
-                Raylib.DrawText(animalName, currentX + 20, currentY + 380, 32, Color.Black);
+                Raylib.DrawText(animalName, currentX + 15, currentY + 230, 24, Color.Black);
 
                 currentX += cardWidth + spacingX;
 
-                if (currentX + cardWidth > screenWidth)
+                if (currentX + cardWidth > screenWidth - 30)
                 {
                     currentX = startX;
                     currentY += cardHeight + spacingY;
@@ -92,7 +100,7 @@ namespace Zoo.GUI
                 int statHeight = 150;
                 int statWidth = screenWidth - 60;
                 int statX = 30;
-                int statY = screenHeight - statHeight - 30;
+                int statY = screenHeight - 550;
 
                 Raylib.DrawRectangle(statX, statY, statWidth, statHeight, Color.RayWhite);
                 Raylib.DrawRectangleLinesEx(new Rectangle(statX, statY, statWidth, statHeight), 3, Color.Black);

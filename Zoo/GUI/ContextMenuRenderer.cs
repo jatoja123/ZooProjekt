@@ -16,9 +16,29 @@ public static class ContextMenuRenderer
 
     public static void Draw(GameController controller, int screenWidth, int screenHeight, Vector2 mousePos, bool isClicked, GUIState state)
     {
-        if (!state.IsContextMenuOpen || state.SelectedX == -1) return;
+        if (!state.IsContextMenuOpen) return;
 
-        var contextCommands = GameController.MapActions.ToList();
+        List<Command> contextCommands;
+
+        if (state.CurrentViewMode == ViewMode.HabitatView)
+        {
+            if (state.SelectedAnimal != null)
+            {
+                contextCommands = GameController.AnimalActions.ToList();
+            }
+            else
+            {
+                return;
+            }
+        }
+        else if (state.SelectedX != -1)
+        {
+            contextCommands = GameController.MapActions.ToList();
+        }
+        else
+        {
+            return;
+        }
 
         if (contextCommands.Count == 0) return;
 
@@ -73,6 +93,11 @@ public static class ContextMenuRenderer
     private static void HandleMainMenuClick(GameController controller, Command cmd, GUIState state)
     {
         var subOptions = cmd.GetAvailableOptions();
+        
+        if (state.CurrentViewMode == ViewMode.HabitatView && (cmd.ActionCommand() == "nakarm" || cmd.ActionCommand() == "napoj"))
+        {
+            subOptions = new List<string> { "1", "2", "3", "5", "10" };
+        }
         
         if (subOptions.Count > 0)
         {
@@ -142,47 +167,64 @@ public static class ContextMenuRenderer
     {
         List<string> args = new List<string>();
 
-        if (cmd.ActionCommand() == "wolne" && !string.IsNullOrWhiteSpace(additionalOption))
+        if (state.CurrentViewMode == ViewMode.HabitatView && state.SelectedAnimal != null && state.SelectedHabitat != null)
         {
-            string indexStr = additionalOption.Split(':')[0].Trim();
-            args.Add(indexStr);
-            args.Add(state.SelectedX.ToString());
-            args.Add(state.SelectedY.ToString());
+            int animalIndex = state.SelectedHabitat.Animals.ToList().IndexOf(state.SelectedAnimal);
+            
+            args.Add(state.SelectedHabitat.X.ToString());
+            args.Add(state.SelectedHabitat.Y.ToString());
+            args.Add(animalIndex.ToString());
+
+            string cmdName = cmd.ActionCommand();
+            if ((cmdName == "nakarm" || cmdName == "napoj") && !string.IsNullOrWhiteSpace(additionalOption))
+            {
+                args.Add(additionalOption.Trim());
+            }
         }
         else
         {
-            if (!string.IsNullOrWhiteSpace(state.InputBuffer))
+            if (cmd.ActionCommand() == "wolne" && !string.IsNullOrWhiteSpace(additionalOption))
             {
-                args = state.InputBuffer.Split(' ', System.StringSplitOptions.RemoveEmptyEntries).ToList();
+                string indexStr = additionalOption.Split(':')[0].Trim();
+                args.Add(indexStr);
+                args.Add(state.SelectedX.ToString());
+                args.Add(state.SelectedY.ToString());
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(state.InputBuffer))
+                {
+                    args = state.InputBuffer.Split(' ', System.StringSplitOptions.RemoveEmptyEntries).ToList();
+                }
+
+                if (!string.IsNullOrWhiteSpace(additionalOption))
+                {
+                    args.Add(additionalOption.Trim());
+                }
             }
 
-            if (!string.IsNullOrWhiteSpace(additionalOption))
+            if (cmd.ActionCommand() == "sprawdz")
             {
-                args.Add(additionalOption);
-            }
-        }
+                int targetX = state.SelectedX;
+                int targetY = state.SelectedY;
 
-        if (cmd.ActionCommand() == "sprawdz")
-        {
-            int targetX = state.SelectedX;
-            int targetY = state.SelectedY;
+                if (args.Count >= 2 && int.TryParse(args[0], out int x) && int.TryParse(args[1], out int y))
+                {
+                    targetX = x;
+                    targetY = y;
+                }
+                else if (args.Count == 0 && targetX != -1 && targetY != -1)
+                {
+                    args.Add(targetX.ToString());
+                    args.Add(targetY.ToString());
+                }
 
-            if (args.Count >= 2 && int.TryParse(args[0], out int x) && int.TryParse(args[1], out int y))
-            {
-                targetX = x;
-                targetY = y;
-            }
-            else if (args.Count == 0 && targetX != -1 && targetY != -1)
-            {
-                args.Add(targetX.ToString());
-                args.Add(targetY.ToString());
-            }
-
-            var location = controller.Map.GetLocation(targetX, targetY);
-            if (location is LocationHabitat habitat)
-            {
-                state.SelectedHabitat = habitat;
-                state.CurrentViewMode = ViewMode.HabitatView;
+                var location = controller.Map.GetLocation(targetX, targetY);
+                if (location is LocationHabitat habitat)
+                {
+                    state.SelectedHabitat = habitat;
+                    state.CurrentViewMode = ViewMode.HabitatView;
+                }
             }
         }
 
@@ -202,7 +244,6 @@ public static class ContextMenuRenderer
 
         CloseAllMenus(state);
     }
-
     private static void CloseAllMenus(GUIState state)
     {
         state.InputBuffer = "";
