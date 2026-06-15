@@ -43,8 +43,11 @@ public class Storage
         return amount;
     }
 
-    public void ExpandLimit(GoodType type, int amount)
-    {
-        limits[type] += amount;
+    public void ExpandLimit(int amount)
+    {   
+        foreach (var t in Enum.GetValues<GoodType>())
+        {
+            limits[t] += amount;
+        }
     }
 }
