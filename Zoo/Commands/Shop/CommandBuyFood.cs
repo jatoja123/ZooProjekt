@@ -11,7 +11,7 @@ public class CommandBuyFood(GameController controller) : Command
     public override string ActionCommand() => "kupjedzenie";
 
 
-    public override string ActionDescription() => "Kupuje jedzenie M-miesne, P-roslinne, B-mieszane. Użycie: kupjedzenie <M/P/B> <ilosc>";
+    public override string ActionDescription() => "Kupuje jedzenie. Użycie: kupjedzenie <Mieso/Rosliny/Mieszane> <ilosc>";
 
     public override bool Execute(List<string> args)
     {
@@ -24,11 +24,11 @@ public class CommandBuyFood(GameController controller) : Command
         GoodType type;
         switch (args[0].ToUpper())
         {
-            case "M": type = GoodType.FoodMeat; break;
-            case "P": type = GoodType.FoodPlant; break;
-            case "B": type = GoodType.FoodMixed; break;
+            case "Mieso": type = GoodType.FoodMeat; break;
+            case "Rosliny": type = GoodType.FoodPlant; break;
+            case "Mieszane": type = GoodType.FoodMixed; break;
             default:
-                controller.ConsoleDisplay.DisplayWarning("Nieznany typ jedzenia - wybierz z (M/P/B)");
+                controller.ConsoleDisplay.DisplayWarning("Nieznany typ jedzenia - wybierz z <Mieso/Rosliny/Mieszane>");
                 return false;
         }
 
@@ -59,5 +59,10 @@ public class CommandBuyFood(GameController controller) : Command
             controller.ConsoleDisplay.DisplayInfo($"Kupiono {amount} {type} za {cost}$");
         }
         return true;
+    }
+
+    public override List<string> GetAvailableOptions()
+    {
+        return new List<string> {"Mieso", "Rosliny", "Mieszane"};
     }
 }
