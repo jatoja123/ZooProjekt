@@ -54,6 +54,9 @@ namespace Zoo.GUI
                 {
                     state.SelectedAnimal = animal;
                     GameController.PlayerActions = GameController.AnimalActions;
+                    state.IsContextMenuOpen = true;
+                    state.ContextMenuX = mousePos.X;
+                    state.ContextMenuY = mousePos.Y;
                     state.ClickHandled = true;
                 }
 

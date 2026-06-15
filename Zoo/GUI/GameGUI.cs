@@ -58,6 +58,9 @@ public class GameGUI
             else if (state.CurrentViewMode == ViewMode.HabitatView)
             {
                 HabitatRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
+                RightPanelRenderer.Draw(screenWidth, screenHeight, mousePos, isClicked, state);
+                ConsoleRenderer.Draw(controller, screenWidth, screenHeight);
+                ContextMenuRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
             }
 
             if (state.IsPopupOpen)

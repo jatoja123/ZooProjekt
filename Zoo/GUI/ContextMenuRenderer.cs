@@ -16,9 +16,22 @@ public static class ContextMenuRenderer
 
     public static void Draw(GameController controller, int screenWidth, int screenHeight, Vector2 mousePos, bool isClicked, GUIState state)
     {
-        if (!state.IsContextMenuOpen || state.SelectedX == -1) return;
+        if (!state.IsContextMenuOpen) return;
 
-        var contextCommands = GameController.MapActions.ToList();
+        List<Command> contextCommands;
+
+        if (state.CurrentViewMode == ViewMode.HabitatView && state.SelectedAnimal != null)
+        {
+            contextCommands = GameController.AnimalActions.ToList();
+        }
+        else if (state.SelectedX != -1)
+        {
+            contextCommands = GameController.MapActions.ToList();
+        }
+        else
+        {
+            return;
+        }
 
         if (contextCommands.Count == 0) return;
 
