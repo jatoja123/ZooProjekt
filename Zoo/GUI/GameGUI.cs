@@ -52,14 +52,13 @@ public class GameGUI
                 TopUIRenderer.Draw(screenHeight, state);
                 MapRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
                 RightPanelRenderer.Draw(screenWidth, screenHeight, mousePos, isClicked, state);
-                ConsoleRenderer.Draw(controller, screenWidth, screenHeight);
+                ConsoleRenderer.Draw(controller, 20, screenHeight - 440, screenWidth - 350, 300, false);
                 ContextMenuRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
             }
             else if (state.CurrentViewMode == ViewMode.HabitatView)
             {
                 HabitatRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
-                RightPanelRenderer.Draw(screenWidth, screenHeight, mousePos, isClicked, state);
-                ConsoleRenderer.Draw(controller, screenWidth, screenHeight);
+                ConsoleRenderer.Draw(controller, 20, screenHeight - 340, screenWidth - 40, 320, false);
                 ContextMenuRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
             }
 
