@@ -10,8 +10,8 @@ public class CommandActionList(GameController controller) : Command
     public override bool Execute(List<string> args)
     {
         var actions = new List<Command> (GameController.PlayerActions);
-        actions.AddRange(GameController.MapActions);
-        actions.AddRange(GameController.AnimalActions);
+        // actions.AddRange(GameController.MapActions);
+        // actions.AddRange(GameController.AnimalActions);
         foreach (var action in actions)
         {
             controller.ConsoleDisplay.DisplayInfo($"{action.ActionCommand()} [{action.ActionCost}] {action.ActionDescription()}");

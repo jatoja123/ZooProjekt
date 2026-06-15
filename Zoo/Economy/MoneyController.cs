@@ -27,8 +27,6 @@ public class MoneyController
                 //1-> 1, 2-> 0.5, 3-> 0.33, 4-> 0.25...
                 //1- 20, 2- 10, 3 -6, 4-5, 5-4,...
 
-
-                //?
                 int condition = animal.GetCondition();
                 income += baseValue * condition / 100;
 
