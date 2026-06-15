@@ -38,9 +38,37 @@ public class CommandAnimalFeed(GameController controller) : Command
             controller.ConsoleDisplay.DisplayWarning("Nie znaleziono zwierza na wybranej pozycji");
             return false;
         }
-        var foodUsed = controller.Storage.Use(animal.foodType, count);
-        foodUsed = animal.Feed(foodUsed);
+
+        var food_storage = controller.Storage.Use(animal.foodType, count);
+
+        if (food_storage == 0)
+        {
+            controller.ConsoleDisplay.DisplayWarning("Brak jedzenia w magazynie");
+            return true;
+        }
+
+        if (food_storage < count)
+        {
+            controller.ConsoleDisplay.DisplayWarning($"Brak wystarczajacej ilosci jedzenia w magazynie, wyjęto tylko {food_storage}");
+        }
+
+
+        var foodUsed = animal.Feed(food_storage);
+
+        if (foodUsed == 0)
+        {
+            controller.ConsoleDisplay.DisplayWarning($"{animal.Name} nie jest glodny ");
+
+            controller.Storage.Add(animal.foodType, food_storage);
+            return true;
+        }
+
         controller.ConsoleDisplay.DisplayInfo($"Nakarmiono {animal.Name} o {foodUsed}");
+
+        if (foodUsed < food_storage)
+        {
+            controller.Storage.Add(animal.foodType, food_storage - foodUsed);
+        }
         return true;
     }
 }

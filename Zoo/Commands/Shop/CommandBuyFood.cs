@@ -24,9 +24,9 @@ public class CommandBuyFood(GameController controller) : Command
         GoodType type;
         switch (args[0].ToUpper())
         {
-            case "Mieso": type = GoodType.FoodMeat; break;
-            case "Rosliny": type = GoodType.FoodPlant; break;
-            case "Mieszane": type = GoodType.FoodMixed; break;
+            case "MIESO": type = GoodType.FoodMeat; break;
+            case "ROSLINY": type = GoodType.FoodPlant; break;
+            case "MIESZANE": type = GoodType.FoodMixed; break;
             default:
                 controller.ConsoleDisplay.DisplayWarning("Nieznany typ jedzenia - wybierz z <Mieso/Rosliny/Mieszane>");
                 return false;
@@ -61,8 +61,9 @@ public class CommandBuyFood(GameController controller) : Command
         return true;
     }
 
+    // to sa casy do switcha
     public override List<string> GetAvailableOptions()
     {
-        return new List<string> {"Mieso", "Rosliny", "Mieszane"};
+        return new List<string> {"MIESO", "ROSLINY", "MIESZANE"};
     }
 }
