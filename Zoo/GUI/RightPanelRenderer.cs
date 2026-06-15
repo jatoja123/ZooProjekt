@@ -32,8 +32,22 @@ public static class RightPanelRenderer
 
             if (isClicked && Raylib.CheckCollisionPointRec(mousePos, btnRect))
             {
-                ExecuteCommand(cmd, state);
-                state.ClickHandled = true;
+                if (GameController.PlayerActions == GameController.ShopActions)
+                {
+                    state.IsLeftMenuOpen = true;
+                    state.IsLeftSubMenuOpen = false;
+                    state.LeftSubOptions.Clear();
+                    state.LeftPendingArgs.Clear();
+                    state.LeftMenuX = screenWidth - 300 - 220;
+                    state.LeftMenuY = btnY;
+                    state.LeftSelectedCommand = cmd;
+                    state.ClickHandled = true;
+                }
+                else
+                {
+                    ExecuteCommand(cmd, state);
+                    state.ClickHandled = true;
+                }
             }
         }
     }

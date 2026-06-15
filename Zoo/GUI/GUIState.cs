@@ -37,4 +37,16 @@ public class GUIState
     public Queue<string> PopupQueue { get; set; } = new Queue<string>();
     public bool IsPopupOpen { get; set; } = false;
     public string CurrentPopupMessage { get; set; } = "";
+    public bool IsLeftMenuOpen { get; set; } = false;
+    public float LeftMenuX { get; set; }
+    public float LeftMenuY { get; set; }
+    public Rectangle LeftMenuRect { get; set; }
+
+    // Podmenu
+    public bool IsLeftSubMenuOpen { get; set; } = false;
+    public List<string> LeftSubOptions { get; set; } = new();
+    public Rectangle LeftSubMenuRect { get; set; }
+    public Command? LeftSelectedCommand { get; set; }
+    public List<string> LeftPendingArgs { get; set; } = new();
+    public bool LeftOptionsReady { get; set; } = false;
 }

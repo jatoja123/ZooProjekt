@@ -54,6 +54,7 @@ public class GameGUI
                 RightPanelRenderer.Draw(screenWidth, screenHeight, mousePos, isClicked, state);
                 ConsoleRenderer.Draw(controller, 20, screenHeight - 440, screenWidth - 350, 300, false);
                 ContextMenuRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
+                LeftContextMenu.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
             }
             else if (state.CurrentViewMode == ViewMode.HabitatView)
             {
