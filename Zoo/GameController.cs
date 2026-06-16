@@ -118,6 +118,8 @@ public class GameController : IObserver
                 consoleDisplay.DisplayTitle($"Tura {turnEvent.Turn}");
                 consoleDisplay.DisplayMap(map);
 
+                ActionCostUsed = 0;
+
                 moneyController.CalculateIncome(animalsController);
                 consoleDisplay.DisplayInfo($"Stan konta: {moneyController.Money}$");
             }
