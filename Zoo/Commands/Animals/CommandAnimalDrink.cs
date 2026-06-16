@@ -3,13 +3,13 @@
 namespace Zoo.Commands.Animals;
 
 
-public class CommandAnimalDrink(GameController controller) : Command
+public class CommandAnimalDrink(GameController controller) : Command(controller)
 {
     public override int ActionCost => 1;
     public override string ActionCommand() => "napoj";
     public override string ActionDescription() => "Napaja zwierze na wybranym wybiegu. Uzycie: napoj <x> <y> <index zwierza> <ilosc wody>";
     
-    public override bool Execute(List<string> args)
+    protected override bool Execute(List<string> args)
     {
         if (args.Count != 4)
         {

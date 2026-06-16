@@ -2,14 +2,14 @@ using System.Collections.Generic;
 
 namespace Zoo.Commands;
 
-public class CommandOpenShop(GameController controller) : Command
+public class CommandOpenShop(GameController controller) : Command(controller)
 {
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "sklep";
     public override string ActionDescription() => "Otwiera sklep. Uzycie: sklep";
 
-    public override bool Execute(List<string> args)
+    protected override bool Execute(List<string> args)
     {
         GameController.PlayerActions = GameController.ShopActions;
         controller.ConsoleDisplay.DisplayInfo("Sklep");

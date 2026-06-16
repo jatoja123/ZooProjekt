@@ -4,13 +4,13 @@ using Zoo.Economy;
 namespace Zoo.Commands.Animals;
 
 
-public class CommandAnimalPlay(GameController controller) : Command
+public class CommandAnimalPlay(GameController controller) : Command(controller)
 {
     public override int ActionCost => 1;
     public override string ActionCommand() => "pobaw";
     public override string ActionDescription() => "Zabawia zwierze na wybiegu. Uzycie: pobaw <x> <y> <index zwierza>";
     
-    public override bool Execute(List<string> args)
+    protected override bool Execute(List<string> args)
     {
         if (args.Count != 3)
         {

@@ -3,14 +3,14 @@ using Zoo.Animals;
 
 namespace Zoo.Commands;
 
-public class CommandRemoveAnimal(GameController controller) : Command
+public class CommandRemoveAnimal(GameController controller) : Command(controller)
 {
     public override int ActionCost => 2;
 
     public override string ActionCommand() => "wyjmij";
     public override string ActionDescription() => "Wyjmuje zwierzę z wybiegu (trzeba je znowu przydzielić). Użycie: wyjmij <x> <y>";
 
-    public override bool Execute(List<string> args)
+    protected override bool Execute(List<string> args)
     {
         if (args.Count != 2)
         {

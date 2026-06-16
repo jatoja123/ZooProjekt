@@ -1,6 +1,6 @@
 ﻿namespace Zoo.Commands;
 
-public class CommandDisplayMap(GameController controller) : Command
+public class CommandDisplayMap(GameController controller) : Command(controller)
 {
     public override int ActionCost => 0;
 
@@ -8,7 +8,7 @@ public class CommandDisplayMap(GameController controller) : Command
     public override string ActionDescription() => "Wyswietla mape zoo";
     
 
-    public override bool Execute(List<string> args)
+    protected override bool Execute(List<string> args)
     {
         controller.ConsoleDisplay.DisplayMap();
         return true;

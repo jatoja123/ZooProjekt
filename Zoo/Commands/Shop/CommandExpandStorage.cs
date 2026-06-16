@@ -3,14 +3,14 @@ using Zoo.Economy;
 
 namespace Zoo.Commands;
 
-public class CommandExpandStorage(GameController controller) : Command
+public class CommandExpandStorage(GameController controller) : Command(controller)
 {
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "rozszerz";
     public override string ActionDescription() => $"Rozszerza limit magazynu o {ShopPrices.ExpandAmount}. Koszt: {ShopPrices.ExpandsStorage}$.";
 
-    public override bool Execute(List<string> args)
+    protected override bool Execute(List<string> args)
     {
         if (controller.MoneyController.Money < ShopPrices.ExpandsStorage)
         {

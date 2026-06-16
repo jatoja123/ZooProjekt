@@ -5,14 +5,14 @@ using Zoo.Economy;
 
 namespace Zoo.Commands;
 
-public class CommandBuyAnimal(GameController controller) : Command
+public class CommandBuyAnimal(GameController controller) : Command(controller)
 {
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "kupzwierze";
     public override string ActionDescription() => $"Kupuje wybrane zwierze. Koszt: {ShopPrices.AnimalPrice}$. Wybierz typ zwierzecia.";
 
-    public override bool Execute(List<string> args)
+    protected override bool Execute(List<string> args)
     {
         if(args.Count < 1)
         {

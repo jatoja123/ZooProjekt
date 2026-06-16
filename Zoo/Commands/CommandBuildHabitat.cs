@@ -2,13 +2,13 @@ using System.Collections.Generic;
 
 namespace Zoo.Commands;
 
-public class CommandBuildHabitat(GameController controller) : Command
+public class CommandBuildHabitat(GameController controller) : Command(controller)
 {
     public override int ActionCost => 5;
     public override string ActionCommand() => "buduj";
     public override string ActionDescription() => "Buduje wybieg na mapie. Uzycie: buduj <x> <y> <ladowe/wodne>";
     
-    public override bool Execute(List<string> args)
+    protected override bool Execute(List<string> args)
     {
         if (args.Count != 3)
         {

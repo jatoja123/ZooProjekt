@@ -5,14 +5,14 @@ using Zoo.Economy;
 
 namespace Zoo.Commands;
 
-public class CommandShowWarehouse(GameController controller) : Command
+public class CommandShowWarehouse(GameController controller) : Command(controller)
 {
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "magazyn";
     public override string ActionDescription() => "Wyswietla zawartosc magazynu. Uzycie: magazyn";
 
-    public override bool Execute(List<string> args)
+    protected override bool Execute(List<string> args)
     {
         // gdy submenu zmienic
         controller.ConsoleDisplay.DisplayInfo("Zawartosc magazynu:");

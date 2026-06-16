@@ -4,14 +4,14 @@ using Zoo.Needs;
 
 namespace Zoo.Commands;
 
-public class CommandShowHabitat(GameController controller) : Command
+public class CommandShowHabitat(GameController controller) : Command(controller)
 {
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "sprawdz";
     public override string ActionDescription() => "Wydwietla informacje o lokacji i zwierzetach. Użycie: sprawdz <x> <y>";
 
-    public override bool Execute(List<string> args)
+    protected override bool Execute(List<string> args)
     {
         if (args.Count != 2)
         {

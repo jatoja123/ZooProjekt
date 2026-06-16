@@ -1,13 +1,13 @@
 ﻿namespace Zoo.Commands;
 
-public class CommandActionList(GameController controller) : Command
+public class CommandActionList(GameController controller) : Command(controller)
 {
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "akcje";
     public override string ActionDescription() => "Wyswietla dostepne akcje.";
 
-    public override bool Execute(List<string> args)
+    protected override bool Execute(List<string> args)
     {
         var actions = new List<Command> (GameController.PlayerActions);
         // actions.AddRange(GameController.MapActions);

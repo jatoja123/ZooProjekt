@@ -2,14 +2,14 @@
 
 namespace Zoo.Commands;
 
-public class CommandSkipTurn(GameController controller) : Command
+public class CommandSkipTurn(GameController controller) : Command(controller)
 {
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "pomin";
     public override string ActionDescription() => "Pomija i kończy ture";
 
-    public override bool Execute(List<string> args)
+    protected override bool Execute(List<string> args)
     {
         controller.SkipTurn();
         return true;

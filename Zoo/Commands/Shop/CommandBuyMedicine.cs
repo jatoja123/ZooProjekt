@@ -3,14 +3,14 @@ using Zoo.Economy;
 
 namespace Zoo.Commands;
 
-public class CommandBuyMedicine(GameController controller) : Command
+public class CommandBuyMedicine(GameController controller) : Command(controller)
 {
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "kupleki";
     public override string ActionDescription() => "Kupuje magiczne leki. Uzycie: kupleki <ilość>";
 
-    public override bool Execute(List<string> args)
+    protected override bool Execute(List<string> args)
     {
         if (args.Count != 1 || !int.TryParse(args[0], out var amount) || amount <= 0)
         {

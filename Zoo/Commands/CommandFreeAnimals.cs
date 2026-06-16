@@ -3,14 +3,14 @@ using Zoo.Animals;
 
 namespace Zoo.Commands;
 
-public class CommandFreeAnimals(GameController controller) : Command
+public class CommandFreeAnimals(GameController controller) : Command(controller)
 {
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "wolne";
     public override string ActionDescription() => "Pokazuje zwierzeta bez wybiegu / wsadza wolne zwierze na wybieg. Użycie: wolne / wolne <index zwierzęcia> <x> <y>";
 
-    public override bool Execute(List<string> args)
+    protected override bool Execute(List<string> args)
     {
         if (args.Count == 3)
         {
