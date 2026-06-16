@@ -41,6 +41,7 @@ public class GameController : IObserver
     private GameGUI gameGui = null!;
 
     public int ActionCostUsed { get; private set; } = 0;
+    public int TotalScore = 0;
     public int MaxActionCost => maxActionCost;
     public int ActionsLeft => MaxActionCost - ActionCostUsed;
 
@@ -123,10 +124,13 @@ public class GameController : IObserver
                 ActionCostUsed = 0;
 
                 moneyController.CalculateIncome(animalsController);
-                consoleDisplay.DisplayInfo($"Stan konta: {moneyController.Money}$");
+                consoleDisplay.DisplayMessage($"Stan konta: {moneyController.Money}$");
+                consoleDisplay.DisplayMessage($"Score: {TotalScore}pkt");
             }
             else
             {
+                var score = map.CalculateScore();
+                TotalScore += score;
                 foreach (var animal in animalsController.Animals)
                 {
                     animal.Update(notifyEvent);
@@ -135,6 +139,7 @@ public class GameController : IObserver
         }
         else if (notifyEvent is GameStartEvent)
         {
+            TotalScore = 0;
             if (RunInConsole)
             {
                 MainActions.AddRange(MapActions);
