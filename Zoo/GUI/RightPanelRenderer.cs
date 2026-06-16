@@ -21,10 +21,11 @@ public static class RightPanelRenderer
             state.ClickHandled = true;
         }
 
-        int buttonsCount = GameController.PlayerActions.Count;
+        var actionsToDisplay = GameController.PlayerActions.Where(x=> x.IsVisible()).ToList();
+        int buttonsCount = actionsToDisplay.Count();
         for (int i = 0; i < buttonsCount; i++)
         {
-            var cmd = GameController.PlayerActions[i];
+            var cmd = actionsToDisplay[i];
             float btnY = exitBtnRect.Y - 20 - ((buttonsCount - i) * 60);
             Rectangle btnRect = new Rectangle(screenWidth - 300, btnY, 280, 50);
             Raylib.DrawRectangleRec(btnRect, Color.LightGray);

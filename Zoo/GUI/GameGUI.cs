@@ -20,7 +20,7 @@ public class GameGUI : IObserver
         state.PopupQueue.Enqueue(message);
     }
 
-    public void Start() => Task.Run(RunLoop);
+    public Task Start() => Task.Run(RunLoop);
 
     public void ReceiveEvent(NotifyEvent notifyEvent)
     {

@@ -12,7 +12,7 @@ public class TurnController: Observable
 
     public void Start()
     {
-        turn = 0;
+        turn = 1;
         isGameRunning = true;
         Notify(new GameStartEvent(totalTurns));
         StartTurn();

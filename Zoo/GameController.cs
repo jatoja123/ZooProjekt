@@ -10,7 +10,8 @@ namespace Zoo;
 public class GameController : IObserver
 {
     public static GameController Instance { get; private set; } = null!;
-    public static List<Command> PlayerActions = new();
+    public static bool RunInConsole = false;
+    public static List<Command> PlayerActions = new(); // obecne akcje dostępne dla gracza
 
     public static List<Command> MainActions = new();
     public static List<Command> ShopActions = new();
@@ -39,13 +40,11 @@ public class GameController : IObserver
 
     private GameGUI gameGui = null!;
 
-    private bool skippingTurn = false;
-
     public int ActionCostUsed { get; private set; } = 0;
     public int MaxActionCost => maxActionCost;
     public int ActionsLeft => MaxActionCost - ActionCostUsed;
 
-    public void StartGame()
+    public async Task StartGame()
     {
         Instance = this;
 
@@ -55,7 +54,8 @@ public class GameController : IObserver
             new CommandFreeAnimals(this),
             new CommandShowWarehouse(this),
             new CommandSkipTurn(this),
-            new CommandOpenShop(this)
+            new CommandOpenShop(this),
+            new CommandDisplayMap(this, CommandVisibility.Console),
         };
 
         ShopActions = new List<Command>()
@@ -91,7 +91,6 @@ public class GameController : IObserver
         consoleDisplay = new ConsoleDisplay();
 
         gameGui = new GameGUI(this);
-        gameGui.Start();
 
         gameEventsController = new GameEventsController();
         gameEventsController.Start();
@@ -103,10 +102,13 @@ public class GameController : IObserver
         storage = new Storage();
 
         turnController = new TurnController();
+        turnController.Subscribe(gameGui);
         turnController.Subscribe(this);
         turnController.Subscribe(gameEventsController);
-        turnController.Subscribe(gameGui);
         turnController.Start();
+        
+        if(RunInConsole) await Task.Run(RunConsoleLoop);
+        else await gameGui.Start();
     }
 
     public void ReceiveEvent(NotifyEvent notifyEvent)
@@ -133,7 +135,12 @@ public class GameController : IObserver
         }
         else if (notifyEvent is GameStartEvent)
         {
-            RunConsoleLoop();
+            if (RunInConsole)
+            {
+                MainActions.AddRange(MapActions);
+                MainActions.AddRange(AnimalActions);
+                PlayerActions = MainActions;
+            }
         }
         else if (notifyEvent is GameEndEvent)
         {
