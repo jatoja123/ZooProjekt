@@ -17,7 +17,7 @@ public class GameController : IObserver
     public static List<Command> AnimalActions = new();
     public static List<Command> MapActions = new();
     
-    private static int MaxActionCost = 10;
+    private static int maxActionCost = 10;
 
     private TurnController turnController = null!;
     private GameEventsController gameEventsController = null!;
@@ -42,10 +42,8 @@ public class GameController : IObserver
     private bool skippingTurn = false;
 
     public int ActionCostUsed { get; private set; } = 0;
-    public int MaxAction => MaxActionCost;
-    public int ActionsLeft => MaxAction - ActionCostUsed;
-
-    public int CurrentTurn { get; private set; } = 1;
+    public int MaxActionCost => maxActionCost;
+    public int ActionsLeft => MaxActionCost - ActionCostUsed;
 
     public void StartGame()
     {
@@ -107,6 +105,7 @@ public class GameController : IObserver
         turnController = new TurnController();
         turnController.Subscribe(this);
         turnController.Subscribe(gameEventsController);
+        turnController.Subscribe(gameGui);
         turnController.Start();
     }
 
@@ -116,11 +115,11 @@ public class GameController : IObserver
         {
             if (turnEvent.IsStartOfTurn)
             {
-                CurrentTurn = turnEvent.Turn + 1;
-                consoleDisplay.DisplayTitle($"Tura {CurrentTurn}");
+                consoleDisplay.DisplayTitle($"Tura {turnEvent.Turn}");
+                consoleDisplay.DisplayMap(map);
 
                 moneyController.CalculateIncome(animalsController);
-                consoleDisplay.DisplayInfo($"Stan kontra: {moneyController.Money}");
+                consoleDisplay.DisplayInfo($"Stan konta: {moneyController.Money}$");
             }
             else
             {
@@ -130,9 +129,9 @@ public class GameController : IObserver
                 }
             }
         }
-        else if (notifyEvent is PlayerActionPhaseEvent)
+        else if (notifyEvent is GameStartEvent)
         {
-            HandleTurnActions();
+            RunConsoleLoop();
         }
         else if (notifyEvent is GameEndEvent)
         {
@@ -140,31 +139,22 @@ public class GameController : IObserver
         }
     }
 
-    private void HandleTurnActions()
+    public bool CanExecuteAction(int actionCost)
     {
-        skippingTurn = false;
-        ActionCostUsed = 0;
-        consoleDisplay.DisplayMap(map);
-
-        while (ActionCostUsed < MaxActionCost && !skippingTurn)
+        if (ActionCostUsed + actionCost > maxActionCost)
         {
-            var (action, args) = consoleDisplay.GetPlayerAction(PlayerActions);
-            var cost = action.ActionCost;
-            if (ActionCostUsed + cost > MaxActionCost)
-            {
-                consoleDisplay.DisplayMessage($"Akcja jest za droga ({cost}). Zostało Ci {ActionsLeft}/{MaxActionCost} akcji");
-                continue;
-            }
-
-            if (!action.Execute(args)) continue;
-            ActionCostUsed += cost;
+            consoleDisplay.DisplayMessage($"Akcja jest za droga ({actionCost}). Zostało Ci {ActionsLeft}/{maxActionCost} akcji");
+            return false;
         }
-
-        if (!skippingTurn)
-        {
-            turnController.EndTurn();
-        }
+        
+        return true;
     }
+
+    public void UseActionPoints(int actionCost)
+    {
+        ActionCostUsed += actionCost;
+    }
+    
     private void HandleGameEnd()
     {
         consoleDisplay.DisplayTitle("Koniec gry");
@@ -178,10 +168,15 @@ public class GameController : IObserver
 
     public void SkipTurn()
     {
-        if (turnController != null)
+        turnController.EndTurn();
+    }
+    
+    private void RunConsoleLoop()
+    {
+        while (turnController.IsGameRunning)
         {
-            skippingTurn = true;
-            turnController.EndTurn();
+            var (command, args) = consoleDisplay.GetPlayerAction(PlayerActions);
+            command.ExecuteCommand(args);
         }
     }
 }

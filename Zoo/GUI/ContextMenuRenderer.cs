@@ -230,7 +230,7 @@ public static class ContextMenuRenderer
 
         Task.Run(() =>
         {
-            bool success = cmd.Execute(args);
+            bool success = cmd.ExecuteCommand(args);
             
             if (success)
             {

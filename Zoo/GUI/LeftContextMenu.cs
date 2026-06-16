@@ -128,7 +128,7 @@ public static class LeftContextMenu
         var argsCopy = new List<string>(args);
         Task.Run(() =>
         {
-            bool success = cmd.Execute(argsCopy);
+            bool success = cmd.ExecuteCommand(argsCopy);
             state.StatusMessage = success ? $"Wykonano: {cmd.ActionCommand()}" : $"Blad! Args: {string.Join(", ", argsCopy)}";
         });
 

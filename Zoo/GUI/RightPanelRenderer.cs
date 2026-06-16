@@ -60,7 +60,7 @@ public static class RightPanelRenderer
 
         Task.Run(() =>
         {
-            if (cmd.Execute(args))
+            if (cmd.ExecuteCommand(args))
             {
                 state.StatusMessage = $"Wykonano: {cmd.ActionCommand()}";
                 state.InputBuffer = "";

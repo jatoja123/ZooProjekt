@@ -5,9 +5,9 @@ public class TurnEvent(bool isStartOfTurn, int turn) : NotifyEvent
     public bool IsStartOfTurn = isStartOfTurn;
     public int Turn = turn;
 }
-public class GameStartEvent () : NotifyEvent {}
-public class GameEndEvent () : NotifyEvent {}
-public class PlayerActionPhaseEvent(int turn) : NotifyEvent
+
+public class GameStartEvent(int totalTurns) : NotifyEvent
 {
-    public int Turn = turn;
+    public int TotalTurns = totalTurns;
 }
+public class GameEndEvent () : NotifyEvent {}

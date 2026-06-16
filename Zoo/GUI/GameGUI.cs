@@ -5,10 +5,13 @@ using Zoo.GUI;
 
 namespace Zoo;
 
-public class GameGUI
+public class GameGUI : IObserver
 {
     private GameController controller;
     private GUIState state = new GUIState();
+
+    private int lastSavedTurn = 0;
+    private int maxTurns = 0;
 
     public GameGUI(GameController controller) => this.controller = controller;
 
@@ -18,6 +21,18 @@ public class GameGUI
     }
 
     public void Start() => Task.Run(RunLoop);
+
+    public void ReceiveEvent(NotifyEvent notifyEvent)
+    {
+        if (notifyEvent is TurnEvent turnEvent)
+        {
+            lastSavedTurn = turnEvent.Turn;
+        }
+        else if (notifyEvent is GameStartEvent gameStartEvent)
+        {
+            maxTurns = gameStartEvent.TotalTurns;
+        }
+    }
 
     private void RunLoop()
     {
@@ -49,7 +64,7 @@ public class GameGUI
 
             if (state.CurrentViewMode == ViewMode.MainMap)
             {
-                TopUIRenderer.Draw(controller, screenHeight, state);
+                TopUIRenderer.Draw(controller, screenHeight, state, lastSavedTurn, maxTurns);
                 MapRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
                 RightPanelRenderer.Draw(screenWidth, screenHeight, mousePos, isClicked, state);
                 ConsoleRenderer.Draw(controller, 20, screenHeight - 440, screenWidth - 350, 300, false);

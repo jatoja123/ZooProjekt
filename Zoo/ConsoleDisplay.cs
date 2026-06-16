@@ -80,6 +80,4 @@ public class ConsoleDisplay
         Console.WriteLine(formatted);
         Logs.Add(formatted);
     }
-
-    
 }
