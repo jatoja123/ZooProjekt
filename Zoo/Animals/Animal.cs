@@ -8,19 +8,20 @@ namespace Zoo.Animals;
 public abstract class Animal
 {
     public GoodType foodType {get; private set;} // M - meat, P - plant, B - both 
-    public uint age {get; private set;}
+    public int age {get; private set;}
+    public AgeRatio AgeRatio { get; private set; } 
     public bool IsInHabitat => Habitat != null;
     public LocationHabitat? Habitat = null;
-    
     private string _name;
     public string Name => $"{_name} - {GetType().Name} ({age})";
     
     public List<Need> AnimalNeeds { get; private set; }
     
-    public Animal(string name, GoodType food)
+    public Animal(string name, GoodType food, AgeRatio ageRatio = AgeRatio.NORMAL)
     {
         _name = name;
         foodType = food;
+         AgeRatio = ageRatio;
         AnimalNeeds = [new Hunger(10, 1), new Thirst(10, 1), new Happiness(10), new Health(10)];
         age = 1;
     }
@@ -33,6 +34,7 @@ public abstract class Animal
             {
                 need.Decrease(need.PassiveDecrease);
             }
+            age += AnimalAgeRatio.AgingFactor[AgeRatio];
         }
     }
     
