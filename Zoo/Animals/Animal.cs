@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Zoo.Economy;
+using Zoo.Environment;
 using Zoo.Needs;
 
 namespace Zoo.Animals;
@@ -19,6 +20,7 @@ public abstract class Animal
     public string Name => $"{_name} - {GetType().Name} ({age})";
     
     public List<Need> AnimalNeeds { get; private set; }
+    public List<EnvironmentalNeed> EnvironmentalNeeds { get; protected set; } = new();
     
     public Animal(string name, GoodType food, AgeRatio ageRatio = AgeRatio.NORMAL)
     {

@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Zoo.Animals;
+using Zoo.Environment;
 namespace Zoo;
 
 public abstract class LocationHabitat(int x, int y) : Location(x, y)
 {
+    public abstract CageTypeEnum HabitatType { get; }
+    public int Temperature { get; set; } = 20;
     public override bool CanBeReplaced() => animals.Count == 0;
     public IReadOnlyList<Animal> Animals => animals;
     
@@ -20,6 +23,14 @@ public abstract class LocationHabitat(int x, int y) : Location(x, y)
             return false;
         }
         
+        foreach (var need in newAnimal.EnvironmentalNeeds)
+        {
+            if (!need.IsSatisfied(this))
+            {
+                return false;
+            }
+        }
+
         animals.Add(newAnimal);
         newAnimal.Habitat = this;
         return true;
