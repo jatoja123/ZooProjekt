@@ -8,8 +8,6 @@ namespace Zoo.Animals;
 
 public abstract class Animal
 {
-    private static readonly Random _random = new();
-
     public GoodType foodType {get; private set;} // M - meat, P - plant, B - both 
     public int age {get; private set;}
     public AgeRatio AgeRatio { get; private set; } 
@@ -68,7 +66,7 @@ public abstract class Animal
         double postepStarosci = (double)(age - progStarosci) / (maxAge - progStarosci);
         double szansaNaSmierc = postepStarosci * 0.40; 
 
-        return _random.NextDouble() < szansaNaSmierc;
+        return Random.Shared.NextDouble() < szansaNaSmierc;
     }
     
     /// <summary>

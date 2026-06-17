@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Zoo.Animals;
-
 namespace Zoo;
 
 public abstract class LocationHabitat(int x, int y) : Location(x, y)
@@ -50,5 +49,22 @@ public abstract class LocationHabitat(int x, int y) : Location(x, y)
         }
         
         return animalConditions / animals.Count;
+    }
+
+     public bool TryReproduce(out Animal? offspring)
+    {
+        offspring = null;
+
+        if (animals.Count >= 4 || animals.Count < 2) return false;
+
+        var candidates = animals.Where(a => a.CanReproduce()).ToList();
+        if (candidates.Count < 2) return false;
+
+        if (Random.Shared.NextDouble() > 0.30) return false;
+
+        var type = animals[0].GetType();
+        offspring = (Animal)Activator.CreateInstance(type, $"Baby_{Random.Shared.Next(1000, 9999)}")!;
+
+        return true;
     }
 }
