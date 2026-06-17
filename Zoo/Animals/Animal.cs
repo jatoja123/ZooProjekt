@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Zoo.Economy;
@@ -7,9 +8,13 @@ namespace Zoo.Animals;
 
 public abstract class Animal
 {
+    private static readonly Random _random = new();
+
     public GoodType foodType {get; private set;} // M - meat, P - plant, B - both 
     public int age {get; private set;}
     public AgeRatio AgeRatio { get; private set; } 
+    public int maxAge = 10;
+    public bool IsDead { get; private set; } = false;
     public bool IsInHabitat => Habitat != null;
     public LocationHabitat? Habitat = null;
     private string _name;
@@ -21,21 +26,49 @@ public abstract class Animal
     {
         _name = name;
         foodType = food;
-         AgeRatio = ageRatio;
+        AgeRatio = ageRatio;
         AnimalNeeds = [new Hunger(10, 1), new Thirst(10, 1), new Happiness(10), new Health(10)];
         age = 1;
     }
     
     public void Update(NotifyEvent gameEvent)
     {
+        if (IsDead) return;
+
         if (gameEvent is TurnEvent turnEvent && !turnEvent.IsStartOfTurn)
         {
             foreach(Need need in AnimalNeeds)
             {
                 need.Decrease(need.PassiveDecrease);
             }
+            
             age += AnimalAgeRatio.AgingFactor[AgeRatio];
+            
+            if (CzyUmiera())
+            {
+                IsDead = true;
+                return;
+            }
         }
+    }
+
+    public bool CzyUmiera()
+    {
+        if (age >= maxAge)
+        {
+            return true;
+        }
+
+        int progStarosci = maxAge / 2;
+        if (age < progStarosci)
+        {
+            return false;
+        }
+
+        double postepStarosci = (double)(age - progStarosci) / (maxAge - progStarosci);
+        double szansaNaSmierc = postepStarosci * 0.40; 
+
+        return _random.NextDouble() < szansaNaSmierc;
     }
     
     /// <summary>
@@ -45,6 +78,7 @@ public abstract class Animal
     /// <returns></returns>
     public int Feed(int foodCount)
     {
+        if (IsDead) return 0;
         Need? hunger = AnimalNeeds.FirstOrDefault(n => n.Type == NeedType.HUNGER);
         if (hunger != null)
         {
@@ -63,6 +97,7 @@ public abstract class Animal
     /// <returns></returns>
     public int GiveWater(int waterAmount)
     {
+        if (IsDead) return 0;
         Need? thirst = AnimalNeeds.FirstOrDefault(n => n.Type == NeedType.THIRST);
         if (thirst != null)
         {
@@ -76,6 +111,7 @@ public abstract class Animal
 
     public void Play()
     {
+        if (IsDead) return;
         Need? happiness = AnimalNeeds.FirstOrDefault(n => n.Type == NeedType.HAPPINESS);
         if (happiness != null)
         {
@@ -85,14 +121,17 @@ public abstract class Animal
 
     public void Heal()
     {
+        if (IsDead) return;
         Need? health = AnimalNeeds.FirstOrDefault(n => n.Type == NeedType.HEALTH);
         if (health != null)
         {
             health.Increase(35);
         }
     }
+
     public int GetCondition()
     {
+        if (IsDead) return 0;
         return AnimalNeeds.Min(n => n.Value);
     }
 }
