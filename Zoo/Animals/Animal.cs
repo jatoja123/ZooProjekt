@@ -134,4 +134,19 @@ public abstract class Animal
         if (IsDead) return 0;
         return AnimalNeeds.Min(n => n.Value);
     }
+
+        /// <summary>
+    /// Sprawdza, czy zwierzę spełnia warunki do rozmnażania.
+    /// Domyślnie: wiek powyżej 2, zdrowie i szczęście powyżej 7.
+    /// </summary>
+    public virtual bool CanReproduce()
+    {
+        if (IsDead) return false;
+
+        // Podstawowe warunki wiekowe
+        if (age < 2 || age >= maxAge) return false;
+
+        // Rozmnażanie wymaga dobrego stanu zdrowia i zadowolenia (powyżej 7)
+        return (AnimalNeeds[2].Value > 7) && (AnimalNeeds[3].Value > 7);
+    }
 }
