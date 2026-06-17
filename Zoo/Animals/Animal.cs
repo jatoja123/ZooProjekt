@@ -37,7 +37,19 @@ public abstract class Animal
         {
             foreach(Need need in AnimalNeeds)
             {
-                need.Decrease(need.PassiveDecrease);
+                int decreaseAmount = need.PassiveDecrease;
+                if (this is IWaterAnimal)
+                {
+                    if (need.Type == NeedType.THIRST)
+                    {
+                        decreaseAmount = 0;
+                    }
+                    else
+                    {
+                        decreaseAmount += 1;
+                    }
+                }
+                need.Decrease(decreaseAmount);
             }
             
             age += AnimalAgeRatio.AgingFactor[AgeRatio];
