@@ -2,7 +2,17 @@
 
 public class AnimalsController
 {
-    public static List<Type> AnimalTypes = new List<Type>() { typeof(Lion), typeof(Elephant) };
+    public static List<Type> AnimalTypes = new List<Type>()
+    {
+        typeof(Lion),
+        typeof(Elephant),
+        typeof(Emu),
+        typeof(Turtle),
+        typeof(Snake),
+        typeof(Dolphin),
+        typeof(Monkey),
+        typeof(Giraffe)
+    };
     
     private List<Animal> animals = new();
     public List<Animal> Animals => animals;

@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Zoo.Animals;
-
+using Zoo.Environment;
 namespace Zoo;
 
 public abstract class LocationHabitat(int x, int y) : Location(x, y)
 {
+    public abstract CageTypeEnum HabitatType { get; }
+    public int Temperature { get; set; } = 20;
     public override bool CanBeReplaced() => animals.Count == 0;
     public IReadOnlyList<Animal> Animals => animals;
     
@@ -21,6 +23,14 @@ public abstract class LocationHabitat(int x, int y) : Location(x, y)
             return false;
         }
         
+        foreach (var need in newAnimal.EnvironmentalNeeds)
+        {
+            if (!need.IsSatisfied(this))
+            {
+                return false;
+            }
+        }
+
         animals.Add(newAnimal);
         newAnimal.Habitat = this;
         return true;
@@ -50,5 +60,22 @@ public abstract class LocationHabitat(int x, int y) : Location(x, y)
         }
         
         return animalConditions / animals.Count;
+    }
+
+     public bool TryReproduce(out Animal? offspring)
+    {
+        offspring = null;
+
+        if (animals.Count >= 4 || animals.Count < 2) return false;
+
+        var candidates = animals.Where(a => a.CanReproduce()).ToList();
+        if (candidates.Count < 2) return false;
+
+        if (Random.Shared.NextDouble() > 0.30) return false;
+
+        var type = animals[0].GetType();
+        offspring = (Animal)Activator.CreateInstance(type, $"Baby_{Random.Shared.Next(1000, 9999)}")!;
+
+        return true;
     }
 }

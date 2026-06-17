@@ -2,14 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Zoo.Economy;
+using Zoo.Environment;
 using Zoo.Needs;
 
 namespace Zoo.Animals;
 
 public abstract class Animal
 {
-    private static readonly Random _random = new();
-
     public GoodType foodType {get; private set;} // M - meat, P - plant, B - both 
     public int age {get; private set;}
     public AgeRatio AgeRatio { get; private set; } 
@@ -21,6 +20,7 @@ public abstract class Animal
     public string Name => $"{_name} - {GetType().Name} ({age})";
     
     public List<Need> AnimalNeeds { get; private set; }
+    public List<EnvironmentalNeed> EnvironmentalNeeds { get; protected set; } = new();
     
     public Animal(string name, GoodType food, AgeRatio ageRatio = AgeRatio.NORMAL)
     {
@@ -39,7 +39,19 @@ public abstract class Animal
         {
             foreach(Need need in AnimalNeeds)
             {
-                need.Decrease(need.PassiveDecrease);
+                int decreaseAmount = need.PassiveDecrease;
+                if (this is IWaterAnimal)
+                {
+                    if (need.Type == NeedType.THIRST)
+                    {
+                        decreaseAmount = 0;
+                    }
+                    else
+                    {
+                        decreaseAmount += 1;
+                    }
+                }
+                need.Decrease(decreaseAmount);
             }
             
             age += AnimalAgeRatio.AgingFactor[AgeRatio];
@@ -68,7 +80,7 @@ public abstract class Animal
         double postepStarosci = (double)(age - progStarosci) / (maxAge - progStarosci);
         double szansaNaSmierc = postepStarosci * 0.40; 
 
-        return _random.NextDouble() < szansaNaSmierc;
+        return Random.Shared.NextDouble() < szansaNaSmierc;
     }
     
     /// <summary>
@@ -133,5 +145,20 @@ public abstract class Animal
     {
         if (IsDead) return 0;
         return AnimalNeeds.Min(n => n.Value);
+    }
+
+        /// <summary>
+    /// Sprawdza, czy zwierzę spełnia warunki do rozmnażania.
+    /// Domyślnie: wiek powyżej 2, zdrowie i szczęście powyżej 7.
+    /// </summary>
+    public virtual bool CanReproduce()
+    {
+        if (IsDead) return false;
+
+        // Podstawowe warunki wiekowe
+        if (age < 2 || age >= maxAge) return false;
+
+        // Rozmnażanie wymaga dobrego stanu zdrowia i zadowolenia (powyżej 7)
+        return (AnimalNeeds[2].Value > 7) && (AnimalNeeds[3].Value > 7);
     }
 }
