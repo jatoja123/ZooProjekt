@@ -1,3 +1,5 @@
+using Zoo.Score;
+
 namespace Zoo.Economy;
 
 public enum GoodType
@@ -9,8 +11,9 @@ public enum GoodType
     MEDICINE
 }
 
-public class Storage
+public class Storage: IScoreable
 {
+    private const int StorageScoreMultiplier = 10;
     private const int DeafultLimit = 10;
 
     private Dictionary<GoodType, int> amounts =
@@ -49,5 +52,16 @@ public class Storage
         {
             limits[t] += amount;
         }
+    }
+
+    public int CalculateScore()
+    {
+        int score = 0;
+        foreach (var t in Enum.GetValues<GoodType>())
+        {
+            score += GetAmount(t);
+            score += (GetLimit(t) - DeafultLimit) / 2; // dodatkowe punkty za ulepszenia w limicie
+        }
+        return score * StorageScoreMultiplier;
     }
 }

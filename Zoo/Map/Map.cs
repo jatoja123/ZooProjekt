@@ -1,10 +1,12 @@
-﻿namespace Zoo;
+﻿using Zoo.Score;
 
-public class Map
+namespace Zoo;
+
+public class Map : IScoreable
 {
     // Punktowanie
-    private static int locationConditionMultiplier = 2;
-    private static int animalCountMultiplier = 1;
+    private const int locationConditionMultiplier = 50;
+    private const int animalCountMultiplier = 20;
     
     private static int width = 5;
     private static int height = 5;
@@ -46,7 +48,7 @@ public class Map
     }
 
     public Location? GetLocation(int x, int y) => Locations.FirstOrDefault(l => l?.X == x && l?.Y == y, null);
-    
+
     public int CalculateScore()
     {
         int score = 0;
@@ -59,7 +61,7 @@ public class Map
                 score += (int)(habitat.Animals.Count * animalCountMultiplier); // liczba zwierząt
             }
         }
-        
+
         return score;
     }
 }

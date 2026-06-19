@@ -4,6 +4,7 @@ using Zoo.Commands;
 using Zoo.Commands.Animals;
 using Zoo.GameEvents;
 using Zoo.Economy;
+using Zoo.Score;
 
 namespace Zoo;
 
@@ -34,6 +35,9 @@ public class GameController : IObserver
 
     private MoneyController moneyController = null!;
     public MoneyController MoneyController => moneyController;
+    
+    private GameScore gameScore = null!;
+    public GameScore GameScore => gameScore;
 
     private Storage storage = null!;
     public Storage Storage => storage;
@@ -41,7 +45,6 @@ public class GameController : IObserver
     private GameGUI gameGui = null!;
 
     public int ActionCostUsed { get; private set; } = 0;
-    public int TotalScore = 0;
     public int MaxActionCost => maxActionCost;
     public int ActionsLeft => MaxActionCost - ActionCostUsed;
 
@@ -102,7 +105,10 @@ public class GameController : IObserver
 
         storage = new Storage();
 
+        gameScore = new GameScore(new() { map, storage, moneyController });
+
         turnController = new TurnController();
+        turnController.Subscribe(gameScore);
         turnController.Subscribe(gameGui);
         turnController.Subscribe(this);
         turnController.Subscribe(gameEventsController);
@@ -125,12 +131,10 @@ public class GameController : IObserver
 
                 moneyController.CalculateIncome(animalsController);
                 consoleDisplay.DisplayMessage($"Stan konta: {moneyController.Money}$");
-                consoleDisplay.DisplayMessage($"Score: {TotalScore}pkt");
+                consoleDisplay.DisplayMessage($"Reputacja: {gameScore.CurrentScore} pkt | Najlepsza reputacja: {gameScore.MaxScore} pkt");
             }
             else
             {
-                var score = map.CalculateScore();
-                TotalScore += score;
                 foreach (var animal in animalsController.Animals)
                 {
                     animal.Update(notifyEvent);
@@ -139,7 +143,6 @@ public class GameController : IObserver
         }
         else if (notifyEvent is GameStartEvent)
         {
-            TotalScore = 0;
             if (RunInConsole)
             {
                 MainActions.AddRange(MapActions);

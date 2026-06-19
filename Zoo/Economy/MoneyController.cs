@@ -1,9 +1,10 @@
 using System.Linq;
 using Zoo.Animals;
+using Zoo.Score;
 
 namespace Zoo.Economy;
 
-public class MoneyController
+public class MoneyController: IScoreable
 {
     private const int StartingMoney = 100;
     private const int BaseIncomePerAnimal = 20;
@@ -41,6 +42,11 @@ public class MoneyController
         if (Money < amount) return false;
         Money -= amount;
         return true;
+    }
+
+    public int CalculateScore()
+    {
+        return Money;
     }
 }
 
