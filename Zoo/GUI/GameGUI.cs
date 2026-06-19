@@ -66,10 +66,6 @@ public class GameGUI : IObserver
         StateDispatches.Enqueue(s => s.EnqueuePopup(message));
     }
 
-    public void AddDecision(PendingDecision decision)
-    {
-        state.DecisionQueue.Enqueue(decision);
-    }
 
     public Task Start() => Task.Run(RunLoop);
 

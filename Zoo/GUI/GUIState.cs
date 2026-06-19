@@ -3,7 +3,6 @@ using System.Collections.Immutable;
 using Raylib_cs;
 using Zoo.Commands;
 using Zoo.Animals;
-using Zoo.GameEvents;
 
 namespace Zoo.GUI;
 
@@ -52,10 +51,6 @@ public record GUIState
     public GUIState UpdateHoveredTile(int x, int y) => this with { HoveredX = x, HoveredY = y };
     public GUIState SetTurn(int turn) => this with { CurrentTurn = turn };
     public GUIState SetTotalTurns(int total) => this with { TotalTurns = total };
-
-    public Queue<PendingDecision> DecisionQueue { get; set; } = new();
-    public bool IsDecisionOpen { get; set; } = false;
-    public PendingDecision? CurrentDecision { get; set; }
 
     public GUIState SwitchView(ViewMode newMode) => (this with
     {
