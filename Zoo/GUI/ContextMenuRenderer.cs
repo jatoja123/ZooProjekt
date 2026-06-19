@@ -176,7 +176,7 @@ public static class ContextMenuRenderer
             args.Add(animalIndex.ToString());
 
             string cmdName = cmd.ActionCommand();
-            if ((cmdName == "nakarm" || cmdName == "napoj") && !string.IsNullOrWhiteSpace(additionalOption))
+            if ((cmdName == "nakarm" || cmdName == "napoj" || cmdName == "lecz") && !string.IsNullOrWhiteSpace(additionalOption))
             {
                 args.Add(additionalOption.Trim());
             }

@@ -9,7 +9,7 @@ public static class AnimalNamesHelper
         return names[Random.Shared.Next(names.Count)];
     }
     
-    private static List<string> playNames = new(){ "Skakanka", "Berek", "Chowany", "Zaklepany", "Klasy", "Wyścigi", "Zapasy", "Przeciąganie liny", "Policjanci i złodzieje", "Warcaby"};
+    private static List<string> playNames = new(){ "Skakanka", "Berek", "Chowany", "Zaklepany", "Klasy", "Wyścigi", "Zapasy", "Przeciaganie liny", "Policjanci i zlodzieje", "Warcaby"};
     
     public static string RandomPlayName()
     {

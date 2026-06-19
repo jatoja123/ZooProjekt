@@ -77,6 +77,7 @@ public class GameController : IObserver
         {
             new CommandAnimalFeed(this),
             new CommandAnimalDrink(this),
+            new CommandAnimalHeal(this),
             new CommandAnimalPlay(this),
         };
         
