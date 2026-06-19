@@ -54,13 +54,13 @@ public class CommandAnimalHeal(GameController controller) : Command(controller)
         }
 
 
-        var medicine_used = animal.Feed(medicine_storage);
+        var medicine_used = animal.Heal(medicine_storage);
 
         if (medicine_used == 0)
         {
             controller.ConsoleDisplay.DisplayWarning($"{animal.Name} jest zdrow jak ryba ");
 
-            controller.Storage.Add(animal.foodType, medicine_used);
+            controller.Storage.Add(GoodType.MEDICINE, medicine_used);
             return true;
         }
 
@@ -68,7 +68,7 @@ public class CommandAnimalHeal(GameController controller) : Command(controller)
 
         if (medicine_used < medicine_storage)
         {
-            controller.Storage.Add(animal.foodType, medicine_storage - medicine_used);
+            controller.Storage.Add(GoodType.MEDICINE, medicine_storage - medicine_used);
         }
         return true;
     }

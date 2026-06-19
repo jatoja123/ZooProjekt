@@ -13,8 +13,7 @@ public class GameEventsController : IObserver
 
     public void Start()
     {
-        AddEvent(new EventHarmedAnimalArrives());
-        AddEvent(new EventAnimalsNotInHabitatDie());
+        events.AddRange(GameEventCatalog.CreateAll());
     }
 
     public void AddEvent(GameEvent gameEvent)

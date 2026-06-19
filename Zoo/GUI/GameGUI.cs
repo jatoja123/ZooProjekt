@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Threading.Tasks;
 using Raylib_cs;
+using Zoo.GameEvents;
 using Zoo.GUI;
 
 namespace Zoo;
@@ -63,6 +64,11 @@ public class GameGUI : IObserver
     public void AddPopup(string message)
     {
         StateDispatches.Enqueue(s => s.EnqueuePopup(message));
+    }
+
+    public void AddDecision(PendingDecision decision)
+    {
+        state.DecisionQueue.Enqueue(decision);
     }
 
     public Task Start() => Task.Run(RunLoop);
