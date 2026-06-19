@@ -6,7 +6,7 @@ public enum CommandVisibility { Console, GUI, Always }
 
 public abstract class Command
 {
-    private GameController controller;
+    protected GameController controller;
     private CommandVisibility visibility;
     
     public Command(GameController controller, CommandVisibility visibility = CommandVisibility.Always)

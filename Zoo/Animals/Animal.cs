@@ -131,14 +131,18 @@ public abstract class Animal
         }
     }
 
-    public void Heal()
+    public int Heal(int medicineAmount)
     {
-        if (IsDead) return;
+        if (IsDead) return 0;
         Need? health = AnimalNeeds.FirstOrDefault(n => n.Type == NeedType.HEALTH);
         if (health != null)
         {
-            health.Increase(35);
+            medicineAmount = Math.Min(medicineAmount, health.Missing);
+            health.Increase(medicineAmount);
+            return medicineAmount;
         }
+        
+        return 0;
     }
 
     public int GetCondition()

@@ -28,11 +28,14 @@ public class CommandBuyWater(GameController controller) : Command(controller)
 
         bool fullyAdded = controller.Storage.Add(GoodType.WATER, amount);
 
-        if (!fullyAdded)
+        if (!fullyAdded) {
             controller.ConsoleDisplay.DisplayWarning("Zakup przekracza limit magazynu, nie zakupiono");
-        else
+            return false;
+        }
+        else {
             controller.MoneyController.Spend(cost);
-        controller.ConsoleDisplay.DisplayInfo($"Kupiono {amount} wody za {cost}$");
-        return true;
+            controller.ConsoleDisplay.DisplayInfo($"Kupiono {amount} wody za {cost}$");
+            return true;
+        }
     }
 }
