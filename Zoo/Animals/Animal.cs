@@ -161,4 +161,14 @@ public abstract class Animal
         // Rozmnażanie wymaga dobrego stanu zdrowia i zadowolenia (powyżej 7)
         return (AnimalNeeds[2].Value > 7) && (AnimalNeeds[3].Value > 7);
     }
+    
+    public void SetAge(int newAge)
+    {
+        age = newAge;
+    }
+
+    public void DecreaseNeed(NeedType needType, int amount)
+    {
+        AnimalNeeds.FirstOrDefault(n => n.Type == needType)?.Decrease(amount);
+    }
 }
