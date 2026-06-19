@@ -40,7 +40,7 @@ public class CommandAnimalHeal(GameController controller) : Command(controller)
             return false;
         }
         
-        var medicine_storage = controller.Storage.Use(animal.foodType, count);
+        var medicine_storage = controller.Storage.Use(GoodType.MEDICINE, count);
 
         if (medicine_storage == 0)
         {
