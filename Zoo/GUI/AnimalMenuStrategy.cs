@@ -7,7 +7,7 @@ namespace Zoo.GUI;
 public sealed class AnimalMenuStrategy : IMenuStrategy
 {
     private static readonly List<string> QuantityOptions = new() { "1", "2", "3", "5", "10" };
-    private static readonly HashSet<string> QuantityCommands = new() { "nakarm", "napoj" };
+    private static readonly HashSet<string> QuantityCommands = new() { "nakarm", "napoj", "lecz" };
 
     public List<Command> GetCommands(GUIState state) =>
         GameController.AnimalActions.ToList();
