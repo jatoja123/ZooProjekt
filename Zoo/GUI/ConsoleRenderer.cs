@@ -1,20 +1,34 @@
 using System.Linq;
+using System.Numerics;
 using Raylib_cs;
+using Zoo;
 
 namespace Zoo.GUI;
 
-public static class ConsoleRenderer
+public class ConsoleRenderer : IRenderer
 {
-    public static void Draw(GameController controller, int x, int y, int width, int height, bool compactMode)
+    private readonly bool isHabitatMode;
+
+    public ConsoleRenderer(bool isHabitatMode)
     {
-        int titleY = compactMode ? y - 25 : y - 40;
-        int titleFontSize = compactMode ? 20 : 30;
-        Color titleColor = compactMode ? Color.RayWhite : Color.DarkGray;
+        this.isHabitatMode = isHabitatMode;
+    }
+
+    public GUIState Draw(GameController controller, int screenWidth, int screenHeight, Vector2 mousePos, bool isClicked, GUIState state)
+    {
+        int x = 20;
+        int y = isHabitatMode ? screenHeight - 340 : screenHeight - 440;
+        int width = isHabitatMode ? screenWidth - 40 : screenWidth - 350;
+        int height = isHabitatMode ? 320 : 300;
+
+        int titleY = isHabitatMode ? y - 25 : y - 40;
+        int titleFontSize = 30;
+        Color titleColor = isHabitatMode ? Color.RayWhite : Color.DarkGray;
         
-        int logFontSize = compactMode ? 16 : 24;
-        int logSpacing = compactMode ? 22 : 35;
+        int logFontSize = 24;
+        int logSpacing = 35;
         
-        string titleText = compactMode ? "Konsola:" : "Konsola gry (ostatnie komunikaty):";
+        string titleText = isHabitatMode ? "Konsola:" : "Konsola gry (ostatnie komunikaty):";
         
         Raylib.DrawText(titleText, x, titleY, titleFontSize, titleColor);
         Raylib.DrawRectangle(x, y, width, height, Color.Black);
@@ -28,5 +42,7 @@ public static class ConsoleRenderer
                 Raylib.DrawText(recentLogs[i], x + 15, y + 15 + (i * logSpacing), logFontSize, Color.Green);
             }
         }
+        
+        return state;
     }
 }

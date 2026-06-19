@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Numerics;
 using System.Threading.Tasks;
 using Raylib_cs;
@@ -7,86 +10,107 @@ namespace Zoo;
 
 public class GameGUI : IObserver
 {
-    private GameController controller;
-    private GUIState state = new GUIState();
+    private readonly GameController controller;
+    private GUIState state;
+    private readonly InputHandler inputHandler;
+    private readonly AssetLoader assetLoader;
 
-    private int lastSavedTurn = 0;
-    private int maxTurns = 0;
+    private readonly List<IRenderer> mainMapRenderers;
+    private readonly List<IRenderer> habitatRenderers;
+    private readonly PopupRenderer popupRenderer;
 
-    public GameGUI(GameController controller) => this.controller = controller;
+    public static ConcurrentQueue<Func<GUIState, GUIState>> StateDispatches = new();
 
-    public void AddPopup(string message)
+    public GameGUI(GameController controller, IMenuStrategy mainMapStrategy, IMenuStrategy habitatStrategy)
     {
-        state.PopupQueue.Enqueue(message);
-    }
+        this.controller = controller;
+        this.state = new GUIState();
+        this.inputHandler = new InputHandler();
+        this.assetLoader = new AssetLoader();
 
-    public Task Start() => Task.Run(RunLoop);
+        mainMapRenderers = new List<IRenderer>
+        {
+            new TopUIRenderer(),
+            new MapRenderer(assetLoader),
+            new RightPanelRenderer(),
+            new ConsoleRenderer(false),
+            new ContextMenuRenderer(mainMapStrategy),
+            new LeftContextMenu()
+        };
+
+        habitatRenderers = new List<IRenderer>
+        {
+            new HabitatRenderer(assetLoader),
+            new ConsoleRenderer(true),
+            new ContextMenuRenderer(habitatStrategy)
+        };
+
+        popupRenderer = new PopupRenderer();
+    }
 
     public void ReceiveEvent(NotifyEvent notifyEvent)
     {
         if (notifyEvent is TurnEvent turnEvent)
         {
-            lastSavedTurn = turnEvent.Turn;
+            StateDispatches.Enqueue(s => s.SetTurn(turnEvent.Turn));
         }
         else if (notifyEvent is GameStartEvent gameStartEvent)
         {
-            maxTurns = gameStartEvent.TotalTurns;
+            StateDispatches.Enqueue(s => s.SetTotalTurns(gameStartEvent.TotalTurns));
         }
     }
 
+    public void AddPopup(string message)
+    {
+        StateDispatches.Enqueue(s => s.EnqueuePopup(message));
+    }
+
+    public Task Start() => Task.Run(RunLoop);
+
     private void RunLoop()
     {
+        Raylib.SetConfigFlags((ConfigFlags)(1024 | 8 | 64));
         Raylib.InitWindow(1800, 1000, "Zoo");
         Raylib.SetTargetFPS(60);
 
         while (!Raylib.WindowShouldClose() && state.KeepRunning)
         {
+            while (StateDispatches.TryDequeue(out var updateFunc))
+            {
+                state = updateFunc(state);
+            }
+
             int screenWidth = Raylib.GetScreenWidth();
             int screenHeight = Raylib.GetScreenHeight();
             Vector2 mousePos = Raylib.GetMousePosition();
             bool isClicked = Raylib.IsMouseButtonPressed(MouseButton.Left);
 
-            state.ClickHandled = false;
-
-            if (!state.IsPopupOpen && state.PopupQueue.Count > 0)
-            {
-                state.IsPopupOpen = true;
-                state.CurrentPopupMessage = state.PopupQueue.Dequeue();
-            }
+            state = state.SetClickHandled(false);
 
             if (!state.IsPopupOpen)
             {
-                InputHandler.HandleKeyboard(state);
+                state = inputHandler.HandleKeyboard(state);
             }
 
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Color.RayWhite);
 
-            if (state.CurrentViewMode == ViewMode.MainMap)
+            var activeRenderers = state.CurrentViewMode == ViewMode.MainMap ? mainMapRenderers : habitatRenderers;
+
+            foreach (var renderer in activeRenderers)
             {
-                TopUIRenderer.Draw(controller, screenHeight, state, lastSavedTurn, maxTurns);
-                MapRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
-                RightPanelRenderer.Draw(screenWidth, screenHeight, mousePos, isClicked, state);
-                ConsoleRenderer.Draw(controller, 20, screenHeight - 440, screenWidth - 350, 300, false);
-                ContextMenuRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
-                LeftContextMenu.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
-            }
-            else if (state.CurrentViewMode == ViewMode.HabitatView)
-            {
-                HabitatRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
-                ConsoleRenderer.Draw(controller, 20, screenHeight - 340, screenWidth - 40, 320, false);
-                ContextMenuRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
+                state = renderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
             }
 
             if (state.IsPopupOpen)
             {
-                PopupRenderer.Draw(screenWidth, screenHeight, mousePos, isClicked, state);
+                state = popupRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
             }
 
             Raylib.EndDrawing();
         }
 
-        AssetLoader.UnloadAllTextures();
+        assetLoader.UnloadAllTextures();
         Raylib.CloseWindow();
     }
 }

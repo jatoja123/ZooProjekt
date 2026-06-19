@@ -4,12 +4,13 @@ using System.Numerics;
 using System.Threading.Tasks;
 using Raylib_cs;
 using Zoo.Commands;
+using Zoo;
 
 namespace Zoo.GUI;
 
-public static class RightPanelRenderer
+public class RightPanelRenderer : IRenderer
 {
-    public static void Draw(int screenWidth, int screenHeight, Vector2 mousePos, bool isClicked, GUIState state)
+    public GUIState Draw(GameController controller, int screenWidth, int screenHeight, Vector2 mousePos, bool isClicked, GUIState state)
     {
         Rectangle exitBtnRect = new Rectangle(screenWidth - 300, screenHeight - 80, 280, 50);
         Raylib.DrawRectangleRec(exitBtnRect, Color.DarkGray);
@@ -17,11 +18,10 @@ public static class RightPanelRenderer
 
         if (isClicked && Raylib.CheckCollisionPointRec(mousePos, exitBtnRect))
         {
-            state.KeepRunning = false;
-            state.ClickHandled = true;
+            return state.ShutdownGame().SetClickHandled(true);
         }
 
-        var actionsToDisplay = GameController.PlayerActions.Where(x=> x.IsVisible()).ToList();
+        var actionsToDisplay = GameController.PlayerActions.Where(x => x.IsVisible()).ToList();
         int buttonsCount = actionsToDisplay.Count();
         for (int i = 0; i < buttonsCount; i++)
         {
@@ -35,43 +35,32 @@ public static class RightPanelRenderer
             {
                 if (GameController.PlayerActions == GameController.ShopActions)
                 {
-                    state.IsLeftMenuOpen = true;
-                    state.IsLeftSubMenuOpen = false;
-                    state.LeftSubOptions.Clear();
-                    state.LeftPendingArgs.Clear();
-                    state.LeftMenuX = screenWidth - 300 - 220;
-                    state.LeftMenuY = btnY;
-                    state.LeftSelectedCommand = cmd;
-                    state.ClickHandled = true;
+                    return state.OpenLeftMenu(screenWidth - 300 - 220, btnY, cmd).SetClickHandled(true);
                 }
                 else
                 {
                     ExecuteCommand(cmd, state);
-                    state.ClickHandled = true;
+                    return state.ClearInputBuffer().SelectTile(-1, -1).SetClickHandled(true);
                 }
             }
         }
+        
+        return state;
     }
 
-    private static void ExecuteCommand(Command cmd, GUIState state)
+    private static GUIState ExecuteCommand(Command cmd, GUIState state)
+{
+    var args = string.IsNullOrWhiteSpace(state.InputBuffer)
+        ? new List<string>()
+        : state.InputBuffer.Split(' ').ToList();
+
+    Task.Run(() =>
     {
-        var args = string.IsNullOrWhiteSpace(state.InputBuffer)
-            ? new List<string>()
-            : state.InputBuffer.Split(' ').ToList();
+        bool success = cmd.ExecuteCommand(args);
+        string msg = success ? $"Wykonano: {cmd.ActionCommand()}" : "Blad parametrow!";
+        GameGUI.StateDispatches.Enqueue(s => s.SetStatus(msg));
+    });
 
-        Task.Run(() =>
-        {
-            if (cmd.ExecuteCommand(args))
-            {
-                state.StatusMessage = $"Wykonano: {cmd.ActionCommand()}";
-                state.InputBuffer = "";
-                state.SelectedX = -1;
-                state.SelectedY = -1;
-            }
-            else
-            {
-                state.StatusMessage = "Blad parametrow!";
-            }
-        });
-    }
+    return state.ClearInputBuffer().SelectTile(-1, -1);
+}
 }

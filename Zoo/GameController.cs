@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Zoo.Animals;
 using Zoo.Commands;
 using Zoo.Commands.Animals;
 using Zoo.GameEvents;
 using Zoo.Economy;
 using Zoo.Score;
+using Zoo.GUI;
 
 namespace Zoo;
 
@@ -12,7 +14,7 @@ public class GameController : IObserver
 {
     public static GameController Instance { get; private set; } = null!;
     public static bool RunInConsole = false;
-    public static List<Command> PlayerActions = new(); // obecne akcje dostępne dla gracza
+    public static List<Command> PlayerActions = new();
 
     public static List<Command> MainActions = new();
     public static List<Command> ShopActions = new();
@@ -95,11 +97,10 @@ public class GameController : IObserver
         map.Start();
         consoleDisplay = new ConsoleDisplay();
 
-        gameGui = new GameGUI(this);
+        gameGui = new GameGUI(this, new MapMenuStrategy(), new AnimalMenuStrategy());
 
         gameEventsController = new GameEventsController();
         gameEventsController.Start();
-
         animalsController = new AnimalsController();
 
         moneyController = new MoneyController();

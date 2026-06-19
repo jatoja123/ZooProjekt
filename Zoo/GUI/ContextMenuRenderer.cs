@@ -8,65 +8,58 @@ using Zoo;
 
 namespace Zoo.GUI;
 
-public static class ContextMenuRenderer
+public class ContextMenuRenderer : IRenderer
 {
+    private const int ItemHeight = 30;
     private const int MenuWidth = 220;
-    private const int MenuItemHeight = 30;
     private const int SubMenuWidth = 200;
 
-    public static void Draw(GameController controller, int screenWidth, int screenHeight, Vector2 mousePos, bool isClicked, GUIState state)
+    private readonly IMenuStrategy strategy;
+
+    public ContextMenuRenderer(IMenuStrategy strategy)
     {
-        if (!state.IsContextMenuOpen) return;
+        this.strategy = strategy;
+    }
 
-        List<Command> contextCommands;
+    public GUIState Draw(
+        GameController controller,
+        int screenWidth, int screenHeight,
+        Vector2 mousePos, bool isClicked,
+        GUIState state)
+    {
+        if (!IsMenuOpen(state)) return state;
 
-        if (state.CurrentViewMode == ViewMode.HabitatView)
-        {
-            if (state.SelectedAnimal != null)
-            {
-                contextCommands = GameController.AnimalActions.ToList();
-            }
-            else
-            {
-                return;
-            }
-        }
-        else if (state.SelectedX != -1)
-        {
-            contextCommands = GameController.MapActions.ToList();
-        }
-        else
-        {
-            return;
-        }
+        if (strategy is ShopMenuStrategy)
+            return DrawShopMenu(controller, screenWidth, screenHeight, mousePos, isClicked, state);
 
-        if (contextCommands.Count == 0) return;
+        return DrawContextMenu(controller, screenWidth, screenHeight, mousePos, isClicked, state);
+    }
 
-        CalculateMainMenuBounds(screenWidth, screenHeight, contextCommands, state);
-        RenderMainMenu(controller, mousePos, isClicked, contextCommands, state);
+    private GUIState DrawContextMenu(
+        GameController controller,
+        int screenWidth, int screenHeight,
+        Vector2 mousePos, bool isClicked,
+        GUIState state)
+    {
+        if (!state.IsContextMenuOpen) return state;
+
+        var commands = strategy.GetCommands(state);
+        if (commands.Count == 0) return state;
+
+        state = RenderMainMenu(controller, mousePos, isClicked, commands, screenWidth, screenHeight, state);
 
         if (state.IsSubMenuOpen)
-        {
-            CalculateSubMenuBounds(screenWidth, screenHeight, state);
-            RenderSubMenu(controller, mousePos, isClicked, state);
-        }
+            state = RenderSubMenu(controller, mousePos, isClicked, state);
 
-        HandleOutsideClicks(mousePos, isClicked, state);
+        return HandleOutsideClick(mousePos, isClicked, state);
     }
 
-    private static void CalculateMainMenuBounds(int screenWidth, int screenHeight, List<Command> commands, GUIState state)
-    {
-        int menuHeight = commands.Count * MenuItemHeight + 10;
-        float menuX = state.ContextMenuX;
-        float menuY = state.ContextMenuY;
-
-        if (menuX + MenuWidth > screenWidth) menuX = screenWidth - MenuWidth - 5;
-        if (menuY + menuHeight > screenHeight) menuY = screenHeight - menuHeight - 5;
-
-        state.ContextMenuRect = new Rectangle(menuX, menuY, MenuWidth, menuHeight);
-    }
-
-    private static void RenderMainMenu(GameController controller, Vector2 mousePos, bool isClicked, List<Command> commands, GUIState state)
+    private GUIState RenderMainMenu(
+        GameController controller,
+        Vector2 mousePos, bool isClicked,
+        List<Command> commands,
+        int screenWidth, int screenHeight,
+        GUIState state)
     {
         Raylib.DrawRectangleRec(state.ContextMenuRect, Color.RayWhite);
         Raylib.DrawRectangleLinesEx(state.ContextMenuRect, 1, Color.Black);
@@ -74,185 +67,200 @@ public static class ContextMenuRenderer
         for (int i = 0; i < commands.Count; i++)
         {
             var cmd = commands[i];
-            Rectangle itemRect = new Rectangle(state.ContextMenuRect.X, state.ContextMenuRect.Y + 5 + (i * MenuItemHeight), MenuWidth, MenuItemHeight);
+            var itemRect = new Rectangle(
+                state.ContextMenuRect.X,
+                state.ContextMenuRect.Y + 5 + i * ItemHeight,
+                MenuWidth, ItemHeight);
 
             if (Raylib.CheckCollisionPointRec(mousePos, itemRect))
             {
                 Raylib.DrawRectangleRec(itemRect, Color.LightGray);
-                
-                if (isClicked)
-                {
-                    HandleMainMenuClick(controller, cmd, state);
-                }
+
+                if (isClicked && !state.ClickHandled)
+                    return OnMainMenuClick(controller, cmd, screenWidth, screenHeight, state)
+                           .SetClickHandled(true);
             }
 
-            Raylib.DrawText(cmd.ActionCommand(), (int)state.ContextMenuRect.X + 10, (int)state.ContextMenuRect.Y + 10 + (i * MenuItemHeight), 20, Color.Black);
+            Raylib.DrawText(cmd.ActionCommand(), (int)itemRect.X + 10, (int)itemRect.Y + 3, 20, Color.Black);
         }
+
+        return state;
     }
 
-    private static void HandleMainMenuClick(GameController controller, Command cmd, GUIState state)
+    private GUIState OnMainMenuClick(
+        GameController controller,
+        Command cmd,
+        int screenWidth, int screenHeight,
+        GUIState state)
     {
-        var subOptions = cmd.GetAvailableOptions();
-        
-        if (state.CurrentViewMode == ViewMode.HabitatView && (cmd.ActionCommand() == "nakarm" || cmd.ActionCommand() == "napoj"))
-        {
-            subOptions = new List<string> { "1", "2", "3", "5", "10" };
-        }
-        
+        var subOptions = strategy.GetSubOptions(cmd, state);
+
         if (subOptions.Count > 0)
-        {
-            state.IsSubMenuOpen = true;
-            state.CurrentSubOptions = subOptions;
-            state.SelectedCommand = cmd;
-            state.ClickHandled = true;
-        }
-        else
-        {
-            ExecuteFinalCommand(controller, cmd, state, "");
-        }
+            return state.OpenSubMenu(subOptions, cmd, screenWidth, screenHeight);
+
+        return ExecuteAndClose(controller, cmd, state, "");
     }
 
-    private static void CalculateSubMenuBounds(int screenWidth, int screenHeight, GUIState state)
-    {
-        int subMenuHeight = state.CurrentSubOptions.Count * MenuItemHeight + 10;
-        float subMenuX = state.ContextMenuRect.X + state.ContextMenuRect.Width;
-        float subMenuY = state.ContextMenuRect.Y;
-
-        if (subMenuX + SubMenuWidth > screenWidth) subMenuX = state.ContextMenuRect.X - SubMenuWidth;
-        if (subMenuY + subMenuHeight > screenHeight) subMenuY = screenHeight - subMenuHeight - 5;
-
-        state.SubMenuRect = new Rectangle(subMenuX, subMenuY, SubMenuWidth, subMenuHeight);
-    }
-
-    private static void RenderSubMenu(GameController controller, Vector2 mousePos, bool isClicked, GUIState state)
+    private GUIState RenderSubMenu(
+        GameController controller,
+        Vector2 mousePos, bool isClicked,
+        GUIState state)
     {
         Raylib.DrawRectangleRec(state.SubMenuRect, Color.RayWhite);
         Raylib.DrawRectangleLinesEx(state.SubMenuRect, 1, Color.Black);
 
-        for (int i = 0; i < state.CurrentSubOptions.Count; i++)
+        var options = state.CurrentSubOptions;
+        for (int i = 0; i < options.Count; i++)
         {
-            string option = state.CurrentSubOptions[i];
-            Rectangle itemRect = new Rectangle(state.SubMenuRect.X, state.SubMenuRect.Y + 5 + (i * MenuItemHeight), SubMenuWidth, MenuItemHeight);
+            string option = options[i];
+            var itemRect = new Rectangle(
+                state.SubMenuRect.X,
+                state.SubMenuRect.Y + 5 + i * ItemHeight,
+                SubMenuWidth, ItemHeight);
 
             if (Raylib.CheckCollisionPointRec(mousePos, itemRect))
             {
                 Raylib.DrawRectangleRec(itemRect, Color.LightGray);
 
-                if (isClicked)
-                {
-                    if (state.SelectedCommand != null)
-                    {
-                        ExecuteFinalCommand(controller, state.SelectedCommand, state, option);
-                    }
-                    return;
-                }
+                if (isClicked && !state.ClickHandled && state.SelectedCommand != null)
+                    return ExecuteAndClose(controller, state.SelectedCommand, state, option)
+                           .SetClickHandled(true);
             }
 
-            Raylib.DrawText(option, (int)state.SubMenuRect.X + 10, (int)state.SubMenuRect.Y + 10 + (i * MenuItemHeight), 20, Color.Black);
+            Raylib.DrawText(option, (int)state.SubMenuRect.X + 10, (int)state.SubMenuRect.Y + 3 + i * ItemHeight, 20, Color.Black);
         }
+
+        return state;
     }
 
-    private static void HandleOutsideClicks(Vector2 mousePos, bool isClicked, GUIState state)
+    private GUIState HandleOutsideClick(Vector2 mousePos, bool isClicked, GUIState state)
     {
-        bool clickedOutsideMenu = !Raylib.CheckCollisionPointRec(mousePos, state.ContextMenuRect);
-        bool clickedOutsideSubMenu = !state.IsSubMenuOpen || !Raylib.CheckCollisionPointRec(mousePos, state.SubMenuRect);
+        bool outsideMain = !Raylib.CheckCollisionPointRec(mousePos, state.ContextMenuRect);
+        bool outsideSub = !state.IsSubMenuOpen || !Raylib.CheckCollisionPointRec(mousePos, state.SubMenuRect);
 
-        if (isClicked && !state.ClickHandled && clickedOutsideMenu && clickedOutsideSubMenu)
-        {
-            CloseAllMenus(state);
-        }
+        if (isClicked && !state.ClickHandled && outsideMain && outsideSub)
+            return state.CloseAllMenus();
+
+        return state;
     }
 
-    private static void ExecuteFinalCommand(GameController controller, Command cmd, GUIState state, string additionalOption)
+    private GUIState DrawShopMenu(
+        GameController controller,
+        int screenWidth, int screenHeight,
+        Vector2 mousePos, bool isClicked,
+        GUIState state)
     {
-        List<string> args = new List<string>();
+        if (!state.IsLeftMenuOpen) return state;
 
-        if (state.CurrentViewMode == ViewMode.HabitatView && state.SelectedAnimal != null && state.SelectedHabitat != null)
+        if (!state.LeftOptionsReady)
         {
-            int animalIndex = state.SelectedHabitat.Animals.ToList().IndexOf(state.SelectedAnimal);
-            
-            args.Add(state.SelectedHabitat.X.ToString());
-            args.Add(state.SelectedHabitat.Y.ToString());
-            args.Add(animalIndex.ToString());
+            if (state.LeftSelectedCommand == null)
+                return state.CloseAllMenus();
 
-            string cmdName = cmd.ActionCommand();
-            if ((cmdName == "nakarm" || cmdName == "napoj" || cmdName == "lecz") && !string.IsNullOrWhiteSpace(additionalOption))
-            {
-                args.Add(additionalOption.Trim());
-            }
+            var options = strategy.GetSubOptions(state.LeftSelectedCommand, state);
+
+            if (options.Count > 0)
+                return state.SetupLeftSubMenu(options, screenWidth, screenHeight);
+
+            DispatchCommand(controller, state.LeftSelectedCommand, state, "");
+            return state.CloseAllMenus();
         }
-        else
+
+        if (state.IsLeftSubMenuOpen)
+            state = RenderShopSubMenu(controller, mousePos, isClicked, state);
+
+        return HandleShopOutsideClick(mousePos, isClicked, state);
+    }
+
+    private GUIState RenderShopSubMenu(
+        GameController controller,
+        Vector2 mousePos, bool isClicked,
+        GUIState state)
+    {
+        Raylib.DrawRectangleRec(state.LeftSubMenuRect, Color.RayWhite);
+        Raylib.DrawRectangleLinesEx(state.LeftSubMenuRect, 1, Color.Black);
+
+        var options = state.LeftSubOptions;
+        for (int i = 0; i < options.Count; i++)
         {
-            if (cmd.ActionCommand() == "wolne" && !string.IsNullOrWhiteSpace(additionalOption))
-            {
-                string indexStr = additionalOption.Split(':')[0].Trim();
-                args.Add(indexStr);
-                args.Add(state.SelectedX.ToString());
-                args.Add(state.SelectedY.ToString());
-            }
-            else
-            {
-                if (!string.IsNullOrWhiteSpace(state.InputBuffer))
-                {
-                    args = state.InputBuffer.Split(' ', System.StringSplitOptions.RemoveEmptyEntries).ToList();
-                }
+            string option = options[i];
+            var itemRect = new Rectangle(
+                state.LeftSubMenuRect.X,
+                state.LeftSubMenuRect.Y + 5 + i * ItemHeight,
+                SubMenuWidth, ItemHeight);
 
-                if (!string.IsNullOrWhiteSpace(additionalOption))
-                {
-                    args.Add(additionalOption.Trim());
-                }
+            if (Raylib.CheckCollisionPointRec(mousePos, itemRect))
+            {
+                Raylib.DrawRectangleRec(itemRect, Color.LightGray);
+
+                if (isClicked && !state.ClickHandled)
+                    return OnShopOptionClick(controller, option, state).SetClickHandled(true);
             }
 
-            if (cmd.ActionCommand() == "sprawdz")
-            {
-                int targetX = state.SelectedX;
-                int targetY = state.SelectedY;
-
-                if (args.Count >= 2 && int.TryParse(args[0], out int x) && int.TryParse(args[1], out int y))
-                {
-                    targetX = x;
-                    targetY = y;
-                }
-                else if (args.Count == 0 && targetX != -1 && targetY != -1)
-                {
-                    args.Add(targetX.ToString());
-                    args.Add(targetY.ToString());
-                }
-
-                var location = controller.Map.GetLocation(targetX, targetY);
-                if (location is LocationHabitat habitat)
-                {
-                    state.SelectedHabitat = habitat;
-                    state.CurrentViewMode = ViewMode.HabitatView;
-                }
-            }
+            Raylib.DrawText(option, (int)itemRect.X + 10, (int)itemRect.Y + 10, 20, Color.Black);
         }
+
+        return state;
+    }
+
+    private GUIState OnShopOptionClick(GameController controller, string option, GUIState state)
+    {
+        if (state.LeftSelectedCommand == null)
+            return state.CloseAllMenus();
+
+        if (strategy.RequiresNextStep(state.LeftSelectedCommand, state, option))
+        {
+            var nextOptions = strategy.GetNextStepOptions(state.LeftSelectedCommand, state, option);
+            return state.AddLeftPendingArgument(option).UpdateLeftSubOptions(nextOptions);
+        }
+
+        DispatchCommand(controller, state.LeftSelectedCommand, state.AddLeftPendingArgument(option), option);
+        return state.AddLeftPendingArgument(option).CloseAllMenus();
+    }
+
+    private GUIState HandleShopOutsideClick(Vector2 mousePos, bool isClicked, GUIState state)
+    {
+        if (!state.IsLeftMenuOpen) return state;
+
+        bool outside = !Raylib.CheckCollisionPointRec(mousePos, state.LeftMenuRect);
+        if (isClicked && !state.ClickHandled && outside)
+            return state.CloseAllMenus();
+
+        return state;
+    }
+
+    private GUIState ExecuteAndClose(
+        GameController controller,
+        Command cmd,
+        GUIState state,
+        string selectedOption)
+    {
+        if (strategy.TryNavigate(controller, cmd, state, out var navigatedState))
+            return navigatedState.CloseAllMenus();
+
+        DispatchCommand(controller, cmd, state, selectedOption);
+        return state.CloseAllMenus();
+    }
+
+    private void DispatchCommand(
+        GameController controller,
+        Command cmd,
+        GUIState state,
+        string selectedOption)
+    {
+        var args = strategy.BuildArgs(cmd, state, selectedOption);
+        var argsCopy = new List<string>(args);
 
         Task.Run(() =>
         {
-            bool success = cmd.ExecuteCommand(args);
-            
-            if (success)
-            {
-                state.StatusMessage = $"Wykonano: {cmd.ActionCommand()}";
-            }
-            else
-            {
-                state.StatusMessage = "Blad parametrow!";
-            }
+            bool success = cmd.ExecuteCommand(argsCopy);
+            string msg = success
+                ? $"Wykonano: {cmd.ActionCommand()}"
+                : $"Blad parametrow! Args: {string.Join(", ", argsCopy)}";
+            GameGUI.StateDispatches.Enqueue(s => s.SetStatus(msg));
         });
+    }
 
-        CloseAllMenus(state);
-    }
-    private static void CloseAllMenus(GUIState state)
-    {
-        state.InputBuffer = "";
-        state.SelectedX = -1;
-        state.SelectedY = -1;
-        state.IsContextMenuOpen = false;
-        state.IsSubMenuOpen = false;
-        state.CurrentSubOptions.Clear();
-        state.SelectedCommand = null;
-        state.ClickHandled = true;
-    }
+    private bool IsMenuOpen(GUIState state) =>
+        state.IsContextMenuOpen || state.IsLeftMenuOpen;
 }

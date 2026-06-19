@@ -1,11 +1,12 @@
 using System.Numerics;
 using Raylib_cs;
+using Zoo;
 
 namespace Zoo.GUI;
 
-public static class PopupRenderer
+public class PopupRenderer
 {
-    public static void Draw(int screenWidth, int screenHeight, Vector2 mousePos, bool isClicked, GUIState state)
+    public GUIState Draw(GameController controller, int screenWidth, int screenHeight, Vector2 mousePos, bool isClicked, GUIState state)
     {
         Raylib.DrawRectangle(0, 0, screenWidth, screenHeight, new Color(0, 0, 0, 150));
 
@@ -27,12 +28,13 @@ public static class PopupRenderer
 
         Raylib.DrawRectangleRec(closeBtnRect, Color.LightGray);
         Raylib.DrawRectangleLinesEx(closeBtnRect, 2, Color.Black);
-        Raylib.DrawText("ZAMKNIJ", (int)closeBtnRect.X + 25, (int)closeBtnRect.Y + 15, 20, Color.Black);
+        Raylib.DrawText("Zamknij", (int)closeBtnRect.X + 35, (int)closeBtnRect.Y + 15, 20, Color.Black);
 
         if (isClicked && Raylib.CheckCollisionPointRec(mousePos, closeBtnRect))
         {
-            state.IsPopupOpen = false;
-            state.ClickHandled = true;
+            return state.ClosePopup().SetClickHandled(true);
         }
+        
+        return state;
     }
 }

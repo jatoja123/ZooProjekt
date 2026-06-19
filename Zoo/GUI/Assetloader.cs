@@ -3,40 +3,39 @@ using System.IO;
 using Raylib_cs;
 using Zoo.Animals;
 
-namespace Zoo.GUI
+namespace Zoo.GUI;
+
+public class AssetLoader
 {
-    public static class AssetLoader
+    private readonly Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
+
+    public Texture2D? GetAnimalTexture(Animal animal)
     {
-        private static readonly Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
+        string speciesName = animal.GetType().Name;
 
-        public static Texture2D? GetAnimalTexture(Animal animal)
+        if (textures.TryGetValue(speciesName, out Texture2D texture))
         {
-            string speciesName = animal.GetType().Name;
-
-            if (textures.TryGetValue(speciesName, out Texture2D texture))
-            {
-                return texture;
-            }
-
-            string filePath = Path.Combine("assets", $"{speciesName.ToLower()}.png");
-
-            if (File.Exists(filePath))
-            {
-                Texture2D loadedTexture = Raylib.LoadTexture(filePath);
-                textures[speciesName] = loadedTexture;
-                return loadedTexture;
-            }
-
-            return null;
+            return texture;
         }
 
-        public static void UnloadAllTextures()
+        string filePath = Path.Combine("assets", $"{speciesName.ToLower()}.png");
+
+        if (File.Exists(filePath))
         {
-            foreach (var texture in textures.Values)
-            {
-                Raylib.UnloadTexture(texture);
-            }
-            textures.Clear();
+            Texture2D loadedTexture = Raylib.LoadTexture(filePath);
+            textures[speciesName] = loadedTexture;
+            return loadedTexture;
         }
+
+        return null;
+    }
+
+    public void UnloadAllTextures()
+    {
+        foreach (var texture in textures.Values)
+        {
+            Raylib.UnloadTexture(texture);
+        }
+        textures.Clear();
     }
 }
