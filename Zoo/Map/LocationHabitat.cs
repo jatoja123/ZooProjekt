@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Zoo.Animals;
 using Zoo.Environment;
@@ -13,27 +13,50 @@ public abstract class LocationHabitat(int x, int y) : Location(x, y)
     
     private List<Animal> animals = new();
 
-    public bool AddAnimal(Animal newAnimal)
+    public bool AddAnimal(Animal newAnimal, out string failMessage)
     {
-        if (animals.Count >= 4) return false;
-        if (animals.Contains(newAnimal)) return false;
+        if (animals.Count >= 4)
+        {
+            failMessage = "Zbyt dużo zwierząt na wybiegu (max 3)";
+            return false;
+        }
+       
+        if (animals.Contains(newAnimal))
+        {
+            failMessage = "To zwierzę już jest na wybiegu";
+            return false;
+        }
         
         if (animals.Count > 0 && animals[0].GetType().Name != newAnimal.GetType().Name)
         {
+            failMessage = "Niekompatybilny gatunek zwierzęcia do pozostałych na wybiegu";
             return false;
         }
         
         foreach (var need in newAnimal.EnvironmentalNeeds)
         {
-            if (!need.ISTemperatureSatisfied(this) || !need.IsenviromentSatisfied(this))
+            if (!need.ISTemperatureSatisfied(this))
             {
+                failMessage = "Nieodpowiednia temperatura wybiegu dla tego zwierzęcia";
+                return false;
+            }
+            if (!need.IsenviromentSatisfied(this))
+            {
+                failMessage = "Niekompatybilny typ wybiegu dla tego zwierzęcia";
                 return false;
             }
         }
+        
+        failMessage = "";
 
         animals.Add(newAnimal);
         newAnimal.Habitat = this;
         return true;
+    }
+
+    public bool AddAnimal(Animal newAnimal)
+    {
+        return AddAnimal(newAnimal, out _);
     }
 
     public bool RemoveAnimal(Animal animalToRemove)

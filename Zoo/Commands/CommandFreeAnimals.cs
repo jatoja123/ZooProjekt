@@ -64,6 +64,12 @@ public class CommandFreeAnimals(GameController controller) : Command(controller)
         var location = controller.Map.GetLocation(x, y);
         if (location == null || location is not LocationHabitat habitat) return false;
         var animal = controller.AnimalsController.FreeAnimals[index];
-        return habitat.AddAnimal(animal);
+        if (!habitat.AddAnimal(animal, out var failMessage))
+        {
+            controller.ConsoleDisplay.DisplayWarning(failMessage);
+            return false;
+        }
+
+        return true;
     }
 }
