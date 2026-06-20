@@ -2,6 +2,6 @@ namespace Zoo.Environment;
 
 public abstract class EnvironmentalNeed
 {
-    public virtual bool ISTemperatureSatisfied(LocationHabitat habitat) => true;
-    public virtual bool IsenviromentSatisfied(LocationHabitat habitat) => true;
+    public virtual bool IsTemperatureSatisfied(LocationHabitat habitat) => true;
+    public virtual bool IsEnviromentSatisfied(LocationHabitat habitat) => true;
 }

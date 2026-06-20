@@ -12,18 +12,25 @@ public class CommandFreeAnimals(GameController controller) : Command(controller)
 
     protected override bool Execute(List<string> args)
     {
+        ClearExecutionMessage();
+
         if (args.Count == 3)
         {
             if (!int.TryParse(args[0], out var idx) || !int.TryParse(args[1], out var x) ||
                 !int.TryParse(args[2], out var y))
             {
+                SetExecutionMessage("Zly format akcji");
                 controller.ConsoleDisplay.DisplayWarning("Zly format akcji");
                 return false;
             }
 
-            if (!MoveFreeAnimal(idx, x, y))
+            if (!MoveFreeAnimal(idx, x, y, out var failMessage))
             {
-                controller.ConsoleDisplay.DisplayWarning("Nie udalo sie przeniesc zwierzecia w to miejsce");
+                SetExecutionMessage(failMessage);
+                if (!string.IsNullOrWhiteSpace(failMessage))
+                {
+                    controller.ConsoleDisplay.DisplayWarning(failMessage);
+                }
                 return false;
             }
             return true;
@@ -59,17 +66,29 @@ public class CommandFreeAnimals(GameController controller) : Command(controller)
         return options;
     }
 
-    private bool MoveFreeAnimal(int index, int x, int y)
+    private bool MoveFreeAnimal(int index, int x, int y, out string failMessage)
     {
-        var location = controller.Map.GetLocation(x, y);
-        if (location == null || location is not LocationHabitat habitat) return false;
-        var animal = controller.AnimalsController.FreeAnimals[index];
-        if (!habitat.AddAnimal(animal, out var failMessage))
+        var freeAnimals = controller.AnimalsController.FreeAnimals;
+        if (index < 0 || index >= freeAnimals.Count)
         {
-            controller.ConsoleDisplay.DisplayWarning(failMessage);
+            failMessage = "Nie istnieje zwierze o podanym indeksie";
             return false;
         }
 
+        var location = controller.Map.GetLocation(x, y);
+        if (location == null || location is not LocationHabitat habitat)
+        {
+            failMessage = "Nie można umieścić zwierzęcia na tej lokalizacji";
+            return false;
+        }
+
+        var animal = freeAnimals[index];
+        if (!habitat.AddAnimal(animal, out failMessage))
+        {
+            return false;
+        }
+
+        failMessage = "";
         return true;
     }
 }

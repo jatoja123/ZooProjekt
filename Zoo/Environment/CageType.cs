@@ -15,7 +15,7 @@ public class CageType : EnvironmentalNeed
         RequiredType = requiredType;
     }
 
-    public override bool IsenviromentSatisfied(LocationHabitat habitat)
+    public override bool IsEnviromentSatisfied(LocationHabitat habitat)
     {
         return habitat.HabitatType == RequiredType;
     }

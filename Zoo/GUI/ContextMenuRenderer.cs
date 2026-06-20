@@ -254,10 +254,12 @@ public class ContextMenuRenderer : IRenderer
         Task.Run(() =>
         {
             bool success = cmd.ExecuteCommand(argsCopy);
-            string msg = success
-                ? $"Wykonano: {cmd.ActionCommand()}"
-                : $"Blad parametrow! Args: {string.Join(", ", argsCopy)}";
-            GameGUI.StateDispatches.Enqueue(s => s.SetStatus(msg));
+            if (!success)
+            {
+                string msg = cmd.LastExecutionMessage;
+                GameGUI.StateDispatches.Enqueue(s => s.SetStatus(msg));
+                GameGUI.EnqueuePopup(msg);
+            }
         });
     }
 

@@ -35,12 +35,12 @@ public abstract class LocationHabitat(int x, int y) : Location(x, y)
         
         foreach (var need in newAnimal.EnvironmentalNeeds)
         {
-            if (!need.ISTemperatureSatisfied(this))
+            if (!need.IsTemperatureSatisfied(this))
             {
                 failMessage = "Nieodpowiednia temperatura wybiegu dla tego zwierzęcia";
                 return false;
             }
-            if (!need.IsenviromentSatisfied(this))
+            if (!need.IsEnviromentSatisfied(this))
             {
                 failMessage = "Niekompatybilny typ wybiegu dla tego zwierzęcia";
                 return false;

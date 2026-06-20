@@ -8,6 +8,7 @@ public abstract class Command
 {
     protected GameController controller;
     private CommandVisibility visibility;
+    private string lastExecutionMessage = "";
     
     public Command(GameController controller, CommandVisibility visibility = CommandVisibility.Always)
     {
@@ -20,7 +21,18 @@ public abstract class Command
     public abstract string ActionDescription();
     protected abstract bool Execute(List<string> args);
     
+    public string LastExecutionMessage => lastExecutionMessage;
     public void SetVisibility(CommandVisibility visibility) => this.visibility = visibility;
+
+    protected void SetExecutionMessage(string message)
+    {
+        lastExecutionMessage = message;
+    }
+
+    protected void ClearExecutionMessage()
+    {
+        lastExecutionMessage = "";
+    }
 
     public bool IsVisible()
     {
@@ -31,11 +43,23 @@ public abstract class Command
 
     public bool ExecuteCommand(List<string> args)
     {
-        if (!controller.CanExecuteAction(ActionCost)) return false;
+        ClearExecutionMessage();
+        if (!controller.CanExecuteAction(ActionCost))
+        {
+            if (string.IsNullOrWhiteSpace(lastExecutionMessage))
+            {
+                lastExecutionMessage = "Brak punktow akcji";
+            }
+            return false;
+        }
         if (Execute(args))
         {
             controller.UseActionPoints(ActionCost);
             return true;
+        }
+        if (string.IsNullOrWhiteSpace(lastExecutionMessage))
+        {
+            lastExecutionMessage = "Blad parametrow!";
         }
         return false;
     }

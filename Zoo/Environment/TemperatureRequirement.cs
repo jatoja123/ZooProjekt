@@ -9,7 +9,7 @@ public class TemperatureRequirement : EnvironmentalNeed
         RequiredTemperature = requiredTemperature;
     }
 
-    public override bool ISTemperatureSatisfied(LocationHabitat habitat)
+    public override bool IsTemperatureSatisfied(LocationHabitat habitat)
     {
         if (habitat.Temperature == null || habitat.Temperature.Count == 0) return false;
 

@@ -57,8 +57,12 @@ public class RightPanelRenderer : IRenderer
     Task.Run(() =>
     {
         bool success = cmd.ExecuteCommand(args);
-        string msg = success ? $"Wykonano: {cmd.ActionCommand()}" : "Blad parametrow!";
-        GameGUI.StateDispatches.Enqueue(s => s.SetStatus(msg));
+        if (!success)
+        {
+            string msg = cmd.LastExecutionMessage;
+            GameGUI.StateDispatches.Enqueue(s => s.SetStatus(msg));
+            GameGUI.EnqueuePopup(msg);
+        }
     });
 
     return state.ClearInputBuffer().SelectTile(-1, -1);
