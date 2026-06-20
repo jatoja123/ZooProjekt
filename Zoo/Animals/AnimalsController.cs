@@ -11,7 +11,8 @@ public class AnimalsController
         typeof(Snake),
         typeof(Dolphin),
         typeof(Monkey),
-        typeof(Giraffe)
+        typeof(Giraffe),
+        typeof(Penguin)
     };
     
     private List<Animal> animals = new();
