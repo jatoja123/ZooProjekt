@@ -120,6 +120,22 @@ public class GameController : IObserver
         else await gameGui.Start();
     }
 
+    public void EnqueueDecision(PendingDecision decision)
+    {
+        if (RunInConsole)
+        {
+            // tryb konsolowy obsłuży to synchronicznie w pętli (patrz pkt 9)
+            consoleDecisionQueue.Enqueue(decision);
+        }
+        else
+        {
+            GameGUI.StateDispatches.Enqueue(s => s.EnqueueDecision(decision));
+        }
+    }
+
+    private Queue<PendingDecision> consoleDecisionQueue = new();
+    public Queue<PendingDecision> ConsoleDecisionQueue => consoleDecisionQueue;
+
     public void ReceiveEvent(NotifyEvent notifyEvent)
     {
         if (notifyEvent is TurnEvent turnEvent)
@@ -194,6 +210,15 @@ public class GameController : IObserver
     {
         while (turnController.IsGameRunning)
         {
+            while (consoleDecisionQueue.Count > 0)
+            {
+                var decision = consoleDecisionQueue.Dequeue();
+                string answer = consoleDisplay.GetPlayerResponse(
+                    $"{decision.Message} ({decision.OptionYesLabel}/{decision.OptionNoLabel}) [t/n]");
+
+                if (answer == "t") decision.OnYes();
+                else decision.OnNo();
+            }
             var (command, args) = consoleDisplay.GetPlayerAction(PlayerActions);
             command.ExecuteCommand(args);
         }

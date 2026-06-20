@@ -21,7 +21,7 @@ public static class GameEventCatalog
                 Chance = 0.2f,
                 Type = GameEventType.StartOfTurn,
                 Priority = EventPriority.Normal,
-                Trigger = TriggerHarmedAnimalArrives
+                DecisionFactory = CreateHarmedAnimalDecision
             },
             new()
             {
@@ -39,11 +39,10 @@ public static class GameEventCatalog
             .ToList();
     }
 
-    private static void TriggerHarmedAnimalArrives()
+    private static PendingDecision CreateHarmedAnimalDecision()
     {
         var animalType = AnimalsController.AnimalTypes[rnd.Next(AnimalsController.AnimalTypes.Count)];
-        var animal = (Animal?)Activator.CreateInstance(animalType, AnimalNamesHelper.RandomName());
-        if (animal == null) return;
+        var animal = (Animal)Activator.CreateInstance(animalType, AnimalNamesHelper.RandomName())!;
 
         animal.SetAge(rnd.Next(2, 10));
         var needs = new List<NeedType> { NeedType.HAPPINESS, NeedType.HEALTH, NeedType.HUNGER, NeedType.THIRST };
@@ -52,11 +51,21 @@ public static class GameEventCatalog
             animal.DecreaseNeed(need, rnd.Next(0, 6));
         }
 
-        animalsController.AddAnimal(animal);
-
-        string message = $"Znaleziono zranione zwierzę: {animal.Name}";
-        GameController.Instance.ConsoleDisplay.DisplayInfo(message);
-        GameController.Instance.TriggerPopupEvent(message);
+        return new PendingDecision
+        {
+            Message = $"Znaleziono zranione zwierze: {animal.Name}.\n\n Przyjac je do zoo?",
+            OptionYesLabel = "Przyjmij",
+            OptionNoLabel = "Odeslij",
+            OnYes = () =>
+            {
+                animalsController.AddAnimal(animal);
+                GameController.Instance.ConsoleDisplay.DisplayInfo($"Przyjeto zwierze: {animal.Name}");
+            },
+            OnNo = () =>
+            {
+                GameController.Instance.ConsoleDisplay.DisplayInfo($"Odeslano zwierze: {animal.Name}");
+            }
+        };
     }
 
     private static void TriggerAnimalsNotInHabitatDie()
@@ -64,7 +73,7 @@ public static class GameEventCatalog
         var animalsToDie = animalsController.FreeAnimals.ToList();
         foreach (var animal in animalsToDie)
         {
-            string message = $"Zwierze umiera, nie bylo na wybiegu: {animal.Name}";
+            string message = $"Zwierze umiera,\n nie bylo na wybiegu: {animal.Name}";
             GameController.Instance.ConsoleDisplay.DisplayInfo(message);
             GameController.Instance.TriggerPopupEvent(message);
             animalsController.RemoveAnimal(animal);

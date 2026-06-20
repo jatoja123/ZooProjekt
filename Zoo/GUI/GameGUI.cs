@@ -19,6 +19,7 @@ public class GameGUI : IObserver
     private readonly List<IRenderer> mainMapRenderers;
     private readonly List<IRenderer> habitatRenderers;
     private readonly PopupRenderer popupRenderer;
+    private readonly DecisionPopupRenderer decisionPopupRenderer;
 
     public static ConcurrentQueue<Func<GUIState, GUIState>> StateDispatches = new();
 
@@ -47,6 +48,9 @@ public class GameGUI : IObserver
         };
 
         popupRenderer = new PopupRenderer();
+
+        popupRenderer = new PopupRenderer();
+        decisionPopupRenderer = new DecisionPopupRenderer();
     }
 
     public void ReceiveEvent(NotifyEvent notifyEvent)
@@ -105,6 +109,15 @@ public class GameGUI : IObserver
             }
 
             if (state.IsPopupOpen)
+            {
+                state = popupRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
+            }
+
+            if (state.IsDecisionOpen)
+            {
+                state = decisionPopupRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
+            }
+            else if (state.IsPopupOpen)
             {
                 state = popupRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
             }

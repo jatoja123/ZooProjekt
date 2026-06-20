@@ -49,14 +49,21 @@ public class GameEventsController : IObserver
 
     private void TryStartEvent(GameEvent gameEvent)
     {
-        if (gameEvent.EventChance() >= 1)
+        if (gameEvent.EventChance() < 1)
         {
-            gameEvent.Trigger();
-            return;
+            var random = rnd.NextDouble();
+            if (random > gameEvent.EventChance()) return;
+
+            
         }
         
-        var random = rnd.NextDouble();
-        if (random > gameEvent.EventChance()) return;
+        if (gameEvent is ParametrizedGameEvent {RequiresDecision: true} parametrized)
+        {
+            var decision = parametrized.CreateDecision();
+            GameController.Instance.EnqueueDecision(decision);
+            return;
+        }
+
         gameEvent.Trigger();
     }
 }

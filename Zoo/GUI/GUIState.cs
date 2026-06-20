@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using Raylib_cs;
 using Zoo.Commands;
 using Zoo.Animals;
+using Zoo.GameEvents;
 
 namespace Zoo.GUI;
 
@@ -144,4 +145,35 @@ public record GUIState
     }
 
     public GUIState ClosePopup() => (this with { IsPopupOpen = false, CurrentPopupMessage = "" }).TryDisplayNextPopup();
+
+    public bool IsDecisionOpen { get; init; } = false;
+    public PendingDecision? CurrentDecision { get; init; }
+    public ImmutableQueue<PendingDecision> DecisionQueue { get; init; } = ImmutableQueue<PendingDecision>.Empty;
+
+    public GUIState EnqueueDecision(PendingDecision decision)
+    {
+        var nextQueue = DecisionQueue.Enqueue(decision);
+        return (this with { DecisionQueue = nextQueue }).TryDisplayNextDecision();
+    }
+
+    private GUIState TryDisplayNextDecision()
+    {
+        if (!IsDecisionOpen && !DecisionQueue.IsEmpty)
+        {
+            var nextQueue = DecisionQueue.Dequeue(out var next);
+            return this with { IsDecisionOpen = true, CurrentDecision = next, DecisionQueue = nextQueue };
+        }
+        return this;
+    }
+
+    public GUIState ResolveDecision(bool accepted)
+    {
+        if (CurrentDecision != null)
+        {
+            if (accepted) CurrentDecision.OnYes();
+            else CurrentDecision.OnNo();
+        }
+        return (this with { IsDecisionOpen = false, CurrentDecision = null }).TryDisplayNextDecision();
+    }
+
 }
