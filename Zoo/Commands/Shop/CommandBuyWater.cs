@@ -8,7 +8,7 @@ public class CommandBuyWater(GameController controller) : Command(controller)
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "kupwode";
-    public override string ActionDescription() => "Kupuje wode. Uzycie: kupwode <ilość>";
+    public override string ActionDescription() => "Kupuje wode. Uzycie: kupwode <ilosc>";
 
     protected override bool Execute(List<string> args)
     {
