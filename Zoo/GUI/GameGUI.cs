@@ -19,6 +19,7 @@ public class GameGUI : IObserver
     private readonly List<IRenderer> habitatRenderers;
     private readonly PopupRenderer popupRenderer;
     private readonly DecisionPopupRenderer decisionPopupRenderer;
+    private readonly GameEndMessage gameEndMessageRenderer;
 
     public static ConcurrentQueue<Func<GUIState, GUIState>> StateDispatches = new();
 
@@ -58,6 +59,7 @@ public class GameGUI : IObserver
 
         popupRenderer = new PopupRenderer();
         decisionPopupRenderer = new DecisionPopupRenderer();
+        gameEndMessageRenderer = new GameEndMessage();
     }
 
     public void ReceiveEvent(NotifyEvent notifyEvent)
@@ -77,6 +79,10 @@ public class GameGUI : IObserver
         StateDispatches.Enqueue(s => s.EnqueuePopup(message));
     }
 
+    public void ShowGameEndScreen()
+    {
+        StateDispatches.Enqueue(s => s.ShowGameEndScreen());
+    }
 
     public Task Start() => Task.Run(RunLoop);
 
@@ -101,7 +107,7 @@ public class GameGUI : IObserver
 
             state = state.SetClickHandled(false);
 
-            if (!state.IsPopupOpen)
+            if (!state.IsPopupOpen && !state.IsGameEndScreenVisible)
             {
                 state = inputHandler.HandleKeyboard(state);
             }
@@ -116,18 +122,20 @@ public class GameGUI : IObserver
                 state = renderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
             }
 
-            if (state.IsPopupOpen)
+            if (state.IsGameEndScreenVisible)
             {
-                state = popupRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
+                state = gameEndMessageRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
             }
-
-            if (state.IsDecisionOpen)
+            else
             {
-                state = decisionPopupRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
-            }
-            else if (state.IsPopupOpen)
-            {
-                state = popupRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
+                if (state.IsDecisionOpen)
+                {
+                    state = decisionPopupRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
+                }
+                else if (state.IsPopupOpen)
+                {
+                    state = popupRenderer.Draw(controller, screenWidth, screenHeight, mousePos, isClicked, state);
+                }
             }
 
             Raylib.EndDrawing();

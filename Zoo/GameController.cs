@@ -44,6 +44,8 @@ public class GameController : IObserver
     private Storage storage = null!;
     public Storage Storage => storage;
 
+    private GameGUI gameGui = null!;
+
     public int ActionCostUsed { get; private set; } = 0;
     public int MaxActionCost => maxActionCost;
     public int ActionsLeft => MaxActionCost - ActionCostUsed;
@@ -95,7 +97,7 @@ public class GameController : IObserver
         map.Start();
         consoleDisplay = new ConsoleDisplay();
 
-        var gameGui = new GameGUI(new MapMenuStrategy(), new AnimalMenuStrategy());
+        gameGui = new GameGUI(new MapMenuStrategy(), new AnimalMenuStrategy());
 
         gameEventsController = new GameEventsController();
         gameEventsController.Start();
@@ -122,7 +124,6 @@ public class GameController : IObserver
     {
         if (RunInConsole)
         {
-            // tryb konsolowy obsłuży to synchronicznie w pętli (patrz pkt 9)
             consoleDecisionQueue.Enqueue(decision);
         }
         else
@@ -190,13 +191,12 @@ public class GameController : IObserver
     
     private void HandleGameEnd()
     {
-        consoleDisplay.DisplayTitle("Koniec gry");
-        GameGUI.EnqueuePopup("Koniec Gry!");
+        gameGui.ShowGameEndScreen();
     }
 
     public void TriggerPopupEvent(string message)
     {
-        GameGUI.EnqueuePopup(message);
+        gameGui.AddPopup(message);
     }
 
     public void SkipTurn()
