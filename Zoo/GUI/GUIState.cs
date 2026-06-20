@@ -46,12 +46,18 @@ public record GUIState
     public string CurrentPopupMessage { get; init; } = "";
     public ImmutableQueue<string> PopupQueue { get; init; } = ImmutableQueue<string>.Empty;
 
+    // NOWA WŁAŚCIWOŚĆ: Status ekranu końcowego
+    public bool IsGameEndScreenVisible { get; init; } = false;
+
     public GUIState SetStatus(string message) => this with { StatusMessage = message };
     public GUIState SetClickHandled(bool handled) => this with { ClickHandled = handled };
     public GUIState ShutdownGame() => this with { KeepRunning = false };
     public GUIState UpdateHoveredTile(int x, int y) => this with { HoveredX = x, HoveredY = y };
     public GUIState SetTurn(int turn) => this with { CurrentTurn = turn };
     public GUIState SetTotalTurns(int total) => this with { TotalTurns = total };
+
+    // NOWA METODA: Włącza ekran końcowy i zamyka inne menu
+    public GUIState ShowGameEndScreen() => this.CloseAllMenus() with { IsGameEndScreenVisible = true };
 
     public GUIState SwitchView(ViewMode newMode) => (this with
     {
@@ -175,5 +181,4 @@ public record GUIState
         }
         return (this with { IsDecisionOpen = false, CurrentDecision = null }).TryDisplayNextDecision();
     }
-
 }
