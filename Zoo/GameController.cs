@@ -44,8 +44,6 @@ public class GameController : IObserver
     private Storage storage = null!;
     public Storage Storage => storage;
 
-    private GameGUI gameGui = null!;
-
     public int ActionCostUsed { get; private set; } = 0;
     public int MaxActionCost => maxActionCost;
     public int ActionsLeft => MaxActionCost - ActionCostUsed;
@@ -97,7 +95,7 @@ public class GameController : IObserver
         map.Start();
         consoleDisplay = new ConsoleDisplay();
 
-        gameGui = new GameGUI(this, new MapMenuStrategy(), new AnimalMenuStrategy());
+        var gameGui = new GameGUI(new MapMenuStrategy(), new AnimalMenuStrategy());
 
         gameEventsController = new GameEventsController();
         gameEventsController.Start();
@@ -193,12 +191,12 @@ public class GameController : IObserver
     private void HandleGameEnd()
     {
         consoleDisplay.DisplayTitle("Koniec gry");
-        gameGui.AddPopup("Koniec Gry!");
+        GameGUI.EnqueuePopup("Koniec Gry!");
     }
 
     public void TriggerPopupEvent(string message)
     {
-        gameGui.AddPopup(message);
+        GameGUI.EnqueuePopup(message);
     }
 
     public void SkipTurn()

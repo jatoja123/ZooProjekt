@@ -11,7 +11,6 @@ namespace Zoo;
 
 public class GameGUI : IObserver
 {
-    private readonly GameController controller;
     private GUIState state;
     private readonly InputHandler inputHandler;
     private readonly AssetLoader assetLoader;
@@ -23,9 +22,19 @@ public class GameGUI : IObserver
 
     public static ConcurrentQueue<Func<GUIState, GUIState>> StateDispatches = new();
 
-    public GameGUI(GameController controller, IMenuStrategy mainMapStrategy, IMenuStrategy habitatStrategy)
+    public static void EnqueuePopup(string message)
     {
-        this.controller = controller;
+        StateDispatches.Enqueue(s => s.EnqueuePopup(message));
+    }
+
+    // Backward-compatible alias for existing references with older casing.
+    public static void Enqueuepopup(string message)
+    {
+        EnqueuePopup(message);
+    }
+
+    public GameGUI(IMenuStrategy mainMapStrategy, IMenuStrategy habitatStrategy)
+    {
         this.state = new GUIState();
         this.inputHandler = new InputHandler();
         this.assetLoader = new AssetLoader();
@@ -46,8 +55,6 @@ public class GameGUI : IObserver
             new ConsoleRenderer(true),
             new ContextMenuRenderer(habitatStrategy)
         };
-
-        popupRenderer = new PopupRenderer();
 
         popupRenderer = new PopupRenderer();
         decisionPopupRenderer = new DecisionPopupRenderer();
@@ -81,6 +88,7 @@ public class GameGUI : IObserver
 
         while (!Raylib.WindowShouldClose() && state.KeepRunning)
         {
+            var controller = GameController.Instance;
             while (StateDispatches.TryDequeue(out var updateFunc))
             {
                 state = updateFunc(state);
