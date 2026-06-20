@@ -2,17 +2,17 @@ namespace Zoo.Environment;
 
 public class TemperatureRequirement : EnvironmentalNeed
 {
-    public int MinTemp { get; }
-    public int MaxTemp { get; }
+    public int RequiredTemperature { get; }
 
-    public TemperatureRequirement(int minTemp, int maxTemp)
+    public TemperatureRequirement(int requiredTemperature)
     {
-        MinTemp = minTemp;
-        MaxTemp = maxTemp;
+        RequiredTemperature = requiredTemperature;
     }
 
-    public override bool IsSatisfied(LocationHabitat habitat)
+    public override bool ISTemperatureSatisfied(LocationHabitat habitat)
     {
-        return habitat.Temperature >= MinTemp && habitat.Temperature <= MaxTemp;
+        if (habitat.Temperature == null || habitat.Temperature.Count == 0) return false;
+
+        return RequiredTemperature >= habitat.Temperature[0] && RequiredTemperature <= habitat.Temperature[1];
     }
 }

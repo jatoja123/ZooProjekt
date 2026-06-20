@@ -7,7 +7,7 @@ namespace Zoo;
 public abstract class LocationHabitat(int x, int y) : Location(x, y)
 {
     public abstract CageTypeEnum HabitatType { get; }
-    public int Temperature { get; set; } = 20;
+    public List<int> Temperature { get; set; } = new List<int> { -20, 20 };
     public override bool CanBeReplaced() => animals.Count == 0;
     public IReadOnlyList<Animal> Animals => animals;
     
@@ -25,7 +25,7 @@ public abstract class LocationHabitat(int x, int y) : Location(x, y)
         
         foreach (var need in newAnimal.EnvironmentalNeeds)
         {
-            if (!need.IsSatisfied(this))
+            if (!need.ISTemperatureSatisfied(this) || !need.IsenviromentSatisfied(this))
             {
                 return false;
             }
@@ -45,10 +45,6 @@ public abstract class LocationHabitat(int x, int y) : Location(x, y)
         return true;
     }
 
-    /// <summary>
-    /// Stan lokacji - liczba [0,1]
-    /// </summary>
-    /// <returns>liczba [0,1]</returns>
     public float LocationCondition()
     {
         if (animals.Count == 0) return 1;
