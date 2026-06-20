@@ -27,6 +27,13 @@ public class HabitatRenderer : IRenderer
         Raylib.DrawRectangleRec(backButton, Color.LightGray);
         Raylib.DrawText("Powrot do mapy", 35, 30, 20, Color.Black);
 
+        if (state.SelectedHabitat != null)
+        {
+            string tempText = $"Temperatura: {state.SelectedHabitat.Temperature[0]}C do {state.SelectedHabitat.Temperature[1]}C";
+            int textWidth = Raylib.MeasureText(tempText, 24);
+            Raylib.DrawText(tempText, screenWidth - textWidth - 20, 30, 24, Color.White);
+        }
+
         if (isClicked && !isOverUI && Raylib.CheckCollisionPointRec(mousePos, backButton))
         {
             GameController.PlayerActions = GameController.MainActions;
