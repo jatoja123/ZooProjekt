@@ -3,8 +3,7 @@ namespace Zoo.Environment;
 public enum CageTypeEnum 
 {
     Land,
-    Water,
-    Amphibious
+    Water
 }
 
 public class CageType : EnvironmentalNeed
@@ -18,6 +17,6 @@ public class CageType : EnvironmentalNeed
 
     public override bool IsenviromentSatisfied(LocationHabitat habitat)
     {
-        return habitat.HabitatType == RequiredType || habitat.HabitatType == CageTypeEnum.Amphibious;
+        return habitat.HabitatType == RequiredType;
     }
 }
