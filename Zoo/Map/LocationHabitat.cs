@@ -25,7 +25,7 @@ public abstract class LocationHabitat(int x, int y) : Location(x, y)
         
         foreach (var need in newAnimal.EnvironmentalNeeds)
         {
-            if (!need.IsSatisfied(this))
+            if (!need.ISTemperatureSatisfied(this) || !need.IsenviromentSatisfied(this))
             {
                 return false;
             }
