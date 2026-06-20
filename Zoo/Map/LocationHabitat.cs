@@ -7,7 +7,7 @@ namespace Zoo;
 public abstract class LocationHabitat(int x, int y) : Location(x, y)
 {
     public abstract CageTypeEnum HabitatType { get; }
-    public int Temperature { get; set; } = 20;
+    public List<int> Temperature { get; set; } = new List<int> { -20, 20 };
     public override bool CanBeReplaced() => animals.Count == 0;
     public IReadOnlyList<Animal> Animals => animals;
     
