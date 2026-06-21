@@ -171,6 +171,11 @@ public abstract class Animal
         age = newAge;
     }
 
+    public void IncreaseNeed(NeedType needType, int amount)
+    {
+        AnimalNeeds.FirstOrDefault(n => n.Type == needType)?.Increase(amount);
+    }
+
     public void DecreaseNeed(NeedType needType, int amount)
     {
         AnimalNeeds.FirstOrDefault(n => n.Type == needType)?.Decrease(amount);

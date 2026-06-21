@@ -16,6 +16,14 @@ public class GameScore : IObserver
         this.scoreables = scoreables;
         LoadMaxScore();
     }
+
+    private int reputationModifier = 0;
+
+    public void AdjustReputation(int amount)
+    {
+        reputationModifier += amount;
+    }
+
     
     private void CalculateScore()
     {
