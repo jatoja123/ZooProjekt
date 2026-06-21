@@ -1,5 +1,3 @@
-using System;
-
 namespace Zoo.Needs;
 
 public abstract class Need

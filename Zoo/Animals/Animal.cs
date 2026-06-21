@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Zoo.Economy;
 using Zoo.Environment;
 using Zoo.Needs;
@@ -83,11 +80,6 @@ public abstract class Animal
         return Random.Shared.NextDouble() < szansaNaSmierc;
     }
     
-    /// <summary>
-    /// Zwraca ile REALNIE nakarmiono (żeby nie przekarmiać)
-    /// </summary>
-    /// <param name="foodCount"></param>
-    /// <returns></returns>
     public int Feed(int foodCount)
     {
         if (IsDead) return 0;
@@ -102,11 +94,6 @@ public abstract class Animal
         return 0;
     }
 
-    /// <summary>
-    /// Zwraca ile REALNIE dano wody (żeby nie utopić)
-    /// </summary>
-    /// <param name="waterAmount"></param>
-    /// <returns></returns>
     public int GiveWater(int waterAmount)
     {
         if (IsDead) return 0;
@@ -150,11 +137,6 @@ public abstract class Animal
         if (IsDead) return 0;
         return AnimalNeeds.Min(n => n.Value);
     }
-
-        /// <summary>
-    /// Sprawdza, czy zwierzę spełnia warunki do rozmnażania.
-    /// Domyślnie: wiek powyżej 2, zdrowie i szczęście powyżej 7.
-    /// </summary>
     
     public int? GetRequiredTemperature()
     {
@@ -168,10 +150,8 @@ public abstract class Animal
     {
         if (IsDead) return false;
 
-        // Podstawowe warunki wiekowe
         if (age < 2 || age >= maxAge) return false;
 
-        // Rozmnażanie wymaga dobrego stanu zdrowia i zadowolenia (powyżej 7)
         return (AnimalNeeds[2].Value > 7) && (AnimalNeeds[3].Value > 7);
     }
     

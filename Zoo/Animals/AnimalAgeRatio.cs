@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Zoo.Animals;
 
 public enum AgeRatio
