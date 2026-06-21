@@ -6,8 +6,8 @@ namespace Zoo.GUI;
 public sealed class ShopMenuStrategy : IMenuStrategy
 {
     private static readonly List<string> QuantityOptions = new() { "1", "2", "3", "5", "10" };
-    private static readonly HashSet<string> DirectQuantityCommands = new() { "kupwode", "kupleki" };
-    private const string FoodCommand = "kupjedzenie";
+    private static readonly HashSet<string> DirectQuantityCommands = new() { "kup_wode", "kup_leki" };
+    private const string FoodCommand = "kup_jedzenie";
 
     public List<Command> GetCommands(GUIState state) =>
         new List<Command>();

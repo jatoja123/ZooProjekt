@@ -38,7 +38,7 @@ public class ConsoleDisplay
         var action = commands.FirstOrDefault(x => x != null && x.ActionCommand() == actionStr, null);
         if (args == null || action == null)
         {
-            DisplayWarning("Wybierz poprawną akcję. Sprawdź akcje pisząc 'akcje'");
+            DisplayWarning("Wybierz poprawną akcje. Sprawdź akcje pisząc 'akcje'");
             return GetPlayerAction(commands);
         }
         

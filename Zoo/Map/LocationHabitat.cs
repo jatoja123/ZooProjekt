@@ -6,8 +6,9 @@ namespace Zoo;
 
 public abstract class LocationHabitat(int x, int y) : Location(x, y)
 {
+    public const int MaxAnimals = 4;
     public abstract CageTypeEnum HabitatType { get; }
-    public List<int> Temperature { get; set; } = new List<int> { -20, 20 };
+    public List<int> Temperature { get; set; } = new List<int> { 5, 20 };
     public override bool CanBeReplaced() => animals.Count == 0;
     public IReadOnlyList<Animal> Animals => animals;
     
@@ -15,21 +16,21 @@ public abstract class LocationHabitat(int x, int y) : Location(x, y)
 
     public bool AddAnimal(Animal newAnimal, out string failMessage)
     {
-        if (animals.Count >= 4)
+        if (animals.Count >= MaxAnimals)
         {
-            failMessage = "Zbyt dużo zwierząt na wybiegu (max 3)";
+            failMessage = $"Zbyt duzo zwierzat na wybiegu (max {MaxAnimals})";
             return false;
         }
        
         if (animals.Contains(newAnimal))
         {
-            failMessage = "To zwierzę już jest na wybiegu";
+            failMessage = "To zwierze już jest na wybiegu";
             return false;
         }
         
         if (animals.Count > 0 && animals[0].GetType().Name != newAnimal.GetType().Name)
         {
-            failMessage = "Niekompatybilny gatunek zwierzęcia do pozostałych na wybiegu";
+            failMessage = "Niekompatybilny gatunek zwierzecia do pozostałych na wybiegu";
             return false;
         }
         
@@ -37,12 +38,12 @@ public abstract class LocationHabitat(int x, int y) : Location(x, y)
         {
             if (!need.IsTemperatureSatisfied(this))
             {
-                failMessage = "Nieodpowiednia temperatura wybiegu dla tego zwierzęcia";
+                failMessage = "Nieodpowiednia temperatura wybiegu dla tego zwierzecia";
                 return false;
             }
             if (!need.IsEnviromentSatisfied(this))
             {
-                failMessage = "Niekompatybilny typ wybiegu dla tego zwierzęcia";
+                failMessage = "Niekompatybilny typ wybiegu dla tego zwierzecia";
                 return false;
             }
         }
@@ -85,7 +86,7 @@ public abstract class LocationHabitat(int x, int y) : Location(x, y)
     {
         offspring = null;
 
-        if (animals.Count >= 4 || animals.Count < 2) return false;
+        if (animals.Count >= MaxAnimals || animals.Count < 2) return false;
 
         var candidates = animals.Where(a => a.CanReproduce()).ToList();
         if (candidates.Count < 2) return false;
@@ -93,7 +94,7 @@ public abstract class LocationHabitat(int x, int y) : Location(x, y)
         if (Random.Shared.NextDouble() > 0.30) return false;
 
         var type = animals[0].GetType();
-        offspring = (Animal)Activator.CreateInstance(type, $"Baby_{Random.Shared.Next(1000, 9999)}")!;
+        offspring = (Animal)Activator.CreateInstance(type, AnimalNamesHelper.RandomName())!;
 
         return true;
     }

@@ -29,7 +29,7 @@ public class MoneyController: IScoreable
                 //1- 20, 2- 10, 3 -6, 4-5, 5-4,...
 
                 int condition = animal.GetCondition();
-                income += baseValue * condition / 100;
+                income += baseValue * condition / 5;
 
             }
         }

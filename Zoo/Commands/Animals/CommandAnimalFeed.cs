@@ -49,7 +49,7 @@ public class CommandAnimalFeed(GameController controller) : Command(controller)
 
         if (food_storage < count)
         {
-            controller.ConsoleDisplay.DisplayWarning($"Brak wystarczajacej ilosci jedzenia w magazynie, wyjęto tylko {food_storage}");
+            controller.ConsoleDisplay.DisplayWarning($"Brak wystarczajacej ilosci jedzenia w magazynie, wyjeto tylko {food_storage}");
         }
 
 

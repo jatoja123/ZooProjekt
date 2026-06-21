@@ -8,7 +8,7 @@ public class CommandFreeAnimals(GameController controller) : Command(controller)
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "wolne";
-    public override string ActionDescription() => "Pokazuje zwierzeta bez wybiegu / wsadza wolne zwierze na wybieg. Użycie: wolne / wolne <index zwierzęcia> <x> <y>";
+    public override string ActionDescription() => "Pokazuje zwierzeta bez wybiegu / wsadza wolne zwierze na wybieg. Uzycie: wolne / wolne <index zwierzecia> <x> <y>";
 
     protected override bool Execute(List<string> args)
     {
@@ -78,7 +78,7 @@ public class CommandFreeAnimals(GameController controller) : Command(controller)
         var location = controller.Map.GetLocation(x, y);
         if (location == null || location is not LocationHabitat habitat)
         {
-            failMessage = "Nie można umieścić zwierzęcia na tej lokalizacji";
+            failMessage = "Nie można umieścić zwierzecia na tej lokalizacji";
             return false;
         }
 

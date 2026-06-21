@@ -7,8 +7,8 @@ public class CommandBuyMedicine(GameController controller) : Command(controller)
 {
     public override int ActionCost => 0;
 
-    public override string ActionCommand() => "kupleki";
-    public override string ActionDescription() => "Kupuje magiczne leki. Uzycie: kupleki <ilosc>";
+    public override string ActionCommand() => "kup_leki";
+    public override string ActionDescription() => "Kupuje leki. Uzycie: kup_leki <ilosc>";
 
     protected override bool Execute(List<string> args)
     {
@@ -21,7 +21,7 @@ public class CommandBuyMedicine(GameController controller) : Command(controller)
         int cost = amount * ShopPrices.MedicinePrice;
         if (controller.MoneyController.Money < cost)
         {
-            controller.ConsoleDisplay.DisplayWarning("Niewystarczajaca ilosc pieniędzy");
+            controller.ConsoleDisplay.DisplayWarning("Niewystarczajaca ilosc pieniedzy");
             return false;
         }
 

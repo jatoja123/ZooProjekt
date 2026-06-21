@@ -1,8 +1,10 @@
+using System.Diagnostics;
 using Raylib_cs;
 using System.Numerics;
 using System.Linq;
 using Zoo.Animals;
 using Zoo;
+using Zoo.Economy;
 
 namespace Zoo.GUI;
 
@@ -118,7 +120,15 @@ public class HabitatRenderer : IRenderer
             Raylib.DrawRectangle(statX, statY, statWidth, statHeight, Color.RayWhite);
             Raylib.DrawRectangleLinesEx(new Rectangle(statX, statY, statWidth, statHeight), 3, Color.Black);
 
-            Raylib.DrawText($"Statystyki: {state.SelectedAnimal.Name}", statX + 20, statY + 20, 36, Color.Black);
+            string foodTypeStr = "";
+            switch(state.SelectedAnimal.foodType)
+            {
+                case GoodType.FoodMeat: foodTypeStr = "MIESO"; break;
+                case GoodType.FoodPlant: foodTypeStr = "ROSLINY"; break;
+                case GoodType.FoodMixed: foodTypeStr = "MIESZANE"; break;
+            }
+            
+            Raylib.DrawText($"Statystyki: {state.SelectedAnimal.Name} | Jedzenie: {foodTypeStr} | Temperatura: {state.SelectedAnimal.GetRequiredTemperature()}", statX + 20, statY + 20, 36, Color.Black);
 
             string needsStr = state.SelectedAnimal.AnimalNeeds.Count > 0 
                 ? string.Join(" | ", state.SelectedAnimal.AnimalNeeds.Select(n => $"{n.Type}: {n.Value}/{n.MaxValue}")) 

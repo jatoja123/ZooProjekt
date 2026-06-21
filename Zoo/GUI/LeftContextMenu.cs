@@ -22,7 +22,7 @@ public class LeftContextMenu : IRenderer
             string cmdName = state.LeftSelectedCommand?.ActionCommand() ?? "";
             List<string> subOptions;
 
-            if (cmdName == "kupwode" || cmdName == "kupleki")
+            if (cmdName == "kup_wode" || cmdName == "kup_leki")
                 subOptions = new List<string>(QuantityOptions);
             else
                 subOptions = state.LeftSelectedCommand?.GetAvailableOptions() ?? new List<string>();
@@ -70,7 +70,7 @@ public class LeftContextMenu : IRenderer
     {
         string cmdName = state.LeftSelectedCommand?.ActionCommand() ?? "";
 
-        if (cmdName == "kupjedzenie" && state.LeftPendingArgs.Count == 0)
+        if (cmdName == "kup_jedzenie" && state.LeftPendingArgs.Count == 0)
         {
             return state.AddLeftPendingArgument(option).UpdateLeftSubOptions(new List<string>(QuantityOptions));
         }

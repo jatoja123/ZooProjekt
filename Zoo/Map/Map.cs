@@ -6,7 +6,7 @@ public class Map : IScoreable
 {
     // Punktowanie
     private const int locationConditionMultiplier = 50;
-    private const int animalCountMultiplier = 20;
+    private const int differentAnimalsMultiplier = 100;
     
     private static int width = 5;
     private static int height = 5;
@@ -58,7 +58,8 @@ public class Map : IScoreable
             {
                 var condition = habitat.LocationCondition();
                 score += (int)(condition * locationConditionMultiplier); // ocena zwierząt
-                score += (int)(habitat.Animals.Count * animalCountMultiplier); // liczba zwierząt
+                var animalTypes = habitat.Animals.GroupBy(x=>x.GetType()).Count();
+                score += (int)(animalTypes * differentAnimalsMultiplier); // liczba zwierząt
             }
         }
 

@@ -8,10 +8,10 @@ public class CommandBuyFood(GameController controller) : Command(controller)
 {
     public override int ActionCost => 0;
 
-    public override string ActionCommand() => "kupjedzenie";
+    public override string ActionCommand() => "kup_jedzenie";
 
 
-    public override string ActionDescription() => "Kupuje jedzenie. Użycie: kupjedzenie <Mieso/Rosliny/Mieszane> <ilosc>";
+    public override string ActionDescription() => "Kupuje jedzenie. Użycie: kup_jedzenie <Mieso/Rosliny/Mieszane> <ilosc>";
 
     protected override bool Execute(List<string> args)
     {

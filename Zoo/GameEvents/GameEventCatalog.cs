@@ -29,7 +29,7 @@ public static class GameEventCatalog
                 Name = "ZranioneZwierzePrzybywa",
                 Chance = 0.2f,
                 Type = GameEventType.StartOfTurn,
-                Priority = EventPriority.Normal,
+                Priority = EventPriority.High,
                 DecisionFactory = CreateHarmedAnimalDecision
             },
             new()
@@ -39,6 +39,14 @@ public static class GameEventCatalog
                 Type = GameEventType.EndOfTurn,
                 Priority = EventPriority.Normal,
                 Trigger = TriggerAnimalsNotInHabitatDie
+            },
+            new()
+            {
+                Name = "ZwierzeSieRodzi",
+                Chance = 1f,
+                Type = GameEventType.EndOfTurn,
+                Priority = EventPriority.Low,
+                Trigger = TriggerAnimalsReproduce
             },
             new()
             {
@@ -67,17 +75,25 @@ public static class GameEventCatalog
             new()
             {
                 Name = "SamotneZwierzeSieNudzi",
-                Chance = 0.2f,
+                Chance = 0.5f,
                 Type = GameEventType.StartOfTurn,
                 Priority = EventPriority.Low,
                 Trigger = TriggerLonelyAnimal
             },
             new()
             {
+                Name = "NudaZwierzat",
+                Chance = 0.2f,
+                Type = GameEventType.StartOfTurn,
+                Priority = EventPriority.Low,
+                Trigger = TriggerLonelyAnimals
+            },
+            new()
+            {
                 Name = "DzieckoWpadloNaWybieg",
                 Chance = 0.1f,
                 Type = GameEventType.StartOfTurn,
-                Priority = EventPriority.High,
+                Priority = EventPriority.Highest,
                 Trigger = TriggerChildInHabitat
             },
 
@@ -141,6 +157,21 @@ public static class GameEventCatalog
             animalsController.RemoveAnimal(animal);
         }
     }
+    
+    private static void TriggerAnimalsReproduce()
+    {
+        var habitats = HabitatsWithAnimals();
+        if (habitats.Count == 0) return;
+ 
+        var habitat = habitats[rnd.Next(habitats.Count)];
+        if (!habitat.TryReproduce(out var animal)) return;
+        
+        animalsController.AddAnimal(animal);
+ 
+        string message = $"Rodzi sie dziecko! {animal.Name}";
+        GameController.Instance.ConsoleDisplay.DisplayInfo(message);
+        GameController.Instance.TriggerPopupEvent(message);
+    }
 
     private static void TriggerDisease()
     {
@@ -201,6 +232,22 @@ public static class GameEventCatalog
         animal.DecreaseNeed(NeedType.HAPPINESS, BoredomHappinessLoss);
  
         string message = $"{animal.Name} jest samotne na wybiegu ({habitat.X}, {habitat.Y}) i bardzo sie nudzi!";
+        GameController.Instance.ConsoleDisplay.DisplayInfo(message);
+        GameController.Instance.TriggerPopupEvent(message);
+    }
+    
+    private static void TriggerLonelyAnimals()
+    {
+        var habitats = HabitatsWithAnimals();
+        if (habitats.Count == 0) return;
+ 
+        var habitat = habitats[rnd.Next(habitats.Count)];
+        foreach (var animal in habitat.Animals)
+        {
+            animal.DecreaseNeed(NeedType.HAPPINESS, 1);
+        }
+ 
+        string message = $"Zwierzeta na wybiegu nudza sie... (-HAPPINESS)";
         GameController.Instance.ConsoleDisplay.DisplayInfo(message);
         GameController.Instance.TriggerPopupEvent(message);
     }

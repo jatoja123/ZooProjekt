@@ -9,7 +9,7 @@ public class CommandBuyAnimal(GameController controller) : Command(controller)
 {
     public override int ActionCost => 0;
 
-    public override string ActionCommand() => "kupzwierze";
+    public override string ActionCommand() => "kup_zwierze";
     public override string ActionDescription() => $"Kupuje wybrane zwierze. Koszt: {ShopPrices.AnimalPrice}$. Wybierz typ zwierzecia.";
 
     protected override bool Execute(List<string> args)

@@ -30,7 +30,7 @@ public abstract class Need
         Type = type;
         if(threshold > _maxValue)
         {
-            throw new ArgumentException("Próg krytyczny nie może być większy niż wartość maksymalna!");
+            throw new ArgumentException("Prog krytyczny nie może być wiekszy niż wartosc maksymalna!");
         }
         else
         {
