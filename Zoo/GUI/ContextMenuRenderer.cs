@@ -258,7 +258,7 @@ public class ContextMenuRenderer : IRenderer
             {
                 string msg = cmd.LastExecutionMessage;
                 GameGUI.StateDispatches.Enqueue(s => s.SetStatus(msg));
-                GameGUI.EnqueuePopup(msg);
+                controller.ConsoleDisplay.DisplayWarning(msg);
             }
         });
     }
