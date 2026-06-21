@@ -4,7 +4,7 @@ namespace Zoo.Commands;
 
 public class CommandChangeTemperature(GameController controller) : Command(controller)
 {
-    public override int ActionCost => 2;
+    public override int ActionCost => 0;
     public override string ActionCommand() => "temperatura";
     public override string ActionDescription() => "Zmienia zakres temperatury na wybiegu. Uzycie: temperatura <x> <y> <zmiana>";
     
