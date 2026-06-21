@@ -102,11 +102,6 @@ public abstract class Animal
         return 0;
     }
 
-    /// <summary>
-    /// Zwraca ile REALNIE dano wody (żeby nie utopić)
-    /// </summary>
-    /// <param name="waterAmount"></param>
-    /// <returns></returns>
     public int GiveWater(int waterAmount)
     {
         if (IsDead) return 0;
@@ -150,11 +145,6 @@ public abstract class Animal
         if (IsDead) return 0;
         return AnimalNeeds.Min(n => n.Value);
     }
-
-        /// <summary>
-    /// Sprawdza, czy zwierzę spełnia warunki do rozmnażania.
-    /// Domyślnie: wiek powyżej 2, zdrowie i szczęście powyżej 7.
-    /// </summary>
     
     public int? GetRequiredTemperature()
     {
