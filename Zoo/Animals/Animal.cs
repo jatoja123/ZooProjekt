@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Zoo.Economy;
 using Zoo.Environment;
 using Zoo.Needs;
