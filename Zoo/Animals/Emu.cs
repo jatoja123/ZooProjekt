@@ -4,7 +4,7 @@ namespace Zoo.Animals;
 
 public class Emu : Animal
 {
-    public Emu(string name) : base(name, GoodType.FoodPlant)
+    public Emu(string name) : base(name, GoodType.FoodPlant, AgeRatio.FAST)
     {
         EnvironmentalNeeds.Add(new Zoo.Environment.CageType(Zoo.Environment.CageTypeEnum.Land));
         EnvironmentalNeeds.Add(new Zoo.Environment.TemperatureRequirement(20));
