@@ -8,7 +8,7 @@ public class CommandBuyMedicine(GameController controller) : Command(controller)
     public override int ActionCost => 0;
 
     public override string ActionCommand() => "kupleki";
-    public override string ActionDescription() => "Kupuje magiczne leki. Uzycie: kupleki <ilość>";
+    public override string ActionDescription() => "Kupuje magiczne leki. Uzycie: kupleki <ilosc>";
 
     protected override bool Execute(List<string> args)
     {

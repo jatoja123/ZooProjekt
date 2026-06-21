@@ -155,6 +155,15 @@ public abstract class Animal
     /// Sprawdza, czy zwierzę spełnia warunki do rozmnażania.
     /// Domyślnie: wiek powyżej 2, zdrowie i szczęście powyżej 7.
     /// </summary>
+    
+    public int? GetRequiredTemperature()
+    {
+        var tempNeed = EnvironmentalNeeds
+            .OfType<Zoo.Environment.TemperatureRequirement>()
+            .FirstOrDefault();
+
+        return tempNeed?.RequiredTemperature;
+    }
     public virtual bool CanReproduce()
     {
         if (IsDead) return false;
@@ -169,6 +178,11 @@ public abstract class Animal
     public void SetAge(int newAge)
     {
         age = newAge;
+    }
+
+    public void IncreaseNeed(NeedType needType, int amount)
+    {
+        AnimalNeeds.FirstOrDefault(n => n.Type == needType)?.Increase(amount);
     }
 
     public void DecreaseNeed(NeedType needType, int amount)

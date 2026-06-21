@@ -22,6 +22,12 @@ public class AnimalsController
     public void AddAnimal(Animal animal)
     {
         animals.Add(animal);
+        
+        var requiredTemp = animal.GetRequiredTemperature();
+        if (requiredTemp.HasValue)
+        {
+            GameController.Instance.ConsoleDisplay.DisplayInfo($"{animal.Name} wymaga temperatury: {requiredTemp.Value}C");
+        }
     }
     
     public void RemoveAnimal(Animal animal)

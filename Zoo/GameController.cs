@@ -72,7 +72,7 @@ public class GameController : IObserver
             new CommandBuyMedicine(this),
             new CommandBuyAnimal(this),
             new CommandExpandStorage(this),
-            new CommandExitShop(this)
+            new CommandExitShop(this),
         };
 
         AnimalActions = new List<Command>()
@@ -86,6 +86,7 @@ public class GameController : IObserver
         MapActions = new List<Command>()
         {
             new CommandBuildHabitat(this),
+            new CommandChangeTemperature(this),
             new CommandShowHabitat(this),
             new CommandRemoveAnimal(this),
             new CommandFreeAnimals(this),
